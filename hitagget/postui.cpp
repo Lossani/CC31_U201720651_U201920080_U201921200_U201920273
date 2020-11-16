@@ -9,13 +9,15 @@ PostUI::PostUI(QWidget *parent) : QWidget(parent)
     QHBoxLayout *layout = new QHBoxLayout(this);
     layout->setMargin(0);
 
-    post_text = new QLabel("Vacío");
-
     view_button = new QPushButton("Ver");
+    view_button->setFixedWidth(50);
+    post_text = new QLabel("Vacío");
     //edit_button = new QPushButton("Editar");
     //delete_button = new QPushButton("Borrar");
-    layout->addWidget(post_text);
+
     layout->addWidget(view_button);
+    layout->addWidget(post_text);
+
     //layout->addWidget(edit_button);
     //layout->addWidget(delete_button);
 }

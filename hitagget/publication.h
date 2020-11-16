@@ -9,8 +9,12 @@ class Publication
 {
 public:
     int id = -1;
-    int author_id = -1;
-    string content;
+    int authorId = -1;
+    string content = "";
+    string pubDate = "";
+
+    Publication() { }
+    ~Publication() { }
 };
 
 #endif // PUBLICATION_H

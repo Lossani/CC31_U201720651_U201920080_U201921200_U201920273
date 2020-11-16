@@ -10,7 +10,10 @@ CONFIG += c++11
 
 SOURCES += \
     addcontacto.cpp \
+    avl.cpp \
+    commentmanager.cpp \
     hitagget.cpp \
+    interactionmanager.cpp \
     main.cpp \
     mainwindow.cpp \
     newpost.cpp \
@@ -25,9 +28,12 @@ HEADERS += \
     ListaD.h \
     ListaT.h \
     addcontacto.h \
+    avl.h \
+    commentmanager.h \
     contacto.h \
     grupo.h \
     hitagget.h \
+    interactionmanager.h \
     listcontroller.h \
     mainwindow.h \
     newpost.h \

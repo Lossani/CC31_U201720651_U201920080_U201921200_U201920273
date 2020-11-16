@@ -18,7 +18,7 @@ NewPost::~NewPost()
 
 void NewPost::show_post()
 {
-    ui->lineEdit->setText(post_content.c_str());
+    ui->label_2->setText(post_content.c_str());
 }
 
 void NewPost::on_buttonBox_accepted()
@@ -26,7 +26,6 @@ void NewPost::on_buttonBox_accepted()
     new_post = new Post();
     new_post->title = ui->txtPostTitle->text().toStdString();
     new_post->content = ui->txtPostContent->toPlainText().toStdString();
-    new_post->tag = ui->txtPostTag->text().toStdString();
     //post_content = ui->lineEdit->text().toStdString();
 }
 /*

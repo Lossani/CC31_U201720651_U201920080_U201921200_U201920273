@@ -8,7 +8,7 @@
 
 using namespace std;
 
-class PostManager : private ListController<Post, int, int>
+class PostManager : private ListController<Post*, int, int>
 {
 private:
     //CommentManager all_comments;
@@ -17,13 +17,13 @@ public:
     ~PostManager();
 
     //void add_post(Post post);
-    virtual void add_post(int author_id, string title, string content, string tag);
-    void add_post(Post post);
-    void update_post(Post updated_element);
-    void delete_post(int post_id);
-    list<Post> get_author_posts(int user_id);
-    list<Post> get_all_posts();
-    Post get_post(int post_id);
+    virtual void addPost(int authorId, string title, string content);
+    void addPost(Post* post);
+    void updatePost(Post* post);
+    void deletePost(int postId);
+    list<Post*> getAuthorPosts(int userId);
+    list<Post*> getAllPosts();
+    Post* getPost(int postId);
    // void add_comment_to_post(int post_id, int comment_author_id, string comment);
     //void delete_comment(int comment_id);
     //list<PostComment> get_post_comments(int post_id);

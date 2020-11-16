@@ -4,7 +4,7 @@
 
 using namespace std;
 
-Hitagget::Hitagget() : PostManager(), UserManager()
+Hitagget::Hitagget() : UserManager(), PostManager(), CommentManager(), InteractionManager()
 {
 
 }
@@ -16,12 +16,11 @@ Hitagget::~Hitagget()
 
 bool Hitagget::log_in(string email, string password)
 {
-    User user = get_user_by_email(email);
+    User user = *getUserByEmail(email);
 
-    if (user.email != "none" && password == user.password)
+    if (user.email != "" && password == user.password)
     {
         logged_user = user;
-        all_logged_user_posts = get_author_posts(user.id);
         return true;
     }
     else
@@ -30,15 +29,15 @@ bool Hitagget::log_in(string email, string password)
     }
 }
 
-bool Hitagget::sign_up(string email, string nickname, string password)
+bool Hitagget::sign_up(string email, string fullname, string password)
 {
-    if (!add_user(email, nickname, password))
+    if (!addUser(email, fullname, password))
     {
         return false;
     }
     else
     {
-        logged_user = get_user_by_email(email);
+        logged_user = *getUserByEmail(email);
         return true;
     }
 }
@@ -58,6 +57,7 @@ User Hitagget::get_logged_user()
     return logged_user;
 }
 
+/*
 void Hitagget::update_logged_user(string fullname, string email)
 {
     if (fullname == "" || email == "")
@@ -71,3 +71,4 @@ void Hitagget::update_logged_user(string fullname, string email)
         update_user(logged_user);
     }
 }
+*/

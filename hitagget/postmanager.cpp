@@ -2,45 +2,57 @@
 #include "postmanager.h"
 #include <fstream>
 #include <QMessageBox>
+#include <ctime>
 
 using namespace std;
 
-PostManager::PostManager() : ListController<Post, int, int>(
-    [](Post post)
+PostManager::PostManager() : ListController<Post*, int, int>(
+    [](Post* post)
     {
-        return post.id;
+        return post->id;
     },
     [](int value1, int value2)
     {
         return value1 == value2;
     },
-    [](ofstream& file, Post element)
+    [](ofstream& file, Post* element)
     {
     //QMessageBox msg;
         //msg.setText("newPost->get_post_content()");
         //msg.exec();
-        file << element.id << endl;
-        file << element.author_id << endl;
-        file << element.content << endl;
-        file << element.title << endl;
-        file << element.tag << endl;
+        file << element->id << endl;
+        file << element->authorId << endl;
+        file << element->content << endl;
+        file << element->title << endl;
     },
     [](ifstream& file)
     {
-        list<Post> retrieved_elements;
+        list<Post*> retrievedElements;
 
-        while(!file.eof())
+        Post* currentPost;
+
+        string id, authorId, numLikes;
+
+        while (getline(file, id, ','))
         {
-            Post current_post;
+            currentPost = new Post();
 
-            file >> current_post.id >> current_post.author_id >> current_post.content >> current_post.title >> current_post.tag;
+            getline(file, authorId, ',');
+            getline(file, currentPost->title, ',');
+            getline(file, currentPost->content, ',');
+            getline(file, currentPost->pubDate, ',');
+            getline(file, numLikes);
 
-            retrieved_elements.push_back(current_post);
+            currentPost->id = stoi(id);
+            currentPost->authorId = stoi(authorId);
+            currentPost->numLikes = stoi(numLikes);
+
+            retrievedElements.push_front(currentPost);
         }
 
-        return retrieved_elements;
+        return retrievedElements;
     },
-    (char*)"posts.dat")
+    "publications.dat")
 {
 
 }
@@ -57,43 +69,44 @@ void PostManager::add_post(Post post)
 }
 */
 
-void PostManager::add_post(int author_id, string title, string content, string tag)
+void PostManager::addPost(int authorId, string title, string content)
 {
-    Post new_post;
+    Post* newPost;
 
-    new_post.id = time(0);
-    new_post.author_id = author_id;
-    new_post.content = content;
-    new_post.title = title;
-    new_post.tag = tag;
-
-    add_element(new_post);
+    newPost->id = time(0);
+    newPost->authorId = authorId;
+    newPost->content = content;
+    newPost->title = title;
+    time_t now = time(0);
+    newPost->pubDate = ctime(&now);
+    newPost->pubDate = newPost->pubDate.erase(newPost->pubDate.find_last_not_of("\t\n\v\f\r ") + 1);
+    add_element(newPost);
 }
 
-void PostManager::add_post(Post post)
+void PostManager::addPost(Post* post)
 {
-    post.id = time(0);
+    post->id = time(0);
     add_element(post);
 }
 
-void PostManager::update_post(Post updated_post)
+void PostManager::updatePost(Post* post)
 {
-    update_element(updated_post);
+    update_element(post);
 }
 
-void PostManager::delete_post(int post_id)
+void PostManager::deletePost(int id)
 {
-    delete_element(post_id);
+    delete_element(id);
 }
 
-list<Post> PostManager::get_author_posts(int user_id)
+list<Post*> PostManager::getAuthorPosts(int userId)
 {
-    function<int(Post)> field_comparator = [](Post post)
+    function<int(Post*)> field_comparator = [](Post* post)
     {
-        return post.author_id;
+        return post->authorId;
     };
 
-    return find_elements(field_comparator, user_id);
+    return find_elements(field_comparator, userId);
 }
 
 /*
@@ -164,14 +177,14 @@ void PostManager::retrieve_posts()
     }
 }
 */
-list<Post> PostManager::get_all_posts()
+list<Post*> PostManager::getAllPosts()
 {
     return get_all_elements();
 }
 
-Post PostManager::get_post(int post_id)
+Post* PostManager::getPost(int postId)
 {
-    return get_element(post_id);
+    return get_element(postId);
 }
 /*
 void PostManager::add_comment_to_post(int post_id, int author_id, char* comment)

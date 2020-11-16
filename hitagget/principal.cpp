@@ -12,11 +12,8 @@ void Principal::show_all_posts()
 {
     function<void(int)> show_post = [this](int id)
     {
-        Post post_to_show = main_instance->get_post(id);
+        Post post_to_show = *main_instance->getPost(id);
 
-        QMessageBox msg;
-           msg.setText(to_string(id).c_str());
-            msg.exec();
         if (post_to_show.id != -1)
         {
             ViewPost *view_post_dialog = new ViewPost();
@@ -61,11 +58,18 @@ void Principal::show_all_posts()
     ui->listWidgetPubli->clear();
     //ui->listWidgetPubli->clear();
 
-    list<Post> posts = main_instance->get_all_posts();
-    for (Post post : posts)
+    list<Post*> posts = main_instance->getAllPosts();
+    int maxPostsToShow = 50;
+
+    for (Post* post : posts)
     {
          //ui->listWidgetGroup->addItem(post.content.c_str());
-        add_item_to_list_widget(ui->listWidgetPubli, post, show_post);
+        add_item_to_list_widget(ui->listWidgetPubli, *post, show_post);
+
+        maxPostsToShow--;
+
+        if (maxPostsToShow == 0)
+            break;
         /*
         add_item_to_list_widget(ui->listPublications, post, false, false, show_post, edit_post, delete_post);
 
@@ -84,7 +88,7 @@ void Principal::add_item_to_list_widget(QListWidget *list, Post individual_post,
 
     PostUI *post_ui = new PostUI();
 
-    post_ui->post_text->setText(individual_post.content.c_str());
+    post_ui->post_text->setText(individual_post.title.c_str());
     post_ui->post_id = individual_post.id;
 
     post_ui->set_view_button_click_action(show_post);
@@ -432,7 +436,7 @@ void Principal::new_publi(){
     }
     else
     {
-        main_instance->add_post(*result);
+        //main_instance->add_post(*result);
         //show_all_posts();
     }
     /*

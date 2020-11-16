@@ -7,18 +7,18 @@
 
 using namespace std;
 
-class UserManager : private ListController<User, int, string>
+class UserManager : private ListController<User*, int, string>
 {
 private:
-    function<string(User)> email_field_comparator;
+    function<string(User*)> email_field_comparator;
 public:
     UserManager();
     ~UserManager();
 
-    bool add_user(string email, string fullname, string password);
-    void update_user(User user_to_update);
-    User get_user_by_email(string email);
-    User get_user_by_id(int id);
+    bool addUser(string email, string fullname, string password);
+    void updateUser(User* user);
+    User* getUserByEmail(string email);
+    User* getUserById(int id);
     //void delete_user(int id);
 };
 

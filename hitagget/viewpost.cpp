@@ -15,5 +15,6 @@ ViewPost::~ViewPost()
 
 void ViewPost::set_current_post(Post post)
 {
+    ui->lblPostTitle->setText(post.title.c_str());
     ui->lblPostContent->setText(post.content.c_str());
 }
