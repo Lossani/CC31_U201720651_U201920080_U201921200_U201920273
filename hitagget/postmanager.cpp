@@ -33,14 +33,16 @@ PostManager::PostManager() : ListController<Post*, int, int>(
 
         string id, authorId, numLikes;
 
-        while (getline(file, id, ','))
+        getline(file, id); // Ignoring first line, temporarily using id for getline parameter
+
+        while (getline(file, id, '\t'))
         {
             currentPost = new Post();
 
-            getline(file, authorId, ',');
-            getline(file, currentPost->title, ',');
-            getline(file, currentPost->content, ',');
-            getline(file, currentPost->pubDate, ',');
+            getline(file, authorId, '\t');
+            getline(file, currentPost->title, '\t');
+            getline(file, currentPost->content, '\t');
+            getline(file, currentPost->pubDate, '\t');
             getline(file, numLikes);
 
             currentPost->id = stoi(id);
@@ -52,7 +54,7 @@ PostManager::PostManager() : ListController<Post*, int, int>(
 
         return retrievedElements;
     },
-    "publications.dat")
+    "publications.tsv")
 {
 
 }

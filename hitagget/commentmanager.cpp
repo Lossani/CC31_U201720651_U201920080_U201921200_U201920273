@@ -26,17 +26,20 @@ CommentManager::CommentManager() : ListController<PostComment*, int, int>(
 
        string id, authorId, publicationId;
 
-       while (getline(file, id, ','))
+       getline(file, id); // Ignoring first line, temporarily using id for getline parameter
+
+       while (getline(file, id, '\t'))
        {
            currentComment = new PostComment();
 
-           getline(file, authorId, ',');
-           getline(file, publicationId, ',');
-           getline(file, currentComment->pubDate, ',');
+           //getline(file, id, ','); // Retrieving the real ID of the comment
+           //getline(file, authorId, ','); // We have no author ID in the files yet
+           getline(file, publicationId, '\t');
+           getline(file, currentComment->pubDate, '\t');
            getline(file, currentComment->content);
 
            currentComment->id = stoi(id);
-           currentComment->authorId = stoi(authorId);
+           //currentComment->authorId = stoi(authorId);
            currentComment->parentPostId = stoi(publicationId);
 
            retrievedElements.push_back(currentComment);
@@ -44,7 +47,7 @@ CommentManager::CommentManager() : ListController<PostComment*, int, int>(
 
        return retrievedElements;
    },
-   "comments.dat")
+   "comment.tsv")
 {
 
 }

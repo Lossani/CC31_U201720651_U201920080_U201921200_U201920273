@@ -30,17 +30,33 @@ UserManager::UserManager() : ListController<User*, int, string>(
 
         string id;
 
-        while (getline(file, id, ','))
+        getline(file, id); // Ignoring first line, temporarily using id for getline parameter
+
+        while (getline(file, id, '\t'))
         {
             currentUser = new User();
 
-            getline(file, currentUser->email, ',');
-            getline(file, currentUser->fullname, ',');
-            getline(file, currentUser->registerDate, ',');
-            getline(file, currentUser->password);
+            //getline(file, id, ','); // Retrieving the real ID of the user
+            getline(file, currentUser->email, '\t');
+            getline(file, currentUser->fullname, '\t');
+            //getline(file, currentUser->registerDate, ',');
+            getline(file, currentUser->registerDate);
+            //getline(file, currentUser->password); // We have no password yet
 
             currentUser->id = stoi(id);
+/*
+            // Data in files are between double quote marks, we must trim them
+            currentUser->email = currentUser->email.erase(currentUser->email.find_last_not_of("\" ") + 1);
+            currentUser->email = currentUser->email.erase(0, currentUser->email.find_first_not_of("\" "));
+            currentUser->fullname = currentUser->fullname.erase(currentUser->fullname.find_last_not_of("\" ") + 1);
+            currentUser->fullname = currentUser->fullname.erase(0, currentUser->fullname.find_first_not_of("\" "));
+*/
 
+            currentUser->password = currentUser->email; // Using same email as password temporarily
+
+            //QMessageBox msg;
+            //msg.setText(to_string(currentUser->email.size()).c_str());
+            //msg.exec();
             retrievedElements.push_back(currentUser);
         }
 
@@ -58,7 +74,7 @@ UserManager::UserManager() : ListController<User*, int, string>(
         return retrieved_elements;
         */
     },
-    "users.dat")
+    "users.tsv")
 {
     email_field_comparator = [](User* user)
     {

@@ -25,25 +25,29 @@ InteractionManager::InteractionManager() : ListController<PostInteraction*, int,
 
        string id, authorId, publicationId, shared;
 
-       while (getline(file, id, ','))
+       int i = 0; // We have no id of the interactions in the files, so we use a basic counter just to fill that field.
+
+       getline(file, id); // Ignoring first line, temporarily using id for getline parameter
+
+       while (getline(file, authorId, '\t'))
        {
            currentInteraction = new PostInteraction();
 
-           getline(file, authorId, ',');
-           getline(file, publicationId, ',');
-           getline(file, currentInteraction->date, ',');
+           //getline(file, authorId, ',');
+           getline(file, publicationId, '\t');
+           getline(file, currentInteraction->date, '\t');
            getline(file, shared);
 
-           currentInteraction->id = stoi(id);
+           currentInteraction->id = i++;
            currentInteraction->authorId = stoi(authorId);
-           currentInteraction->shared = stoi(shared);
+           currentInteraction->shared = shared == "TRUE" ? true : false;
 
            retrievedElements.push_back(currentInteraction);
        }
 
        return retrievedElements;
    },
-   "interactions.dat")
+   "interaction.tsv")
 {
 
 }

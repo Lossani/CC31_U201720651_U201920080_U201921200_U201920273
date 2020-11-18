@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>380</width>
+    <width>438</width>
     <height>554</height>
    </rect>
   </property>
@@ -33,7 +33,7 @@
      </widget>
     </item>
     <item>
-     <widget class="QLabel" name="lblnombre">
+     <widget class="QLabel" name="lblEmail">
       <property name="font">
        <font>
         <family>Comic Sans MS</family>
@@ -47,12 +47,12 @@
        <string notr="true">font: 8pt &quot;Comic Sans MS&quot;;</string>
       </property>
       <property name="text">
-       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:14pt; color:#80b766;&quot;&gt;Nombre:&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:14pt; color:#80b766;&quot;&gt;Email:&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
       </property>
      </widget>
     </item>
     <item>
-     <widget class="QLineEdit" name="leNombre"/>
+     <widget class="QLineEdit" name="txtEmail"/>
     </item>
     <item>
      <widget class="QLabel" name="lblapellido">
@@ -100,7 +100,7 @@
      </widget>
     </item>
     <item>
-     <widget class="QLineEdit" name="leContra">
+     <widget class="QLineEdit" name="txtPassword">
       <property name="echoMode">
        <enum>QLineEdit::Password</enum>
       </property>
@@ -141,8 +141,8 @@ color: rgb(255, 255, 255);</string>
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>380</width>
-     <height>21</height>
+     <width>438</width>
+     <height>26</height>
     </rect>
    </property>
   </widget>

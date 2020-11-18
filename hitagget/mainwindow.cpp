@@ -1,5 +1,6 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
+#include "hitagget.h"
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -8,8 +9,6 @@ MainWindow::MainWindow(QWidget *parent)
 
 
     ui->setupUi(this);
-
-
 
         QPixmap *img = new QPixmap("Logo.png");
         ui->lblLogo->setPixmap(*img);
@@ -41,11 +40,27 @@ void MainWindow::Cerrar(){
 }
 
 void MainWindow::Ingresar(){
+    User* user = windP.main_instance->getUserByEmail(ui->txtEmail->text().toStdString());
 
-    if(ui->leContra->text() == contra ){
-        if(ui->leApellido->text()!="" && ui->leNombre->text()!=""){
-            nombre = ui->leNombre->text();
-            apellido = ui->leApellido->text();
+    if (user == nullptr)
+    {
+        ui->txtPassword->setText("");
+
+        ui->lblerror->setStyleSheet("QLabel { color : red; }");
+
+        ui->lblerror->setText("¡EL USUARIO INGRESADO NO EXISTE!");
+
+        ui->lblerror->show();
+
+        return;
+    }
+
+    if (ui->txtEmail->text().toStdString() == user->email)
+    {
+        if (ui->txtPassword->text().toStdString() == user->password)
+        {
+            nombre = ui->txtEmail->text();
+            apellido = ui->txtEmail->text();
 
             windP.Unombre = &nombre;
             windP.Uapellido = &apellido;
@@ -55,22 +70,20 @@ void MainWindow::Ingresar(){
             windP.show();
 
             Cerrar();
+        }
+        else
+        {
+            ui->txtPassword->setText("");
+
+            error_contra--;
+            if(error_contra==0) this->close();
+
+            ui->lblerror->setStyleSheet("QLabel { color : red; }");
+
+            ui->lblerror->setText("CONTRASEÑA INCORRECTA, VUELVA A INTENTARLO TIENE "+ QString::number(error_contra) +" INTENTOS");
+
+            ui->lblerror->show();
+        }
     }
-
-
-    } else {
-        ui->leContra->setText("");
-
-        error_contra--;
-        if(error_contra==0) this->close();
-
-        ui->lblerror->setStyleSheet("QLabel { color : red; }");
-
-        ui->lblerror->setText("CONTRASEÑA INCORRECTA, VUELVA A INTENTARLO TIENE "+ QString::number(error_contra) +" INTENTOS");
-
-        ui->lblerror->show();
-    }
-
-
 }
 
