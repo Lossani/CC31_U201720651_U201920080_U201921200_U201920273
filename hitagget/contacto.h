@@ -6,21 +6,19 @@ using namespace std;
 class Contacto{
 private:
     QString numero;
-    QString nombre;
-    QString apellido;
+    QString comp_name;
     QString apodo;
 public:
 
-    Contacto(){
-        apellido = "";
+    Contacto(){      
         numero = "";
-        nombre = "";
+        comp_name = "";
         apodo = "";
     }
-    Contacto(QString n, QString a, QString num, QString ap){
-        apellido = a;
+    Contacto(QString n, QString num, QString ap){
+
         numero = num;
-        nombre = n;
+        comp_name = n;
         apodo = ap;
     }
 
@@ -28,13 +26,23 @@ public:
     }
 
     QString get_numero(){return numero;}
-    QString get_nombre(){return nombre;}
-    QString get_apellido(){return apellido;}
+    QString get_comp_name(){return comp_name;}
     QString get_apodo(){return apodo;}
-    void set_apellido(QString ap){apellido = ap;}
     void set_numero(QString n){numero = n;}
-    void set_nombre(QString e){nombre = e;}
+    void set_comp_name(QString e){comp_name = e;}
     void set_apodo(QString es){apodo = es;}
+
+    QString fill_space(QString fill, int n = 15){
+        int sep = n-fill.size();
+        if(sep % 2 != 0)
+            return QString((sep/2),' ') + fill + QString((sep/2)+1,' ');
+        return QString((sep/2),' ') + fill + QString((sep/2),' ');
+    }
+
+    QString toString(){
+       return fill_space(this->comp_name,30)+" | "+fill_space(this->numero,15)+" | "+fill_space(this->apodo);
+    }
+
 };
 
 #endif // CONTACTO_H

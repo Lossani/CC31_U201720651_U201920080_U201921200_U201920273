@@ -5,8 +5,12 @@
 #include "newpost.h"
 #include "postui.h"
 #include <QFileDialog>
+#include <QFile>
+#include <QTextCodec>
 
 #include <QRandomGenerator>
+
+bool invertir = false;
 
 void Principal::show_all_posts()
 {
@@ -102,7 +106,20 @@ Principal::Principal(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::Principal)
 {
+    setlocale(LC_ALL,"");
     ui->setupUi(this);
+
+    QTextCodec::setCodecForLocale(QTextCodec::codecForName("UTF-8"));
+
+    //Arboles Contactos
+    this->BST_Cont_Apodo = new BST<Contacto, QString>([](Contacto j){return j.get_apodo();});
+    this->BST_Cont_CName = new BST<Contacto, QString>([](Contacto j){return j.get_comp_name();});
+    this->BST_Cont_Number = new BST<Contacto, QString>([](Contacto j){return j.get_numero();});
+
+
+
+
+
     main_instance = new Hitagget();
 
     show_all_posts();
@@ -120,13 +137,6 @@ Principal::Principal(QWidget *parent) :
         QPixmap *img = new QPixmap(tempR_F);
         ui->lblFPerfil->setPixmap(*img);
     }
-
-
-
-
-
-
-
 
 
 
@@ -252,8 +262,42 @@ Principal::Principal(QWidget *parent) :
 
     //LISTA DE CONTACTOS
 
+    QFile file("Contactos.csv");
+    if(file.open(QIODevice::ReadOnly)){ //WriteOnly
+        QTextStream in(&file); // in << palabras[1] << "\n";
+        while(!in.atEnd()){
+            QString linea = in.readLine();
+            QStringList palabras = linea.split(",");
+            Contacto nuevo(palabras[0],palabras[1],palabras[2]);
+            lcont.append(nuevo);
 
-    ifstream c("Contactos.txt");
+            BST_Cont_CName->add(nuevo);
+            BST_Cont_Number->add(nuevo);
+            BST_Cont_Apodo->add(nuevo);
+        }
+        file.close();
+    }
+
+
+
+
+    act_cont();
+
+
+
+    /*
+
+    ui->listWidgetCont->clear();
+
+    for(int i =0;i<lcont.getCount();i++){
+    ui->listWidgetCont->addItem(lcont.selected->data.get_comp_name() + "\t" + lcont.selected->data.get_numero() + "\t" +lcont.selected->data.get_apodo() );
+    lcont.sgt();
+    }
+    */
+
+
+    /*
+    ifstream c("Contactos.csv");
 
     string Nombre_cont;
     string Apellido_cont;
@@ -283,7 +327,10 @@ Principal::Principal(QWidget *parent) :
     ui->listWidgetCont->addItem(lcont.selected->data.get_nombre() + "\t" + lcont.selected->data.get_apellido() + "\t" + lcont.selected->data.get_numero() + "\t" +lcont.selected->data.get_apodo() );
     lcont.sgt();
     }
+    */
     //LISTA DE CONTACTOS fin
+
+
 
 
 
@@ -330,10 +377,15 @@ Principal::Principal(QWidget *parent) :
     }
 
 
+    limcont = 10;
 
+    //ARBOL CONTACTO
+    this->ventAC.BST_Cont_Apodo = this->BST_Cont_Apodo;
+    this->ventAC.BST_Cont_CName = this->BST_Cont_CName;
+    this->ventAC.BST_Cont_Number = this->BST_Cont_Number;
 
-
-
+    this->ventAC.lista = this->ui->listWidgetCont;
+    this->ventAC.limcont = limcont;
 
 
     connect(ui->btnCamFoto,SIGNAL(released()),this,SLOT(cambiar_imagen()));
@@ -341,7 +393,11 @@ Principal::Principal(QWidget *parent) :
     connect(ui->btnPublicar,SIGNAL(released()),this,SLOT(new_publi()));
 
     connect(ui->btnAgregar,SIGNAL(released()),this,SLOT(add_contact()));
-    connect(ui->btnAcLC,SIGNAL(released()),this,SLOT(act_cont()));
+
+    connect(ui->BCnom,SIGNAL(released()),this,SLOT(act_cont_ANom()));
+    connect(ui->BCnum,SIGNAL(released()),this,SLOT(act_cont_ANum()));
+    connect(ui->BCapod,SIGNAL(released()),this,SLOT(act_cont_AAp()));
+
 
 }
 
@@ -405,7 +461,7 @@ void Principal::act_tend(){
 
 void Principal::cambiar_nombre(){
     ui->lblUsuario->clear();
-    ui->lblUsuario->setText("Usuario:\n" + *Unombre + "\n" + *Uapellido);
+    ui->lblUsuario->setText("Usuario:\n" + *Unombre);
 }
 
 void Principal::cambiar_imagen(){
@@ -497,13 +553,78 @@ void Principal::new_publi(){
 }
 
 void Principal::act_cont(){
+
     ui->listWidgetCont->clear();
     lcont.selected = lcont.head;
+    int contador = 0;
     for(int i =0;i<lcont.getCount();i++){
-    ui->listWidgetCont->addItem(lcont.selected->data.get_nombre() + "\t" + lcont.selected->data.get_apellido() + "\t" + lcont.selected->data.get_numero() + "\t" +lcont.selected->data.get_apodo() );
-    lcont.sgt();
+        if(contador<10){
+            ui->listWidgetCont->addItem(lcont.selected->data.toString());
+        }
+        contador++;
+
+        /*
+        if(lcont.selected->data.get_comp_name().size()<=16){
+            ui->listWidgetCont->addItem(lcont.selected->data.get_comp_name() + "\t \t" + lcont.selected->data.get_numero() + "\t" +lcont.selected->data.get_apodo() );
+        } else {
+            ui->listWidgetCont->addItem(lcont.selected->data.get_comp_name() + "\t" + lcont.selected->data.get_numero() + "\t" +lcont.selected->data.get_apodo() );
+        }
+        */
+       lcont.sgt();
     }
+
+
+
+
 }
+
+
+
+
+void Principal::act_cont_AAp(){
+    ui->listWidgetCont->clear();
+
+    if(invertir){
+            BST_Cont_Apodo->inorder(ui->listWidgetCont, limcont);
+                this->ventAC.ord = 0;
+    } else{
+         BST_Cont_Apodo->postorder(ui->listWidgetCont,limcont);
+          this->ventAC.ord = 1;
+    }
+
+    invertir = !invertir;
+
+}
+
+
+void Principal::act_cont_ANom(){
+    ui->listWidgetCont->clear();
+    if(invertir){
+            BST_Cont_CName->inorder(ui->listWidgetCont,limcont);
+                this->ventAC.ord = 2;
+    } else{
+         BST_Cont_CName->postorder(ui->listWidgetCont,limcont);
+          this->ventAC.ord = 3;
+    }
+
+    invertir = !invertir;
+
+}
+void Principal::act_cont_ANum(){
+
+
+    ui->listWidgetCont->clear();
+    if(invertir){
+            BST_Cont_Number->inorder(ui->listWidgetCont,limcont);
+                this->ventAC.ord = 4;
+    } else{
+         BST_Cont_Number->postorder(ui->listWidgetCont,limcont);
+          this->ventAC.ord = 5;
+    }
+
+    invertir = !invertir;
+}
+
 
 void Principal::add_contact(){
     ventAC.ptrLC = &lcont;

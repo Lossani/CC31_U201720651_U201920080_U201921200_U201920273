@@ -45,6 +45,16 @@ public:
 
     }
 
+
+    void clear(){
+
+
+
+        len = 0;
+        this->head=nullptr;
+        this->selected = nullptr;
+    }
+
     void eliminar(){
 
       Nodo<T>* temp = this->selected;

@@ -17,6 +17,8 @@ class MainWindow : public QMainWindow
 
 public:
 
+    QList<Usuario> lverif;
+
     int error_contra;
     QString contra;
     MainWindow(QWidget *parent = nullptr);
@@ -27,6 +29,7 @@ public:
 private slots:
     void Cerrar();
     void Ingresar();
+    void Mostrar_Registro();
 private:
     Ui::MainWindow *ui;
 };

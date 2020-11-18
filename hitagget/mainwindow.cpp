@@ -1,6 +1,7 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-#include "hitagget.h"
+#include <QFile>
+#include <QList>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -10,8 +11,12 @@ MainWindow::MainWindow(QWidget *parent)
 
     ui->setupUi(this);
 
-        QPixmap *img = new QPixmap("Logo.png");
+    ui->Ventanas->setCurrentIndex(1);
+
+
+        QPixmap *img = new QPixmap("Imagenes\\Logo.png");
         ui->lblLogo->setPixmap(*img);
+        ui->lblLogo_2->setPixmap(*img);
 
 
 
@@ -27,7 +32,24 @@ MainWindow::MainWindow(QWidget *parent)
 
 
 
+        QFile file("users.csv");
+        if(file.open(QIODevice::ReadOnly)){ //WriteOnly
+            QTextStream in(&file); // in << palabras[1] << "\n";
+            while(!in.atEnd()){
+                QString linea = in.readLine();
+                QStringList palabras = linea.split(",");
+                Usuario nuevo(palabras[1],palabras[2],palabras[3],palabras[4]);
+                lverif.append(nuevo);
+            }
+            file.close();
+        }
+
+
+
+
+
     connect(ui->btnIngresar,SIGNAL(released()),this,SLOT(Ingresar()));
+    connect(ui->btnCrearCuenta,SIGNAL(released()),this,SLOT(Mostrar_Registro()));
 }
 
 MainWindow::~MainWindow()
@@ -35,32 +57,57 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
+void MainWindow::Mostrar_Registro(){
+    ui->Ventanas->setCurrentIndex(0);
+}
+
 void MainWindow::Cerrar(){
     this->hide();
 }
 
 void MainWindow::Ingresar(){
-    User* user = windP.main_instance->getUserByEmail(ui->txtEmail->text().toStdString());
 
-    if (user == nullptr)
-    {
-        ui->txtPassword->setText("");
 
-        ui->lblerror->setStyleSheet("QLabel { color : red; }");
+    for(int i=0;i<lverif.size();i++){
 
-        ui->lblerror->setText("¡EL USUARIO INGRESADO NO EXISTE!");
+        QString CSCll = "";
 
-        ui->lblerror->show();
 
-        return;
+        for(int j=1;j < lverif[i].get_email().size()-1;j++){
+            CSCll = CSCll+lverif[i].get_email()[j];
+        }
+
+
+        if(CSCll == ui->leCorreo->text()){
+            windP.show();
+            Cerrar();
+
+            QString NSCll = "";
+
+
+            for(int j=1;j < lverif[i].get_fullname().size()-1;j++){
+                NSCll = NSCll+lverif[i].get_fullname()[j];
+            }
+
+            windP.Unombre = &NSCll;
+
+            windP.cambiar_nombre();
+
+            return;
+        }
+        else{
+            ui->lblerror->show();
+        }
+
     }
 
-    if (ui->txtEmail->text().toStdString() == user->email)
-    {
-        if (ui->txtPassword->text().toStdString() == user->password)
-        {
-            nombre = ui->txtEmail->text();
-            apellido = ui->txtEmail->text();
+
+
+    /*
+    if(ui->leContra->text() == contra ){
+        if(ui->leApellido->text()!="" && ui->leNombre->text()!=""){
+            nombre = ui->leNombre->text();
+            apellido = ui->leApellido->text();
 
             windP.Unombre = &nombre;
             windP.Uapellido = &apellido;
@@ -70,20 +117,22 @@ void MainWindow::Ingresar(){
             windP.show();
 
             Cerrar();
-        }
-        else
-        {
-            ui->txtPassword->setText("");
-
-            error_contra--;
-            if(error_contra==0) this->close();
-
-            ui->lblerror->setStyleSheet("QLabel { color : red; }");
-
-            ui->lblerror->setText("CONTRASEÑA INCORRECTA, VUELVA A INTENTARLO TIENE "+ QString::number(error_contra) +" INTENTOS");
-
-            ui->lblerror->show();
-        }
     }
+
+
+    } else {
+        ui->leContra->setText("");
+
+        error_contra--;
+        if(error_contra==0) this->close();
+
+        ui->lblerror->setStyleSheet("QLabel { color : red; }");
+
+        ui->lblerror->setText("CONTRASEÑA INCORRECTA, VUELVA A INTENTARLO TIENE "+ QString::number(error_contra) +" INTENTOS");
+
+        ui->lblerror->show();
+    }*/
+
+
 }
 

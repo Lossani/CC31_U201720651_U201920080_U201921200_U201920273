@@ -10,6 +10,12 @@
     <height>720</height>
    </rect>
   </property>
+  <property name="sizePolicy">
+   <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+    <horstretch>0</horstretch>
+    <verstretch>0</verstretch>
+   </sizepolicy>
+  </property>
   <property name="minimumSize">
    <size>
     <width>1280</width>
@@ -27,7 +33,7 @@
   </property>
   <property name="windowIcon">
    <iconset>
-    <normaloff>D:/UPC/CICLO 3/Algoritmos y estructura de datos/Semana 7/logo_icon.ico</normaloff>D:/UPC/CICLO 3/Algoritmos y estructura de datos/Semana 7/logo_icon.ico</iconset>
+    <normaloff>../../../../UPC/CICLO 3/Algoritmos y estructura de datos/Semana 7/logo_icon.ico</normaloff>../../../../UPC/CICLO 3/Algoritmos y estructura de datos/Semana 7/logo_icon.ico</iconset>
   </property>
   <property name="styleSheet">
    <string notr="true">color: rgb(255, 255, 255);
@@ -44,11 +50,20 @@ font: 14pt &quot;Comic Sans MS&quot;;</string>
       <height>271</height>
      </rect>
     </property>
+    <property name="font">
+     <font>
+      <family>Courier</family>
+      <pointsize>8</pointsize>
+      <weight>50</weight>
+      <italic>false</italic>
+      <bold>false</bold>
+     </font>
+    </property>
     <property name="styleSheet">
      <string notr="true">color: rgb(255, 255, 255);
 background-color: rgb(28, 44, 58);
 border-top-color: rgb(25, 39, 52);
-font: 9pt &quot;Arial&quot;;</string>
+font: 8pt &quot;Courier&quot;;</string>
     </property>
     <property name="frameShape">
      <enum>QFrame::Box</enum>
@@ -137,7 +152,7 @@ color: rgb(255, 255, 255);</string>
      <string/>
     </property>
     <property name="pixmap">
-     <pixmap resource="Imagenes.qrc">:/D:/UPC/CICLO 3/Algoritmos y estructura de datos/TP/Usuario.png</pixmap>
+     <pixmap>:/D:/UPC/CICLO 3/Algoritmos y estructura de datos/TP/Usuario.png</pixmap>
     </property>
     <property name="scaledContents">
      <bool>true</bool>
@@ -328,24 +343,6 @@ color: rgb(255, 255, 255);</string>
      <string>Agregar</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="btnAcLC">
-    <property name="geometry">
-     <rect>
-      <x>1060</x>
-      <y>650</y>
-      <width>191</width>
-      <height>23</height>
-     </rect>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">font: 10pt &quot;Arial&quot;;
-background-color: rgb(128, 183, 128);
-color: rgb(255, 255, 255);</string>
-    </property>
-    <property name="text">
-     <string>Actualizar Lista de Contactos</string>
-    </property>
-   </widget>
    <widget class="QLabel" name="label">
     <property name="geometry">
      <rect>
@@ -482,7 +479,7 @@ color: rgb(255, 255, 255);</string>
     <property name="geometry">
      <rect>
       <x>930</x>
-      <y>320</y>
+      <y>310</y>
       <width>171</width>
       <height>16</height>
      </rect>
@@ -538,6 +535,86 @@ color: rgb(255, 255, 255);</string>
      <string/>
     </property>
    </widget>
+   <widget class="QPushButton" name="BCnom">
+    <property name="geometry">
+     <rect>
+      <x>1050</x>
+      <y>650</y>
+      <width>61</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Arial</family>
+      <pointsize>10</pointsize>
+      <weight>50</weight>
+      <italic>false</italic>
+      <bold>false</bold>
+      <underline>false</underline>
+     </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">font: 10pt &quot;Arial&quot;;
+background-color: rgb(128, 183, 128);
+color: rgb(255, 255, 255);</string>
+    </property>
+    <property name="text">
+     <string>Nombre</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="BCnum">
+    <property name="geometry">
+     <rect>
+      <x>1120</x>
+      <y>650</y>
+      <width>61</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">font: 10pt &quot;Arial&quot;;
+background-color: rgb(128, 183, 128);
+color: rgb(255, 255, 255);</string>
+    </property>
+    <property name="text">
+     <string>Numero</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="BCapod">
+    <property name="geometry">
+     <rect>
+      <x>1190</x>
+      <y>650</y>
+      <width>61</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">font: 10pt &quot;Arial&quot;;
+background-color: rgb(128, 183, 128);
+color: rgb(255, 255, 255);</string>
+    </property>
+    <property name="text">
+     <string>Apodo</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_10">
+    <property name="geometry">
+     <rect>
+      <x>1050</x>
+      <y>620</y>
+      <width>201</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">font: 14pt &quot;Comic Sans MS&quot;;</string>
+    </property>
+    <property name="text">
+     <string>Ordenar por:</string>
+    </property>
+   </widget>
    <zorder>label_9</zorder>
    <zorder>listWidgetCont</zorder>
    <zorder>listWidgetPubli</zorder>
@@ -551,7 +628,6 @@ color: rgb(255, 255, 255);</string>
    <zorder>leTag</zorder>
    <zorder>btnPublicar</zorder>
    <zorder>btnAgregar</zorder>
-   <zorder>btnAcLC</zorder>
    <zorder>label</zorder>
    <zorder>label_2</zorder>
    <zorder>label_3</zorder>
@@ -560,6 +636,10 @@ color: rgb(255, 255, 255);</string>
    <zorder>label_6</zorder>
    <zorder>label_7</zorder>
    <zorder>label_8</zorder>
+   <zorder>BCnom</zorder>
+   <zorder>BCnum</zorder>
+   <zorder>BCapod</zorder>
+   <zorder>label_10</zorder>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
@@ -579,15 +659,12 @@ color: rgb(255, 255, 255);</string>
   <tabstop>tePubli</tabstop>
   <tabstop>btnPublicar</tabstop>
   <tabstop>btnAgregar</tabstop>
-  <tabstop>btnAcLC</tabstop>
   <tabstop>listWidgetPubli</tabstop>
   <tabstop>listWidgetTend</tabstop>
   <tabstop>listWidgetGroup</tabstop>
   <tabstop>btnCamFoto</tabstop>
   <tabstop>listWidgetCont</tabstop>
  </tabstops>
- <resources>
-  <include location="Imagenes.qrc"/>
- </resources>
+ <resources/>
  <connections/>
 </ui>

@@ -35,6 +35,8 @@ public:
         return len == 0;
     }
 
+
+
     void addFirst (QString elem) {
         head = new Node(elem, head);
         ++len;
