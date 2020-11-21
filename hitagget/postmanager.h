@@ -40,6 +40,8 @@ public:
     list<Post*> getPostsByPubDate(bool asc, int limit);
     list<Post*> getPostsByLikes(bool asc, int limit);
 
+    list<Post*> getPostsThatContainsString(string value, bool asc, int limit);
+
     const Post* getPostById(int postId);
 
     list<Post*> getPostsByNumInteractions(bool asc, int limit);

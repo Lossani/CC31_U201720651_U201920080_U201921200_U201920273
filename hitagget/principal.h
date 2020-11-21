@@ -79,6 +79,10 @@ private slots:
 
     void on_cb_may_men_currentIndexChanged(int index);
 
+    void on_txtSearchBox_textChanged(const QString &arg1);
+
+    void on_txtSearchBox_returnPressed();
+
 private:
     void add_item_to_list_widget(QListWidget *list, Post individual_post, function<void(int)> show_post);
     Ui::Principal *ui;

@@ -90,6 +90,9 @@ void Principal::show_all_posts(int op, bool inv)
     case 2:
         posts = main_instance->getPostsByLikes(inv, 50);
         break;
+    case 3:
+        posts = main_instance->getPostsThatContainsString(ui->txtSearchBox->text().toStdString(), inv, 50);
+        break;
     default:
         posts = main_instance->getPostsByNumInteractions(inv, 50);
         break;
@@ -433,8 +436,6 @@ Principal::Principal(QWidget *parent) :
     connect(ui->BCnom,SIGNAL(released()),this,SLOT(act_cont_ANom()));
     connect(ui->BCnum,SIGNAL(released()),this,SLOT(act_cont_ANum()));
     connect(ui->BCapod,SIGNAL(released()),this,SLOT(act_cont_AAp()));
-
-
 }
 
 
@@ -633,7 +634,6 @@ void Principal::act_cont_AAp(){
 
 }
 
-
 void Principal::act_cont_ANom(){
     ui->listWidgetCont->clear();
     if(invertir){
@@ -681,4 +681,14 @@ void Principal::on_cb_men_may_currentIndexChanged(int index)
 void Principal::on_cb_may_men_currentIndexChanged(int index)
 {
     show_all_posts(index, false);
+}
+
+void Principal::on_txtSearchBox_textChanged(const QString &arg1)
+{
+
+}
+
+void Principal::on_txtSearchBox_returnPressed()
+{
+    show_all_posts(3, true);
 }

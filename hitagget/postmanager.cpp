@@ -247,6 +247,18 @@ list<Post *> PostManager::getPostsByLikes(bool asc, int limit)
         return avl_posts_by_numLikes->postOrder(limit);
 }
 
+list<Post *> PostManager::getPostsThatContainsString(string value, bool asc, int limit)
+{
+    if (limit <= 0)
+        return list<Post*>();
+
+    if (asc)
+        return avl_posts_by_title->findAllStringsContains(value, asc, limit);
+    else
+        return avl_posts_by_title->findAllStringsContains(value, asc, limit);
+
+}
+
 const Post* PostManager::getPostById(int postId)
 {
     return avl_posts_by_id->find(postId);

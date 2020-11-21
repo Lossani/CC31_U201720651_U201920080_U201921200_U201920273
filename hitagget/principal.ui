@@ -665,6 +665,21 @@ color: rgb(255, 255, 255);</string>
      </property>
     </item>
    </widget>
+   <widget class="QLineEdit" name="txtSearchBox">
+    <property name="geometry">
+     <rect>
+      <x>680</x>
+      <y>10</y>
+      <width>231</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: rgb(255, 255, 255);
+color: rgb(35, 182, 111);
+font: 8pt &quot;Comic Sans MS&quot;;</string>
+    </property>
+   </widget>
    <zorder>label_9</zorder>
    <zorder>listWidgetCont</zorder>
    <zorder>listWidgetPubli</zorder>
@@ -692,6 +707,7 @@ color: rgb(255, 255, 255);</string>
    <zorder>label_10</zorder>
    <zorder>cb_may_men</zorder>
    <zorder>cb_men_may</zorder>
+   <zorder>txtSearchBox</zorder>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
@@ -699,7 +715,7 @@ color: rgb(255, 255, 255);</string>
      <x>0</x>
      <y>0</y>
      <width>1280</width>
-     <height>31</height>
+     <height>37</height>
     </rect>
    </property>
   </widget>

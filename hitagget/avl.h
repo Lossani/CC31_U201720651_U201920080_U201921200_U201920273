@@ -43,6 +43,8 @@ public:
     const T find(R value);
     list<T> findAll(R value);
 
+    list<T> findAllStringsContains(string value, bool asc, int limit);
+
     list<T> inOrder();
     list<T> postOrder();
     list<T> inOrder(int limit);
@@ -68,6 +70,9 @@ private:
     void postOrder(list<T>& returnValues, Node*& node);
     void inOrder(list<T>& returnValues, Node*& node, int limit);
     void postOrder(list<T>& returnValues, Node*& node, int limit);
+
+    void findAllStringsContainsInOrder(list<T>& returnValues, Node*& node, string value, int limit);
+    void findAllStringsContainsPostOrder(list<T>& returnValues, Node*& node, string value, int limit);
 
     Node* nullNode = nullptr;
 };
@@ -158,6 +163,23 @@ list<T> AVL<T, R, NONE>::findAll(R value)
 
     return returnValues;
 }
+
+template <typename T, typename R, T NONE>
+list<T> AVL<T, R, NONE>::findAllStringsContains(string value, bool asc, int limit)
+{
+    if (typeid(R) != typeid(string))
+        return list<T>();
+
+    list<T> returnValues;
+
+    if (asc)
+        findAllStringsContainsInOrder(returnValues, root, value, limit);
+    else
+        findAllStringsContainsPostOrder(returnValues, root, value, limit);
+
+    return returnValues;
+}
+
 
 template <typename T, typename R, T NONE>
 list<T> AVL<T, R, NONE>::inOrder()
@@ -414,7 +436,58 @@ void AVL<T, R, NONE>::postOrder(list<T>& returnValues, Node*& node, int limit)
     postOrder(returnValues, node->rightChild, limit);
     if (returnValues.size() < limit)
         returnValues.push_back(node->element);
+    else
+        return;
     postOrder(returnValues, node->leftChild, limit);
 }
+
+template <typename T, typename R, T NONE>
+void AVL<T, R, NONE>::findAllStringsContainsInOrder(list<T>& returnValues, Node*& node, string value, int limit)
+{
+    if (node == nullptr)
+        return;
+
+    if (returnValues.size() >= limit)
+        return;
+
+    findAllStringsContainsInOrder(returnValues, node->leftChild, value, limit);
+
+    if (returnValues.size() < limit)
+    {
+        if (comparator_function(node->element).find(value) != string::npos)
+        {
+            returnValues.push_back(node->element);
+        }
+    }
+    else
+        return;
+
+    findAllStringsContainsInOrder(returnValues, node->rightChild, value, limit);
+}
+
+template <typename T, typename R, T NONE>
+void AVL<T, R, NONE>::findAllStringsContainsPostOrder(list<T>& returnValues, Node*& node, string value, int limit)
+{
+    if (node == nullptr)
+        return;
+
+    if (returnValues.size() >= limit)
+        return;
+
+    findAllStringsContainsPostOrder(returnValues, node->rightChild, value, limit);
+
+    if (returnValues.size() < limit)
+    {
+        if (comparator_function(node->element).find(value) != string::npos)
+        {
+            returnValues.push_back(node->element);
+        }
+    }
+    else
+        return;
+
+    findAllStringsContainsPostOrder(returnValues, node->leftChild, value, limit);
+}
+
 
 #endif // AVL_H
