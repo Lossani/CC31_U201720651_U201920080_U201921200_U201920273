@@ -252,7 +252,7 @@ font: 9pt &quot;Arial&quot;;</string>
     <property name="geometry">
      <rect>
       <x>330</x>
-      <y>550</y>
+      <y>570</y>
       <width>581</width>
       <height>71</height>
      </rect>
@@ -280,7 +280,7 @@ p, li { white-space: pre-wrap; }
     <property name="geometry">
      <rect>
       <x>330</x>
-      <y>520</y>
+      <y>540</y>
       <width>231</width>
       <height>20</height>
      </rect>
@@ -295,7 +295,7 @@ font: 8pt &quot;Comic Sans MS&quot;;</string>
     <property name="geometry">
      <rect>
       <x>800</x>
-      <y>520</y>
+      <y>540</y>
       <width>113</width>
       <height>20</height>
      </rect>
@@ -347,7 +347,7 @@ color: rgb(255, 255, 255);</string>
     <property name="geometry">
      <rect>
       <x>330</x>
-      <y>450</y>
+      <y>500</y>
       <width>241</width>
       <height>31</height>
      </rect>
@@ -368,9 +368,9 @@ color: rgb(255, 255, 255);</string>
    <widget class="QLabel" name="label_2">
     <property name="geometry">
      <rect>
-      <x>330</x>
-      <y>500</y>
-      <width>171</width>
+      <x>770</x>
+      <y>450</y>
+      <width>131</width>
       <height>16</height>
      </rect>
     </property>
@@ -384,14 +384,14 @@ color: rgb(255, 255, 255);</string>
      </font>
     </property>
     <property name="text">
-     <string>Titulo:</string>
+     <string>Menos:</string>
     </property>
    </widget>
    <widget class="QLabel" name="label_3">
     <property name="geometry">
      <rect>
-      <x>800</x>
-      <y>500</y>
+      <x>590</x>
+      <y>450</y>
       <width>71</width>
       <height>16</height>
      </rect>
@@ -406,14 +406,14 @@ color: rgb(255, 255, 255);</string>
      </font>
     </property>
     <property name="text">
-     <string>Tema:</string>
+     <string>Más:</string>
     </property>
    </widget>
    <widget class="QLabel" name="label_4">
     <property name="geometry">
      <rect>
       <x>780</x>
-      <y>520</y>
+      <y>540</y>
       <width>21</width>
       <height>16</height>
      </rect>
@@ -615,6 +615,56 @@ color: rgb(255, 255, 255);</string>
      <string>Ordenar por:</string>
     </property>
    </widget>
+   <widget class="QComboBox" name="cb_may_men">
+    <property name="geometry">
+     <rect>
+      <x>590</x>
+      <y>470</y>
+      <width>141</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <item>
+     <property name="text">
+      <string>Interaciones</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>Fecha</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>Likes</string>
+     </property>
+    </item>
+   </widget>
+   <widget class="QComboBox" name="cb_men_may">
+    <property name="geometry">
+     <rect>
+      <x>770</x>
+      <y>470</y>
+      <width>141</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <item>
+     <property name="text">
+      <string>Interaciones</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>Fecha</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>Likes</string>
+     </property>
+    </item>
+   </widget>
    <zorder>label_9</zorder>
    <zorder>listWidgetCont</zorder>
    <zorder>listWidgetPubli</zorder>
@@ -640,6 +690,8 @@ color: rgb(255, 255, 255);</string>
    <zorder>BCnum</zorder>
    <zorder>BCapod</zorder>
    <zorder>label_10</zorder>
+   <zorder>cb_may_men</zorder>
+   <zorder>cb_men_may</zorder>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
@@ -647,7 +699,7 @@ color: rgb(255, 255, 255);</string>
      <x>0</x>
      <y>0</y>
      <width>1280</width>
-     <height>32</height>
+     <height>31</height>
     </rect>
    </property>
   </widget>

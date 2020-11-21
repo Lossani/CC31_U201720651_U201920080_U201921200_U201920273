@@ -217,17 +217,50 @@ list<Post *> PostManager::getAllPostsByLikes(bool asc)
         return avl_posts_by_numLikes->postOrder();
 }
 
-const Post* PostManager::getPostById(int postId)
-{
-    return avl_posts_by_id->find(postId);
-}
-
-list<Post *> PostManager::getPostsByNumInteractions(bool asc)
+list<Post *> PostManager::getAllPostsByNumInteractions(bool asc)
 {
     if (asc)
         return avl_posts_by_numInteractions->inOrder();
     else
         return avl_posts_by_numInteractions->postOrder();
+}
+
+list<Post *> PostManager::getPostsByPubDate(bool asc, int limit)
+{
+    if (limit <= 0)
+        return list<Post*>();
+
+    if (asc)
+        return avl_posts_by_pubDate->inOrder(limit);
+    else
+        return avl_posts_by_pubDate->postOrder(limit);
+}
+
+list<Post *> PostManager::getPostsByLikes(bool asc, int limit)
+{
+    if (limit <= 0)
+        return list<Post*>();
+
+    if (asc)
+        return avl_posts_by_numLikes->inOrder(limit);
+    else
+        return avl_posts_by_numLikes->postOrder(limit);
+}
+
+const Post* PostManager::getPostById(int postId)
+{
+    return avl_posts_by_id->find(postId);
+}
+
+list<Post *> PostManager::getPostsByNumInteractions(bool asc, int limit)
+{
+    if (limit <= 0)
+        return list<Post*>();
+
+    if (asc)
+        return avl_posts_by_numInteractions->inOrder(limit);
+    else
+        return avl_posts_by_numInteractions->postOrder(limit);
 }
 /*
 void PostManager::add_comment_to_post(int post_id, int author_id, char* comment)

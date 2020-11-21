@@ -35,10 +35,14 @@ public:
 
     list<Post*> getAllPostsByPubDate(bool asc);
     list<Post*> getAllPostsByLikes(bool asc);
+    list<Post *> getAllPostsByNumInteractions(bool asc);
+
+    list<Post*> getPostsByPubDate(bool asc, int limit);
+    list<Post*> getPostsByLikes(bool asc, int limit);
 
     const Post* getPostById(int postId);
 
-    list<Post*> getPostsByNumInteractions(bool asc);
+    list<Post*> getPostsByNumInteractions(bool asc, int limit);
    // void add_comment_to_post(int post_id, int comment_author_id, string comment);
     //void delete_comment(int comment_id);
     //list<PostComment> get_post_comments(int post_id);

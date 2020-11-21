@@ -45,6 +45,8 @@ public:
 
     list<T> inOrder();
     list<T> postOrder();
+    list<T> inOrder(int limit);
+    list<T> postOrder(int limit);
 
 private:
     void destroy(Node*& node);
@@ -64,6 +66,8 @@ private:
 
     void inOrder(list<T>& returnValues, Node*& node);
     void postOrder(list<T>& returnValues, Node*& node);
+    void inOrder(list<T>& returnValues, Node*& node, int limit);
+    void postOrder(list<T>& returnValues, Node*& node, int limit);
 
     Node* nullNode = nullptr;
 };
@@ -169,6 +173,24 @@ list<T> AVL<T, R, NONE>::postOrder()
 {
     list<T> returnValues;
     postOrder(returnValues, root);
+
+    return returnValues;
+}
+
+template <typename T, typename R, T NONE>
+list<T> AVL<T, R, NONE>::inOrder(int limit)
+{
+    list<T> returnValues;
+    inOrder(returnValues, root, limit);
+
+    return returnValues;
+}
+
+template <typename T, typename R, T NONE>
+list<T> AVL<T, R, NONE>::postOrder(int limit)
+{
+    list<T> returnValues;
+    postOrder(returnValues, root, limit);
 
     return returnValues;
 }
@@ -361,6 +383,38 @@ void AVL<T, R, NONE>::postOrder(list<T>& returnValues, Node*& node)
     postOrder(returnValues, node->rightChild);
     returnValues.push_back(node->element);
     postOrder(returnValues, node->leftChild);
+}
+
+template <typename T, typename R, T NONE>
+void AVL<T, R, NONE>::inOrder(list<T>& returnValues, Node*& node, int limit)
+{
+    if (node == nullptr)
+        return;
+
+    if (returnValues.size() >= limit)
+        return;
+
+    inOrder(returnValues, node->leftChild, limit);
+    if (returnValues.size() < limit)
+        returnValues.push_back(node->element);
+    else
+        return;
+    inOrder(returnValues, node->rightChild, limit);
+}
+
+template <typename T, typename R, T NONE>
+void AVL<T, R, NONE>::postOrder(list<T>& returnValues, Node*& node, int limit)
+{
+    if(node == nullptr)
+        return;
+
+    if (returnValues.size() >= limit)
+        return;
+
+    postOrder(returnValues, node->rightChild, limit);
+    if (returnValues.size() < limit)
+        returnValues.push_back(node->element);
+    postOrder(returnValues, node->leftChild, limit);
 }
 
 #endif // AVL_H

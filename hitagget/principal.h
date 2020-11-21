@@ -61,7 +61,7 @@ public:
 
 public:
     Hitagget *main_instance = nullptr;
-    void show_all_posts();
+    void show_all_posts(int op, bool inv);
     void act_tend();
     void cambiar_nombre();
 
@@ -74,6 +74,10 @@ private slots:
     void cambiar_imagen();
     void new_publi();
     void add_contact();
+
+    void on_cb_men_may_currentIndexChanged(int index);
+
+    void on_cb_may_men_currentIndexChanged(int index);
 
 private:
     void add_item_to_list_widget(QListWidget *list, Post individual_post, function<void(int)> show_post);

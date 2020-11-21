@@ -12,16 +12,22 @@
 
 bool invertir = false;
 
-void Principal::show_all_posts()
+void Principal::show_all_posts(int op, bool inv)
 {
     function<void(int)> show_post = [this](int id)
     {
         Post post_to_show = *main_instance->getPostById(id);
         list<PostComment*> comments = main_instance->getPostComments(id);
         QMessageBox msg;
-        msg.setText(to_string(id).c_str());
-        msg.exec();
+
+            msg.setText(to_string(id).c_str());
+            msg.exec();
             msg.setText(to_string(post_to_show.numInteractions).c_str());
+            msg.exec();
+            msg.setText(to_string(post_to_show.numLikes).c_str());
+            msg.exec();
+            msg.setText(post_to_show.pubDate.c_str());
+
             msg.exec();
 
         if (post_to_show.id != -1)
@@ -68,18 +74,41 @@ void Principal::show_all_posts()
     ui->listWidgetPubli->clear();
     //ui->listWidgetPubli->clear();
 
-    list<Post*> posts = main_instance->getPostsByNumInteractions(false);
-    int maxPostsToShow = 50;
+    //0 - INT
+    //1 - Fecha
+    //2 - LIKES
+
+    list<Post*> posts;
+
+    switch(op){
+    case 0:
+        posts = main_instance->getPostsByNumInteractions(inv, 50);
+    break;
+    case 1:
+        posts = main_instance->getPostsByPubDate(inv, 50);
+        break;
+    case 2:
+        posts = main_instance->getPostsByLikes(inv, 50);
+        break;
+    default:
+        posts = main_instance->getPostsByNumInteractions(inv, 50);
+        break;
+    }
+
+
+
+
+    //int maxPostsToShow = 50;
 
     for (Post* post : posts)
     {
          //ui->listWidgetGroup->addItem(post.content.c_str());
         add_item_to_list_widget(ui->listWidgetPubli, *post, show_post);
 
-        maxPostsToShow--;
+        //maxPostsToShow--;
 
-        if (maxPostsToShow == 0)
-            break;
+        //if (maxPostsToShow == 0)
+        //   break;
         /*
         add_item_to_list_widget(ui->listPublications, post, false, false, show_post, edit_post, delete_post);
 
@@ -93,6 +122,7 @@ void Principal::show_all_posts()
 
 void Principal::add_item_to_list_widget(QListWidget *list, Post individual_post, function<void(int)> show_post)
 {
+
     QListWidgetItem *item = new QListWidgetItem();
     list->addItem(item);
 
@@ -128,7 +158,7 @@ Principal::Principal(QWidget *parent) :
 
     main_instance = new Hitagget();
 
-    show_all_posts();
+    show_all_posts(0, false);
 
     lst = new ListaT();
 
@@ -641,4 +671,14 @@ void Principal::add_contact(){
 Principal::~Principal()
 {
     delete ui;
+}
+
+void Principal::on_cb_men_may_currentIndexChanged(int index)
+{
+    show_all_posts(index, true);
+}
+
+void Principal::on_cb_may_men_currentIndexChanged(int index)
+{
+    show_all_posts(index, false);
 }
