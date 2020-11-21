@@ -7,7 +7,7 @@
 #include <QFileDialog>
 #include <QFile>
 #include <QTextCodec>
-
+#include <QDate>
 #include <QRandomGenerator>
 
 bool invertir = false;
@@ -16,12 +16,18 @@ void Principal::show_all_posts()
 {
     function<void(int)> show_post = [this](int id)
     {
-        Post post_to_show = *main_instance->getPost(id);
+        Post post_to_show = *main_instance->getPostById(id);
+        list<PostComment*> comments = main_instance->getPostComments(id);
+        QMessageBox msg;
+        msg.setText(to_string(id).c_str());
+        msg.exec();
+            msg.setText(to_string(main_instance->getNumInteractionsOfPost(id)).c_str());
+            msg.exec();
 
         if (post_to_show.id != -1)
         {
             ViewPost *view_post_dialog = new ViewPost();
-            view_post_dialog->set_current_post(post_to_show);
+            view_post_dialog->set_current_post(post_to_show, comments);
             view_post_dialog->exec();
         }
     };
@@ -62,7 +68,7 @@ void Principal::show_all_posts()
     ui->listWidgetPubli->clear();
     //ui->listWidgetPubli->clear();
 
-    list<Post*> posts = main_instance->getAllPosts();
+    list<Post*> posts = main_instance->getAllPostsByLikes(false);
     int maxPostsToShow = 50;
 
     for (Post* post : posts)
@@ -460,8 +466,9 @@ void Principal::act_tend(){
 
 
 void Principal::cambiar_nombre(){
+
     ui->lblUsuario->clear();
-    ui->lblUsuario->setText("Usuario:\n" + *Unombre);
+    ui->lblUsuario->setText("Usuario:\n" + *Unombre + "\n" + *UfechaR);
 }
 
 void Principal::cambiar_imagen(){

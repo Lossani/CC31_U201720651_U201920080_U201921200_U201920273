@@ -22,8 +22,10 @@ UserManager::UserManager() : ListController<User*, int, string>(
         file << element->registerDate << endl;
         file << element->password;
     },
-    [](ifstream& file)
+    [this](ifstream& file)
     {
+        avl_users_by_email = new AVL<User*, string, nullptr>([](User* element) { return element->email; });
+
         list<User*> retrievedElements;
 
         User* currentUser;
@@ -58,6 +60,8 @@ UserManager::UserManager() : ListController<User*, int, string>(
             //msg.setText(to_string(currentUser->email.size()).c_str());
             //msg.exec();
             retrievedElements.push_back(currentUser);
+
+            avl_users_by_email->add(currentUser);
         }
 
         return retrievedElements;
@@ -80,6 +84,11 @@ UserManager::UserManager() : ListController<User*, int, string>(
     {
         return user->email;
     };
+
+    for (User* user : get_all_elements())
+    {
+        this->avl_users_by_email->add(user);
+    }
 }
 
 UserManager::~UserManager()
@@ -110,12 +119,13 @@ void UserManager::updateUser(User* user)
     update_element(user);
 }
 
-User* UserManager:: getUserByEmail(string email)
+const User* UserManager:: getUserByEmail(string email)
 {
-    return get_element(email_field_comparator, email);
+    return avl_users_by_email->find(email);
+    //return get_element(email_field_comparator, email);
 }
 
-User* UserManager:: getUserById(int id)
+const User* UserManager:: getUserById(int id)
 {
     return get_element(id);
 }

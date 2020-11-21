@@ -3,6 +3,7 @@
 #include <iostream>
 #include "post.h"
 #include "listcontroller.h"
+#include "avl.h"
 //#include "commentmanager.h"
 #include <list>
 
@@ -12,6 +13,12 @@ class PostManager : private ListController<Post*, int, int>
 {
 private:
     //CommentManager all_comments;
+    AVL<Post*, int, nullptr>* avl_posts_by_id;
+    AVL<Post*, int, nullptr>* avl_posts_by_authorId;
+    AVL<Post*, string, nullptr>* avl_posts_by_title;
+    AVL<Post*, string, nullptr>*  avl_posts_by_pubDate;
+    AVL<Post*, int, nullptr>* avl_posts_by_numLikes;
+
 public:
     PostManager();
     ~PostManager();
@@ -23,7 +30,11 @@ public:
     void deletePost(int postId);
     list<Post*> getAuthorPosts(int userId);
     list<Post*> getAllPosts();
-    Post* getPost(int postId);
+
+    list<Post*> getAllPostsByPubDate(bool asc);
+    list<Post*> getAllPostsByLikes(bool asc);
+
+    const Post* getPostById(int postId);
    // void add_comment_to_post(int post_id, int comment_author_id, string comment);
     //void delete_comment(int comment_id);
     //list<PostComment> get_post_comments(int post_id);

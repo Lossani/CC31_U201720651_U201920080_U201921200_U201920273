@@ -17,8 +17,9 @@ InteractionManager::InteractionManager() : ListController<PostInteraction*, int,
        file << element->id << endl;
        file << element->authorId << endl;
    },
-   [](ifstream& file)
+   [this](ifstream& file)
    {
+       avl_interactions_by_post_id = new AVL<PostInteraction*, int, nullptr>([](PostInteraction* element) { return element->parentPostId; });
        list<PostInteraction*> retrievedElements;
 
        PostInteraction* currentInteraction;
@@ -40,9 +41,12 @@ InteractionManager::InteractionManager() : ListController<PostInteraction*, int,
 
            currentInteraction->id = i++;
            currentInteraction->authorId = stoi(authorId);
+           currentInteraction->parentPostId = stoi(publicationId);
            currentInteraction->shared = shared == "TRUE" ? true : false;
 
            retrievedElements.push_back(currentInteraction);
+
+           avl_interactions_by_post_id->add(currentInteraction);
        }
 
        return retrievedElements;
@@ -75,15 +79,25 @@ void InteractionManager::addInteraction(int authorId, int postId, bool shared)
 
 list<PostInteraction*> InteractionManager::getPostInteractions(int postId)
 {
-    function<int(PostInteraction*)> field_comparator = [](PostInteraction* interaction)
-    {
-        return interaction->parentPostId;
-    };
-
-    return find_elements(field_comparator, postId);
+    return avl_interactions_by_post_id->findAll(postId);
 }
 
 PostInteraction InteractionManager::getInteraction(int interactionId)
 {
-    get_element(interactionId);
+    return *get_element(interactionId);
+}
+
+int InteractionManager::getNumInteractionsOfPost(int postId)
+{
+    int numInteractions = 0;
+
+    for (PostInteraction* interaction : avl_interactions_by_post_id->findAll(postId))
+    {
+        if (interaction->shared)
+            numInteractions += 2;
+        else
+            numInteractions++;
+    }
+
+    return numInteractions;
 }

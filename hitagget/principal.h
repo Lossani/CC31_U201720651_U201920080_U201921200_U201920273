@@ -51,7 +51,7 @@ public:
     Usuario *usuario;
 
     QString *Unombre;
-    QString *Uapellido;
+    QString *UfechaR;
 
 
     addcontacto ventAC;
@@ -60,6 +60,7 @@ public:
     ~Principal();
 
 public:
+    Hitagget *main_instance = nullptr;
     void show_all_posts();
     void act_tend();
     void cambiar_nombre();
@@ -75,7 +76,6 @@ private slots:
     void add_contact();
 
 private:
-    Hitagget *main_instance = nullptr;
     void add_item_to_list_widget(QListWidget *list, Post individual_post, function<void(int)> show_post);
     Ui::Principal *ui;
 };

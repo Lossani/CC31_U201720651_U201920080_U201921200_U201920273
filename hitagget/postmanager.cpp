@@ -25,8 +25,13 @@ PostManager::PostManager() : ListController<Post*, int, int>(
         file << element->content << endl;
         file << element->title << endl;
     },
-    [](ifstream& file)
+    [this](ifstream& file)
     {
+        avl_posts_by_id = new AVL<Post*, int, nullptr>([](Post* element) { return element->id; });
+        avl_posts_by_authorId = new AVL<Post*, int, nullptr>([](Post* element) { return element->authorId; });
+        avl_posts_by_title = new AVL<Post*, string, nullptr>([](Post* element) { return element->title; });
+        avl_posts_by_pubDate = new AVL<Post*, string, nullptr>([](Post* element) { return element->pubDate; });
+        avl_posts_by_numLikes = new AVL<Post*, int, nullptr>([](Post* element) { return element->numLikes; });
         list<Post*> retrievedElements;
 
         Post* currentPost;
@@ -49,7 +54,13 @@ PostManager::PostManager() : ListController<Post*, int, int>(
             currentPost->authorId = stoi(authorId);
             currentPost->numLikes = stoi(numLikes);
 
-            retrievedElements.push_front(currentPost);
+            retrievedElements.push_back(currentPost);
+
+            avl_posts_by_id->add(currentPost);
+            avl_posts_by_authorId->add(currentPost);
+            avl_posts_by_title->add(currentPost);
+            avl_posts_by_pubDate->add(currentPost);
+            avl_posts_by_numLikes->add(currentPost);
         }
 
         return retrievedElements;
@@ -103,12 +114,14 @@ void PostManager::deletePost(int id)
 
 list<Post*> PostManager::getAuthorPosts(int userId)
 {
-    function<int(Post*)> field_comparator = [](Post* post)
+    /*function<int(Post*)> field_comparator = [](Post* post)
     {
         return post->authorId;
     };
 
-    return find_elements(field_comparator, userId);
+    return find_elements(field_comparator, userId);*/
+
+    return avl_posts_by_authorId->findAll(userId);
 }
 
 /*
@@ -184,9 +197,25 @@ list<Post*> PostManager::getAllPosts()
     return get_all_elements();
 }
 
-Post* PostManager::getPost(int postId)
+list<Post *> PostManager::getAllPostsByPubDate(bool asc)
 {
-    return get_element(postId);
+    if (asc)
+        return avl_posts_by_pubDate->inOrder();
+    else
+        return avl_posts_by_pubDate->postOrder();
+}
+
+list<Post *> PostManager::getAllPostsByLikes(bool asc)
+{
+    if (asc)
+        return avl_posts_by_numLikes->inOrder();
+    else
+        return avl_posts_by_numLikes->postOrder();
+}
+
+const Post* PostManager::getPostById(int postId)
+{
+    return avl_posts_by_id->find(postId);
 }
 /*
 void PostManager::add_comment_to_post(int post_id, int author_id, char* comment)

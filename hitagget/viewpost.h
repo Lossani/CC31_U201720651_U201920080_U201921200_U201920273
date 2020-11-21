@@ -15,7 +15,7 @@ class ViewPost : public QDialog
 public:
     explicit ViewPost(QWidget *parent = nullptr);
     ~ViewPost();
-    void set_current_post(Post post);
+    void set_current_post(Post post, list<PostComment*> postComments);
 
 private:
     Ui::ViewPost *ui;

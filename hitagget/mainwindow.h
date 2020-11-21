@@ -30,6 +30,7 @@ private slots:
     void Cerrar();
     void Ingresar();
     void Mostrar_Registro();
+    void Registrar();
 private:
     Ui::MainWindow *ui;
 };

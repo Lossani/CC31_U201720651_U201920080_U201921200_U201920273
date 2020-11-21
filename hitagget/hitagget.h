@@ -18,6 +18,7 @@ private:
 public:
     Hitagget();
     ~Hitagget();
+
     bool log_in(string email, string password);
     //void log_out();
     bool sign_up(string email, string fullname, string password);
@@ -27,6 +28,8 @@ public:
     //void update_logged_user(string nickname, string email);
 
     list<Post> all_logged_user_posts;
+
+    list<Post*> getPostsByNumInteractions(bool asc);
 };
 
 #endif // HITAGGET_H

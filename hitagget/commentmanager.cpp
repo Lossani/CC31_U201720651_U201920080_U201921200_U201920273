@@ -18,8 +18,9 @@ CommentManager::CommentManager() : ListController<PostComment*, int, int>(
        file << element->authorId << endl;
        file << element->content << endl;
    },
-   [](ifstream& file)
+   [this](ifstream& file)
    {
+       avl_comments_by_post_id = new AVL<PostComment*, int, nullptr>([] (PostComment* element) { return element->parentPostId; });
        list<PostComment*> retrievedElements;
 
        PostComment* currentComment;
@@ -43,6 +44,8 @@ CommentManager::CommentManager() : ListController<PostComment*, int, int>(
            currentComment->parentPostId = stoi(publicationId);
 
            retrievedElements.push_back(currentComment);
+
+           avl_comments_by_post_id->add(currentComment);
        }
 
        return retrievedElements;
@@ -90,12 +93,7 @@ void CommentManager::deleteComment(int id)
 
 list<PostComment*> CommentManager::getPostComments(int postId)
 {
-    function<int(PostComment*)> field_comparator = [](PostComment* comment)
-    {
-        return comment->parentPostId;
-    };
-
-    return find_elements(field_comparator, postId);
+    return avl_comments_by_post_id->findAll(postId);
 }
 
 PostComment CommentManager::getComment(int commentId)
