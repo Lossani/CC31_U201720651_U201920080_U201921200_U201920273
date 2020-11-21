@@ -4,7 +4,7 @@
 
 using namespace std;
 
-Hitagget::Hitagget() : UserManager(), PostManager(), CommentManager(), InteractionManager()
+Hitagget::Hitagget() : UserManager(), PostManager(), CommentManager()
 {
 
 }
@@ -57,17 +57,6 @@ User Hitagget::get_logged_user()
     return logged_user;
 }
 
-list<Post *> Hitagget::getPostsByNumInteractions(bool asc)
-{
-    if (asc)
-    {
-
-    }
-    else
-    {
-
-    }
-}
 
 /*
 void Hitagget::update_logged_user(string fullname, string email)

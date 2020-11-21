@@ -21,7 +21,7 @@ void Principal::show_all_posts()
         QMessageBox msg;
         msg.setText(to_string(id).c_str());
         msg.exec();
-            msg.setText(to_string(main_instance->getNumInteractionsOfPost(id)).c_str());
+            msg.setText(to_string(post_to_show.numInteractions).c_str());
             msg.exec();
 
         if (post_to_show.id != -1)
@@ -68,7 +68,7 @@ void Principal::show_all_posts()
     ui->listWidgetPubli->clear();
     //ui->listWidgetPubli->clear();
 
-    list<Post*> posts = main_instance->getAllPostsByLikes(false);
+    list<Post*> posts = main_instance->getPostsByNumInteractions(false);
     int maxPostsToShow = 50;
 
     for (Post* post : posts)

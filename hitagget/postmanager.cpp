@@ -6,7 +6,7 @@
 
 using namespace std;
 
-PostManager::PostManager() : ListController<Post*, int, int>(
+PostManager::PostManager() : InteractionManager(), ListController<Post*, int, int>(
     [](Post* post)
     {
         return post->id;
@@ -32,6 +32,8 @@ PostManager::PostManager() : ListController<Post*, int, int>(
         avl_posts_by_title = new AVL<Post*, string, nullptr>([](Post* element) { return element->title; });
         avl_posts_by_pubDate = new AVL<Post*, string, nullptr>([](Post* element) { return element->pubDate; });
         avl_posts_by_numLikes = new AVL<Post*, int, nullptr>([](Post* element) { return element->numLikes; });
+        avl_posts_by_numInteractions = new AVL<Post*, int, nullptr>([](Post* element) { return element->numInteractions; });
+
         list<Post*> retrievedElements;
 
         Post* currentPost;
@@ -53,6 +55,7 @@ PostManager::PostManager() : ListController<Post*, int, int>(
             currentPost->id = stoi(id);
             currentPost->authorId = stoi(authorId);
             currentPost->numLikes = stoi(numLikes);
+            currentPost->numInteractions = getNumInteractionsOfPost(stoi(id));
 
             retrievedElements.push_back(currentPost);
 
@@ -61,6 +64,7 @@ PostManager::PostManager() : ListController<Post*, int, int>(
             avl_posts_by_title->add(currentPost);
             avl_posts_by_pubDate->add(currentPost);
             avl_posts_by_numLikes->add(currentPost);
+            avl_posts_by_numInteractions->add(currentPost);
         }
 
         return retrievedElements;
@@ -93,23 +97,23 @@ void PostManager::addPost(int authorId, string title, string content)
     time_t now = time(0);
     newPost->pubDate = ctime(&now);
     newPost->pubDate = newPost->pubDate.erase(newPost->pubDate.find_last_not_of("\t\n\v\f\r ") + 1);
-    add_element(newPost);
+    ListController<Post*, int, int>::add_element(newPost);
 }
 
 void PostManager::addPost(Post* post)
 {
     post->id = time(0);
-    add_element(post);
+    ListController<Post*, int, int>::add_element(post);
 }
 
 void PostManager::updatePost(Post* post)
 {
-    update_element(post);
+    ListController<Post*, int, int>::update_element(post);
 }
 
 void PostManager::deletePost(int id)
 {
-    delete_element(id);
+    ListController<Post*, int, int>::delete_element(id);
 }
 
 list<Post*> PostManager::getAuthorPosts(int userId)
@@ -194,7 +198,7 @@ void PostManager::retrieve_posts()
 */
 list<Post*> PostManager::getAllPosts()
 {
-    return get_all_elements();
+    return ListController<Post*, int, int>::get_all_elements();
 }
 
 list<Post *> PostManager::getAllPostsByPubDate(bool asc)
@@ -216,6 +220,14 @@ list<Post *> PostManager::getAllPostsByLikes(bool asc)
 const Post* PostManager::getPostById(int postId)
 {
     return avl_posts_by_id->find(postId);
+}
+
+list<Post *> PostManager::getPostsByNumInteractions(bool asc)
+{
+    if (asc)
+        return avl_posts_by_numInteractions->inOrder();
+    else
+        return avl_posts_by_numInteractions->postOrder();
 }
 /*
 void PostManager::add_comment_to_post(int post_id, int author_id, char* comment)

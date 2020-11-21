@@ -38,6 +38,7 @@ public:
     unsigned int numLikes;
     vector<PostComment*> comments;
     vector<PostInteraction*> interactions;
+    int numInteractions = 0;
 
     Post() { }
     ~Post() { }

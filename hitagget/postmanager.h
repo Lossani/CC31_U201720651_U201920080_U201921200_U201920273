@@ -5,11 +5,12 @@
 #include "listcontroller.h"
 #include "avl.h"
 //#include "commentmanager.h"
+#include "interactionmanager.h"
 #include <list>
 
 using namespace std;
 
-class PostManager : private ListController<Post*, int, int>
+class PostManager : private InteractionManager, private ListController<Post*, int, int>
 {
 private:
     //CommentManager all_comments;
@@ -18,6 +19,7 @@ private:
     AVL<Post*, string, nullptr>* avl_posts_by_title;
     AVL<Post*, string, nullptr>*  avl_posts_by_pubDate;
     AVL<Post*, int, nullptr>* avl_posts_by_numLikes;
+    AVL<Post*, int, nullptr>* avl_posts_by_numInteractions;
 
 public:
     PostManager();
@@ -35,6 +37,8 @@ public:
     list<Post*> getAllPostsByLikes(bool asc);
 
     const Post* getPostById(int postId);
+
+    list<Post*> getPostsByNumInteractions(bool asc);
    // void add_comment_to_post(int post_id, int comment_author_id, string comment);
     //void delete_comment(int comment_id);
     //list<PostComment> get_post_comments(int post_id);

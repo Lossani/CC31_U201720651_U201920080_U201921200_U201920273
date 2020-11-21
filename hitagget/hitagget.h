@@ -10,7 +10,7 @@
 
 using namespace std;
 
-class Hitagget : public UserManager, public PostManager, public CommentManager, public InteractionManager
+class Hitagget : public UserManager, public PostManager, public CommentManager
 {
 private:
     User logged_user;
@@ -28,8 +28,6 @@ public:
     //void update_logged_user(string nickname, string email);
 
     list<Post> all_logged_user_posts;
-
-    list<Post*> getPostsByNumInteractions(bool asc);
 };
 
 #endif // HITAGGET_H
