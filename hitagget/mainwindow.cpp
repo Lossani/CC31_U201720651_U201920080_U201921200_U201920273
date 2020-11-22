@@ -169,13 +169,17 @@ void MainWindow::Registrar(){
 void MainWindow::Ingresar(){
 
     if(ui->leCorreo->text() != ""){
-        if (windP.main_instance->getUserByEmail(ui->leCorreo->text().toStdString()) == nullptr)
+        const User* user = windP.main_instance->getUserByEmail(ui->leCorreo->text().toStdString());
+        if (user == nullptr)
         {
             ui->lblerror->setText("Este correo no se encuentra registrado\nLe recomendamos crear una cuenta en HiTagget");
             ui->lblerror->show();
         }
         else
         {
+            windP.Unombre = new QString(user->fullname.c_str());
+            windP.UfechaR = new QString(user->registerDate.c_str());
+            windP.cambiar_nombre();
             windP.show();
             Cerrar();
         }

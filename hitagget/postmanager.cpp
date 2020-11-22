@@ -38,8 +38,6 @@ PostManager::PostManager() : InteractionManager(), ListController<Post*, int, in
 
         list<Post*> retrievedElements;
 
-        int currentIndex = 2;
-
         Post* currentPost;
 
         string id, authorId, numLikes;
@@ -55,8 +53,6 @@ PostManager::PostManager() : InteractionManager(), ListController<Post*, int, in
             getline(file, currentPost->content, '\t');
             getline(file, currentPost->pubDate, '\t');
             getline(file, numLikes);
-
-            currentPost->index = currentIndex++;
 
             currentPost->id = stoi(id);
             currentPost->authorId = stoi(authorId);
