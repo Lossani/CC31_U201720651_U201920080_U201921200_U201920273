@@ -62,6 +62,7 @@ public:
 public:
     Hitagget *main_instance = nullptr;
     void show_all_posts(int op, bool inv);
+    void show_search_posts(int op, bool asc);
     void act_tend();
     void cambiar_nombre();
 
@@ -82,6 +83,8 @@ private slots:
     void on_txtSearchBox_textChanged(const QString &arg1);
 
     void on_txtSearchBox_returnPressed();
+
+    void on_cmbBoxSearchOptions_currentIndexChanged(int index);
 
 private:
     void add_item_to_list_widget(QListWidget *list, Post individual_post, function<void(int)> show_post);

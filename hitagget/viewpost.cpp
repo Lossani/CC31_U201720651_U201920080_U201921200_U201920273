@@ -18,6 +18,7 @@ void ViewPost::set_current_post(Post post, list<PostComment*> postComments)
 {
     ui->lblPostTitle->setText(post.title.c_str());
     ui->lblPostContent->setText(post.content.c_str());
+    ui->lblNumLikes->setText(to_string(post.numLikes).c_str());
 
     for (PostComment* comment: postComments)
     {

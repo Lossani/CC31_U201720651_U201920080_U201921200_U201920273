@@ -680,6 +680,41 @@ color: rgb(35, 182, 111);
 font: 8pt &quot;Comic Sans MS&quot;;</string>
     </property>
    </widget>
+   <widget class="QComboBox" name="cmbBoxSearchOptions">
+    <property name="geometry">
+     <rect>
+      <x>530</x>
+      <y>0</y>
+      <width>141</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <item>
+     <property name="text">
+      <string>Igual a</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>Inicia con</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>Finaliza con</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>Contiene</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>No contiene</string>
+     </property>
+    </item>
+   </widget>
    <zorder>label_9</zorder>
    <zorder>listWidgetCont</zorder>
    <zorder>listWidgetPubli</zorder>
@@ -708,6 +743,7 @@ font: 8pt &quot;Comic Sans MS&quot;;</string>
    <zorder>cb_may_men</zorder>
    <zorder>cb_men_may</zorder>
    <zorder>txtSearchBox</zorder>
+   <zorder>cmbBoxSearchOptions</zorder>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">

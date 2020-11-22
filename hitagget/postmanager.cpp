@@ -20,10 +20,12 @@ PostManager::PostManager() : InteractionManager(), ListController<Post*, int, in
     //QMessageBox msg;
         //msg.setText("newPost->get_post_content()");
         //msg.exec();
-        file << element->id << endl;
-        file << element->authorId << endl;
-        file << element->content << endl;
-        file << element->title << endl;
+        file << element->id << '\t';
+        file << element->authorId << '\t';
+        file << element->title << '\t';
+        file << element->content << '\t';
+        file << element->pubDate << '\t';
+        file << element->numLikes << endl;
     },
     [this](ifstream& file)
     {
@@ -35,6 +37,8 @@ PostManager::PostManager() : InteractionManager(), ListController<Post*, int, in
         avl_posts_by_numInteractions = new AVL<Post*, int, nullptr>([](Post* element) { return element->numInteractions; });
 
         list<Post*> retrievedElements;
+
+        int currentIndex = 2;
 
         Post* currentPost;
 
@@ -51,6 +55,8 @@ PostManager::PostManager() : InteractionManager(), ListController<Post*, int, in
             getline(file, currentPost->content, '\t');
             getline(file, currentPost->pubDate, '\t');
             getline(file, numLikes);
+
+            currentPost->index = currentIndex++;
 
             currentPost->id = stoi(id);
             currentPost->authorId = stoi(authorId);
@@ -247,16 +253,42 @@ list<Post *> PostManager::getPostsByLikes(bool asc, int limit)
         return avl_posts_by_numLikes->postOrder(limit);
 }
 
-list<Post *> PostManager::getPostsThatContainsString(string value, bool asc, int limit)
+list<Post *> PostManager::getPostsByTitle(bool asc, int limit)
 {
     if (limit <= 0)
         return list<Post*>();
 
     if (asc)
-        return avl_posts_by_title->findAllStringsContains(value, asc, limit);
+        return avl_posts_by_title->inOrder(limit);
     else
-        return avl_posts_by_title->findAllStringsContains(value, asc, limit);
+        return avl_posts_by_title->postOrder(limit);
+}
 
+list<Post *> PostManager::getPostsThatContainsString(string value, bool asc, int limit)
+{
+    if (limit <= 0)
+        return list<Post*>();
+
+    return avl_posts_by_title->findAllStringsThatContains(value, asc, limit);
+}
+
+list<Post *> PostManager::getPostsThatStartsWithString(string value, bool asc, int limit)
+{
+    if (limit <= 0)
+        return list<Post*>();
+
+    return avl_posts_by_title->findAllStringsThatStartsWith(value, asc, limit);
+}
+
+list<Post *> PostManager::getPostsThatTitleEqualsToString(string value, bool asc, int limit)
+{
+    if (limit <= 0)
+        return list<Post*>();
+
+    if (asc)
+        return avl_posts_by_title->findAll(value, limit);
+    else
+        return avl_posts_by_title->findAll(value, limit);
 }
 
 const Post* PostManager::getPostById(int postId)

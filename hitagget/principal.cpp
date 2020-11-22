@@ -123,6 +123,64 @@ void Principal::show_all_posts(int op, bool inv)
     }
 }
 
+void Principal::show_search_posts(int op, bool asc)
+{
+    function<void(int)> show_post = [this](int id)
+    {
+        Post post_to_show = *main_instance->getPostById(id);
+        list<PostComment*> comments = main_instance->getPostComments(id);
+        QMessageBox msg;
+
+            msg.setText(to_string(id).c_str());
+            msg.exec();
+            msg.setText(to_string(post_to_show.numInteractions).c_str());
+            msg.exec();
+            msg.setText(to_string(post_to_show.numLikes).c_str());
+            msg.exec();
+            msg.setText(post_to_show.pubDate.c_str());
+
+            msg.exec();
+
+        if (post_to_show.id != -1)
+        {
+            ViewPost *view_post_dialog = new ViewPost();
+            view_post_dialog->set_current_post(post_to_show, comments);
+            view_post_dialog->exec();
+        }
+    };
+
+    ui->listWidgetPubli->clear();
+
+    list<Post*> posts;
+
+    switch(op)
+    {
+        case 0:
+            posts = main_instance->getPostsThatTitleEqualsToString(ui->txtSearchBox->text().toStdString(), asc, 50);
+            break;
+        case 1:
+            posts = main_instance->getPostsThatStartsWithString(ui->txtSearchBox->text().toStdString(), asc, 50);
+            break;
+        case 2:
+            posts = main_instance->getPostsByLikes(asc, 50);
+            break;
+        case 3:
+            posts = main_instance->getPostsThatContainsString(ui->txtSearchBox->text().toStdString(), asc, 50);
+            break;
+        case 4:
+            posts = main_instance->getPostsThatContainsString(ui->txtSearchBox->text().toStdString(), asc, 50);
+            break;
+        default:
+            posts = main_instance->getPostsByNumInteractions(asc, 50);
+            break;
+    }
+
+    for (Post* post : posts)
+    {
+        add_item_to_list_widget(ui->listWidgetPubli, *post, show_post);
+    }
+}
+
 void Principal::add_item_to_list_widget(QListWidget *list, Post individual_post, function<void(int)> show_post)
 {
 
@@ -690,5 +748,10 @@ void Principal::on_txtSearchBox_textChanged(const QString &arg1)
 
 void Principal::on_txtSearchBox_returnPressed()
 {
-    show_all_posts(3, true);
+    show_search_posts(ui->cmbBoxSearchOptions->currentIndex(), true);
+}
+
+void Principal::on_cmbBoxSearchOptions_currentIndexChanged(int index)
+{
+
 }
