@@ -11,6 +11,7 @@
 #include <QRandomGenerator>
 
 bool invertir = false;
+int op_busq = 0;
 
 void Principal::show_all_posts(int op, bool inv)
 {
@@ -82,16 +83,36 @@ void Principal::show_all_posts(int op, bool inv)
 
     switch(op){
     case 0:
+        //INTERACCIONES
         posts = main_instance->getPostsByNumInteractions(inv, 50);
-    break;
+        break;
     case 1:
+        //FECHA
         posts = main_instance->getPostsByPubDate(inv, 50);
         break;
     case 2:
+        //LIKES
         posts = main_instance->getPostsByLikes(inv, 50);
         break;
     case 3:
+        //IGUAL A aaron.plan@hotmail
+        posts = main_instance->getPostsThatTitleEqualsToString(ui->txtSearchBox->text().toStdString(), inv, 50);
+        break;
+    case 4:
+        //INICIA CON
+        posts = main_instance->getPostsThatStartsWithString(ui->txtSearchBox->text().toStdString(), inv, 50);
+        break;
+    case 5:
+        //FINALIZA CON
+        posts = main_instance->getPostsThatEndsWithString(ui->txtSearchBox->text().toStdString(),inv, 50);
+        break;
+    case 6:
+        //CONTIENE
         posts = main_instance->getPostsThatContainsString(ui->txtSearchBox->text().toStdString(), inv, 50);
+        break;
+    case 7:
+        //NO CONTIENE
+       posts = main_instance->getPostsNoContainsString(ui->txtSearchBox->text().toStdString(), inv, 50);
         break;
     default:
         posts = main_instance->getPostsByNumInteractions(inv, 50);
@@ -107,19 +128,6 @@ void Principal::show_all_posts(int op, bool inv)
     {
          //ui->listWidgetGroup->addItem(post.content.c_str());
         add_item_to_list_widget(ui->listWidgetPubli, *post, show_post);
-
-        //maxPostsToShow--;
-
-        //if (maxPostsToShow == 0)
-        //   break;
-        /*
-        add_item_to_list_widget(ui->listPublications, post, false, false, show_post, edit_post, delete_post);
-
-        if (post.author_id == main_instance->get_logged_user().id || main_instance->get_logged_user().is_admin)
-        {
-            add_item_to_list_widget(ui->listUserPosts, post, true, true, show_post, edit_post, delete_post);
-        }
-        */
     }
 }
 
@@ -162,13 +170,13 @@ void Principal::show_search_posts(int op, bool asc)
             posts = main_instance->getPostsThatStartsWithString(ui->txtSearchBox->text().toStdString(), asc, 50);
             break;
         case 2:
-            posts = main_instance->getPostsByLikes(asc, 50);
+            posts = main_instance->getPostsThatEndsWithString(ui->txtSearchBox->text().toStdString(), asc, 50);
             break;
         case 3:
             posts = main_instance->getPostsThatContainsString(ui->txtSearchBox->text().toStdString(), asc, 50);
             break;
         case 4:
-            posts = main_instance->getPostsThatContainsString(ui->txtSearchBox->text().toStdString(), asc, 50);
+            posts = main_instance->getPostsNoContainsString(ui->txtSearchBox->text().toStdString(), asc, 50);
             break;
         default:
             posts = main_instance->getPostsByNumInteractions(asc, 50);
@@ -491,6 +499,8 @@ Principal::Principal(QWidget *parent) :
 
     connect(ui->btnAgregar,SIGNAL(released()),this,SLOT(add_contact()));
 
+    connect(ui->btnInvertir, SIGNAL(released()), this, SLOT(f_invertir()));
+
     connect(ui->BCnom,SIGNAL(released()),this,SLOT(act_cont_ANom()));
     connect(ui->BCnum,SIGNAL(released()),this,SLOT(act_cont_ANum()));
     connect(ui->BCapod,SIGNAL(released()),this,SLOT(act_cont_AAp()));
@@ -726,32 +736,27 @@ void Principal::add_contact(){
     ventAC.show();
 }
 
+void Principal::f_invertir()
+{
+    invertir = !invertir;
+    show_all_posts(op_busq, invertir);
+
+}
+
+
 Principal::~Principal()
 {
     delete ui;
 }
 
-void Principal::on_cb_men_may_currentIndexChanged(int index)
-{
-    show_all_posts(index, true);
-}
-
-void Principal::on_cb_may_men_currentIndexChanged(int index)
-{
-    show_all_posts(index, false);
-}
-
-void Principal::on_txtSearchBox_textChanged(const QString &arg1)
-{
-
-}
-
 void Principal::on_txtSearchBox_returnPressed()
 {
-    show_search_posts(ui->cmbBoxSearchOptions->currentIndex(), true);
+    op_busq = 3 + (ui->cmbBoxSearchOptions->currentIndex());
+    show_all_posts(op_busq, invertir);
 }
 
-void Principal::on_cmbBoxSearchOptions_currentIndexChanged(int index)
+void Principal::on_cb_criterios_currentIndexChanged(int index)
 {
-
+    op_busq = index;
+    show_all_posts(op_busq, invertir);
 }

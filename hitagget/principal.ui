@@ -79,15 +79,15 @@ font: 8pt &quot;Courier&quot;;</string>
     <property name="geometry">
      <rect>
       <x>330</x>
-      <y>40</y>
+      <y>79</y>
       <width>581</width>
-      <height>391</height>
+      <height>481</height>
      </rect>
     </property>
     <property name="maximumSize">
      <size>
       <width>581</width>
-      <height>391</height>
+      <height>520</height>
      </size>
     </property>
     <property name="styleSheet">
@@ -248,65 +248,6 @@ font: 9pt &quot;Arial&quot;;</string>
      <enum>QAbstractItemView::NoSelection</enum>
     </property>
    </widget>
-   <widget class="QTextEdit" name="tePubli">
-    <property name="geometry">
-     <rect>
-      <x>330</x>
-      <y>570</y>
-      <width>581</width>
-      <height>71</height>
-     </rect>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">background-color: rgb(255, 255, 255);
-font: 8pt &quot;Comic Sans MS&quot;;
-color: rgb(35, 182, 111);</string>
-    </property>
-    <property name="lineWrapMode">
-     <enum>QTextEdit::WidgetWidth</enum>
-    </property>
-    <property name="markdown">
-     <string/>
-    </property>
-    <property name="html">
-     <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
-&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
-p, li { white-space: pre-wrap; }
-&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Comic Sans MS'; font-size:8pt; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:'MS Shell Dlg 2'; font-size:8.25pt;&quot;&gt;&lt;br /&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-    </property>
-   </widget>
-   <widget class="QLineEdit" name="leTitleP">
-    <property name="geometry">
-     <rect>
-      <x>330</x>
-      <y>540</y>
-      <width>231</width>
-      <height>20</height>
-     </rect>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">background-color: rgb(255, 255, 255);
-color: rgb(35, 182, 111);
-font: 8pt &quot;Comic Sans MS&quot;;</string>
-    </property>
-   </widget>
-   <widget class="QLineEdit" name="leTag">
-    <property name="geometry">
-     <rect>
-      <x>800</x>
-      <y>540</y>
-      <width>113</width>
-      <height>20</height>
-     </rect>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">background-color: rgb(255, 255, 255);
-font: 8pt &quot;Comic Sans MS&quot;;
-color: rgb(35, 182, 111);
-</string>
-    </property>
-   </widget>
    <widget class="QPushButton" name="btnPublicar">
     <property name="geometry">
      <rect>
@@ -343,33 +284,11 @@ color: rgb(255, 255, 255);</string>
      <string>Agregar</string>
     </property>
    </widget>
-   <widget class="QLabel" name="label">
-    <property name="geometry">
-     <rect>
-      <x>330</x>
-      <y>500</y>
-      <width>241</width>
-      <height>31</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <family>Comic Sans MS</family>
-      <pointsize>14</pointsize>
-      <weight>50</weight>
-      <italic>false</italic>
-      <bold>false</bold>
-     </font>
-    </property>
-    <property name="text">
-     <string>Crear nueva publicacion:</string>
-    </property>
-   </widget>
    <widget class="QLabel" name="label_2">
     <property name="geometry">
      <rect>
-      <x>770</x>
-      <y>450</y>
+      <x>760</x>
+      <y>570</y>
       <width>131</width>
       <height>16</height>
      </rect>
@@ -384,58 +303,14 @@ color: rgb(255, 255, 255);</string>
      </font>
     </property>
     <property name="text">
-     <string>Menos:</string>
-    </property>
-   </widget>
-   <widget class="QLabel" name="label_3">
-    <property name="geometry">
-     <rect>
-      <x>590</x>
-      <y>450</y>
-      <width>71</width>
-      <height>16</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <family>Comic Sans MS</family>
-      <pointsize>14</pointsize>
-      <weight>50</weight>
-      <italic>false</italic>
-      <bold>false</bold>
-     </font>
-    </property>
-    <property name="text">
-     <string>Más:</string>
-    </property>
-   </widget>
-   <widget class="QLabel" name="label_4">
-    <property name="geometry">
-     <rect>
-      <x>780</x>
-      <y>540</y>
-      <width>21</width>
-      <height>16</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <family>Comic Sans MS</family>
-      <pointsize>14</pointsize>
-      <weight>50</weight>
-      <italic>false</italic>
-      <bold>false</bold>
-     </font>
-    </property>
-    <property name="text">
-     <string>#</string>
+     <string>Criterio:</string>
     </property>
    </widget>
    <widget class="QLabel" name="label_5">
     <property name="geometry">
      <rect>
       <x>330</x>
-      <y>20</y>
+      <y>10</y>
       <width>171</width>
       <height>16</height>
      </rect>
@@ -615,36 +490,11 @@ color: rgb(255, 255, 255);</string>
      <string>Ordenar por:</string>
     </property>
    </widget>
-   <widget class="QComboBox" name="cb_may_men">
+   <widget class="QComboBox" name="cb_criterios">
     <property name="geometry">
      <rect>
-      <x>590</x>
-      <y>470</y>
-      <width>141</width>
-      <height>31</height>
-     </rect>
-    </property>
-    <item>
-     <property name="text">
-      <string>Interaciones</string>
-     </property>
-    </item>
-    <item>
-     <property name="text">
-      <string>Fecha</string>
-     </property>
-    </item>
-    <item>
-     <property name="text">
-      <string>Likes</string>
-     </property>
-    </item>
-   </widget>
-   <widget class="QComboBox" name="cb_men_may">
-    <property name="geometry">
-     <rect>
-      <x>770</x>
-      <y>470</y>
+      <x>760</x>
+      <y>590</y>
       <width>141</width>
       <height>31</height>
      </rect>
@@ -668,10 +518,10 @@ color: rgb(255, 255, 255);</string>
    <widget class="QLineEdit" name="txtSearchBox">
     <property name="geometry">
      <rect>
-      <x>680</x>
-      <y>10</y>
-      <width>231</width>
-      <height>20</height>
+      <x>490</x>
+      <y>49</y>
+      <width>421</width>
+      <height>21</height>
      </rect>
     </property>
     <property name="styleSheet">
@@ -683,8 +533,8 @@ font: 8pt &quot;Comic Sans MS&quot;;</string>
    <widget class="QComboBox" name="cmbBoxSearchOptions">
     <property name="geometry">
      <rect>
-      <x>530</x>
-      <y>0</y>
+      <x>330</x>
+      <y>40</y>
       <width>141</width>
       <height>31</height>
      </rect>
@@ -715,6 +565,33 @@ font: 8pt &quot;Comic Sans MS&quot;;</string>
      </property>
     </item>
    </widget>
+   <widget class="QPushButton" name="btnInvertir">
+    <property name="geometry">
+     <rect>
+      <x>330</x>
+      <y>570</y>
+      <width>91</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Comic Sans MS</family>
+      <pointsize>14</pointsize>
+      <weight>50</weight>
+      <italic>false</italic>
+      <bold>false</bold>
+     </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: rgb(128, 183, 128);
+color: rgb(255, 255, 255);
+font: 14pt &quot;Comic Sans MS&quot;;</string>
+    </property>
+    <property name="text">
+     <string>Invertir</string>
+    </property>
+   </widget>
    <zorder>label_9</zorder>
    <zorder>listWidgetCont</zorder>
    <zorder>listWidgetPubli</zorder>
@@ -723,15 +600,9 @@ font: 8pt &quot;Comic Sans MS&quot;;</string>
    <zorder>lblUsuario</zorder>
    <zorder>listWidgetGroup</zorder>
    <zorder>listWidgetTend</zorder>
-   <zorder>tePubli</zorder>
-   <zorder>leTitleP</zorder>
-   <zorder>leTag</zorder>
    <zorder>btnPublicar</zorder>
    <zorder>btnAgregar</zorder>
-   <zorder>label</zorder>
    <zorder>label_2</zorder>
-   <zorder>label_3</zorder>
-   <zorder>label_4</zorder>
    <zorder>label_5</zorder>
    <zorder>label_6</zorder>
    <zorder>label_7</zorder>
@@ -740,10 +611,10 @@ font: 8pt &quot;Comic Sans MS&quot;;</string>
    <zorder>BCnum</zorder>
    <zorder>BCapod</zorder>
    <zorder>label_10</zorder>
-   <zorder>cb_may_men</zorder>
-   <zorder>cb_men_may</zorder>
+   <zorder>cb_criterios</zorder>
    <zorder>txtSearchBox</zorder>
    <zorder>cmbBoxSearchOptions</zorder>
+   <zorder>btnInvertir</zorder>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
@@ -751,16 +622,13 @@ font: 8pt &quot;Comic Sans MS&quot;;</string>
      <x>0</x>
      <y>0</y>
      <width>1280</width>
-     <height>37</height>
+     <height>31</height>
     </rect>
    </property>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
  </widget>
  <tabstops>
-  <tabstop>leTitleP</tabstop>
-  <tabstop>leTag</tabstop>
-  <tabstop>tePubli</tabstop>
   <tabstop>btnPublicar</tabstop>
   <tabstop>btnAgregar</tabstop>
   <tabstop>listWidgetPubli</tabstop>

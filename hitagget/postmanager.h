@@ -42,7 +42,9 @@ public:
     list<Post*> getPostsByTitle(bool asc, int limit);
 
     list<Post*> getPostsThatContainsString(string value, bool asc, int limit);
+    list<Post *> getPostsNoContainsString(string value, bool asc, int limit);
     list<Post*> getPostsThatStartsWithString(string value, bool asc, int limit);
+    list<Post*> getPostsThatEndsWithString(string value, bool asc, int limit);
     list<Post*> getPostsThatTitleEqualsToString(string value, bool asc, int limit);
 
     const Post* getPostById(int postId);
