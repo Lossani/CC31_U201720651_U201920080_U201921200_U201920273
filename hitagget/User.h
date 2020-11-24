@@ -7,6 +7,14 @@
 
 using namespace std;
 
+
+struct Follower
+{
+public:
+    int userID;
+    int followedUserID;
+};
+
 class User
 {
 public:
@@ -15,6 +23,8 @@ public:
     string fullname = "";
     string registerDate = "";
     string password = "";
+
+    list<Follower*> followedUsers;
     //bool is_admin = false;
     //vector<Post*> posts;
 

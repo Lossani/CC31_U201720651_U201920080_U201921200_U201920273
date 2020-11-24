@@ -15,38 +15,15 @@ MainWindow::MainWindow(QWidget *parent)
     ui->Ventanas->setCurrentIndex(1);
 
 
-        QPixmap *img = new QPixmap("Imagenes\\Logo.png");
-        ui->lblLogo->setPixmap(*img);
-        ui->lblLogo_2->setPixmap(*img);
+    QPixmap *img = new QPixmap("Imagenes\\Logo.png");
+    ui->lblLogo->setPixmap(*img);
+    ui->lblLogo_2->setPixmap(*img);
 
     ui->lblerrorReg->hide();
 
     error_contra = 4;
 
     ui->lblerror->hide();
-
-    fstream c("Contras.txt");
-        string tempc;
-        c>>tempc;
-
-        contra = QString::fromStdString(tempc);
-
-
-
-        QFile file("users.tsv");
-        if(file.open(QIODevice::ReadOnly)){ //WriteOnly
-            QTextStream in(&file); // in << palabras[1] << "\n";
-            while(!in.atEnd()){
-                QString linea = in.readLine();
-                QStringList palabras = linea.split("\t");
-                Usuario nuevo(palabras[0],palabras[1],palabras[2],palabras[3]);
-                lverif.append(nuevo);
-            }
-            file.close();
-        }
-
-
-
 
     connect(ui->btnRegistrar,SIGNAL(released()),this,SLOT(Registrar()));
     connect(ui->btnIngresar,SIGNAL(released()),this,SLOT(Ingresar()));
@@ -149,7 +126,7 @@ void MainWindow::Registrar(){
                 windP.UfechaR = &datetemp;
 
 
-                windP.cambiar_nombre();
+                windP.show_user_info();
 
                 windP.show();
                 Cerrar();
@@ -168,93 +145,26 @@ void MainWindow::Registrar(){
 
 void MainWindow::Ingresar(){
 
-    if(ui->leCorreo->text() != ""){
-        const User* user = windP.main_instance->getUserByEmail(ui->leCorreo->text().toStdString());
-        if (user == nullptr)
+    if (ui->leCorreo->text() != "")
+    {
+        if (!windP.main_instance->log_in(ui->leCorreo->text().toStdString()))
         {
             ui->lblerror->setText("Este correo no se encuentra registrado\nLe recomendamos crear una cuenta en HiTagget");
             ui->lblerror->show();
         }
         else
         {
-            windP.Unombre = new QString(user->fullname.c_str());
-            windP.UfechaR = new QString(user->registerDate.c_str());
-            windP.cambiar_nombre();
+            windP.Unombre = new QString(windP.main_instance->logged_user->fullname.c_str());
+            windP.UfechaR = new QString(windP.main_instance->logged_user->registerDate.c_str());
+            windP.show_user_info();
             windP.show();
             Cerrar();
         }
-        /*
-        for(int i=0;i<lverif.size();i++){
-
-            QString C_com = lverif[i].get_email() + ".com";
-
-
-            if(C_com == ui->leCorreo->text()){
-                windP.show();
-                Cerrar();
-
-                QString FullName = lverif[i].get_fullname();
-                QString DateR = lverif[i].get_regdate();
-
-
-                windP.Unombre = &FullName;
-                windP.UfechaR = &DateR;
-
-                windP.cambiar_nombre();
-
-                return;
-            }
-            else if(ui->leCorreo->text()[ui->leCorreo->text().size()-1] == "m" && ui->leCorreo->text()[ui->leCorreo->text().size()-2] == "o" && ui->leCorreo->text()[ui->leCorreo->text().size()-3] == "c" && ui->leCorreo->text()[ui->leCorreo->text().size()-4] == "."){
-                ui->lblerror->setText("Este correo no se encuentra registrado\nLe recomendamos crear una cuenta en HiTagget");
-                ui->lblerror->show();
-            } else{
-                ui->lblerror->setText("Ingrese un correo valido");
-                ui->lblerror->show();
-
-            }
-
-        }
-
-*/
-    } else{
+    }
+    else
+    {
         ui->lblerror->setText("Debe llenar la casilla de correo");
         ui->lblerror->show();
-
     }
-
-
-
-
-    /*
-    if(ui->leContra->text() == contra ){
-        if(ui->leApellido->text()!="" && ui->leNombre->text()!=""){
-            nombre = ui->leNombre->text();
-            apellido = ui->leApellido->text();
-
-            windP.Unombre = &nombre;
-            windP.Uapellido = &apellido;
-
-            windP.cambiar_nombre();
-
-            windP.show();
-
-            Cerrar();
-    }
-
-
-    } else {
-        ui->leContra->setText("");
-
-        error_contra--;
-        if(error_contra==0) this->close();
-
-        ui->lblerror->setStyleSheet("QLabel { color : red; }");
-
-        ui->lblerror->setText("CONTRASEÑA INCORRECTA, VUELVA A INTENTARLO TIENE "+ QString::number(error_contra) +" INTENTOS");
-
-        ui->lblerror->show();
-    }*/
-
-
 }
 

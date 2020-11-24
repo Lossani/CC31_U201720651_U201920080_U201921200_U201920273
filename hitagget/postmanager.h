@@ -31,6 +31,7 @@ public:
     void updatePost(Post* post);
     void deletePost(int postId);
     list<Post*> getAuthorPosts(int userId);
+    list<Post*> getAuthorPosts(int userId, bool asc, int limit);
     list<Post*> getAllPosts();
 
     list<Post*> getAllPostsByPubDate(bool asc);
@@ -47,7 +48,7 @@ public:
     list<Post*> getPostsThatEndsWithString(string value, bool asc, int limit);
     list<Post*> getPostsThatTitleEqualsToString(string value, bool asc, int limit);
 
-    const Post* getPostById(int postId);
+    Post* getPostById(int postId);
 
     list<Post*> getPostsByNumInteractions(bool asc, int limit);
    // void add_comment_to_post(int post_id, int comment_author_id, string comment);

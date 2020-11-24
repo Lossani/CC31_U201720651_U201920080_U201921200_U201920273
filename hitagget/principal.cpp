@@ -13,30 +13,38 @@
 bool invertir = false;
 int op_busq = 0;
 
-void Principal::show_all_posts(int op, bool inv)
+void Principal::show_all_posts(int op, bool inv, bool show_specific_profile)
 {
-    function<void(int)> show_post = [this](int id)
+    function<void(Post*, string)> show_post = [this](Post* post, string author_name)
     {
-        Post post_to_show = *main_instance->getPostById(id);
-        list<PostComment*> comments = main_instance->getPostComments(id);
+        list<PostComment*> comments = main_instance->getPostComments(post->id);
         QMessageBox msg;
 
-            msg.setText(to_string(id).c_str());
+            msg.setText(to_string(post->id).c_str());
             msg.exec();
-            msg.setText(to_string(post_to_show.numInteractions).c_str());
+            msg.setText(to_string(post->numInteractions).c_str());
             msg.exec();
-            msg.setText(to_string(post_to_show.numLikes).c_str());
+            msg.setText(to_string(post->numLikes).c_str());
             msg.exec();
-            msg.setText(post_to_show.pubDate.c_str());
+            msg.setText(post->pubDate.c_str());
 
             msg.exec();
 
-        if (post_to_show.id != -1)
+        if (post->id != -1)
         {
             ViewPost *view_post_dialog = new ViewPost();
-            view_post_dialog->set_current_post(post_to_show, comments);
+
+            view_post_dialog->set_current_post(post, author_name, comments);
             view_post_dialog->exec();
         }
+    };
+
+    function<void(int)> show_author_profile = [this](int authorID)
+    {
+        main_instance->shown_user = main_instance->getUserById(authorID);
+
+        ui->lblShownUser->clear();
+        ui->lblShownUser->setText(("Mostrando usuario:\n" + main_instance->shown_user->fullname + "\n" + main_instance->shown_user->registerDate).c_str());
     };
 /*
     function<void(int)> edit_post = [this](int id)
@@ -73,123 +81,92 @@ void Principal::show_all_posts(int op, bool inv)
     };
 */
     ui->listWidgetPubli->clear();
-    //ui->listWidgetPubli->clear();
-
-    //0 - INT
-    //1 - Fecha
-    //2 - LIKES
 
     list<Post*> posts;
 
     switch(op){
     case 0:
         //INTERACCIONES
-        posts = main_instance->getPostsByNumInteractions(inv, 50);
+
+        if (ui->txtSearchBox->text().toStdString().empty())
+        {
+            if (show_specific_profile)
+                posts = main_instance->getAuthorPosts(main_instance->shown_user != nullptr ? main_instance->shown_user->id : main_instance->logged_user->id, inv, 50);
+            else
+                posts = main_instance->getPostsByNumInteractions(inv, 50);
+        }
+        else
+        {
+            // We have something in the search box, we will show the results of the search box instead ordered by the interaction criteria
+            show_all_posts(3 + (ui->cmbBoxSearchOptions->currentIndex()), invertir, show_specific_profile);
+            return;
+        }
         break;
     case 1:
         //FECHA
-        posts = main_instance->getPostsByPubDate(inv, 50);
+
+        if (ui->txtSearchBox->text().toStdString().empty())
+        {
+            posts = main_instance->getPostsByPubDate(inv, 50);
+        }
+        else
+        {
+            // We have something in the search box, we will show the results of the search box instead ordered by the date criteria
+            show_all_posts(3 + (ui->cmbBoxSearchOptions->currentIndex()), invertir, show_specific_profile);
+            return;
+        }
         break;
     case 2:
         //LIKES
-        posts = main_instance->getPostsByLikes(inv, 50);
-        break;
+
+        if (ui->txtSearchBox->text().toStdString().empty())
+        {
+            posts = main_instance->getPostsByLikes(inv, 50);
+        }
+        else
+        {
+            // We have something in the search box, we will show the results of the search box instead ordered by the likes criteria
+            show_all_posts(3 + (ui->cmbBoxSearchOptions->currentIndex()), invertir, show_specific_profile);
+            return;
+        }
     case 3:
-        //IGUAL A aaron.plan@hotmail
-        posts = main_instance->getPostsThatTitleEqualsToString(ui->txtSearchBox->text().toStdString(), inv, 50);
+        //IGUAL A
+        if (ui->txtSearchBox->text().toStdString() != "")
+            posts = main_instance->getPostsThatTitleEqualsToString(ui->txtSearchBox->text().toStdString(), inv, 50);
         break;
     case 4:
         //INICIA CON
-        posts = main_instance->getPostsThatStartsWithString(ui->txtSearchBox->text().toStdString(), inv, 50);
+        if (ui->txtSearchBox->text().toStdString() != "")
+            posts = main_instance->getPostsThatStartsWithString(ui->txtSearchBox->text().toStdString(), inv, 50);
         break;
     case 5:
         //FINALIZA CON
-        posts = main_instance->getPostsThatEndsWithString(ui->txtSearchBox->text().toStdString(),inv, 50);
+        if (ui->txtSearchBox->text().toStdString() != "")
+            posts = main_instance->getPostsThatEndsWithString(ui->txtSearchBox->text().toStdString(), inv, 50);
         break;
     case 6:
         //CONTIENE
-        posts = main_instance->getPostsThatContainsString(ui->txtSearchBox->text().toStdString(), inv, 50);
+        if (ui->txtSearchBox->text().toStdString() != "")
+            posts = main_instance->getPostsThatContainsString(ui->txtSearchBox->text().toStdString(), inv, 50);
         break;
     case 7:
         //NO CONTIENE
-       posts = main_instance->getPostsNoContainsString(ui->txtSearchBox->text().toStdString(), inv, 50);
+        if (ui->txtSearchBox->text().toStdString() != "")
+            posts = main_instance->getPostsNoContainsString(ui->txtSearchBox->text().toStdString(), inv, 50);
         break;
     default:
-        posts = main_instance->getPostsByNumInteractions(inv, 50);
+        posts = main_instance->getPostsByTitle(inv, 50);
         break;
     }
 
-
-
-
-    //int maxPostsToShow = 50;
-
     for (Post* post : posts)
     {
-         //ui->listWidgetGroup->addItem(post.content.c_str());
-        add_item_to_list_widget(ui->listWidgetPubli, *post, show_post);
+        string author_name = main_instance->getUserById(post->authorId)->fullname;
+        add_item_to_list_widget(ui->listWidgetPubli, post, show_post, show_author_profile, author_name);
     }
 }
 
-void Principal::show_search_posts(int op, bool asc)
-{
-    function<void(int)> show_post = [this](int id)
-    {
-        Post post_to_show = *main_instance->getPostById(id);
-        list<PostComment*> comments = main_instance->getPostComments(id);
-        QMessageBox msg;
-
-            msg.setText(to_string(id).c_str());
-            msg.exec();
-            msg.setText(to_string(post_to_show.numInteractions).c_str());
-            msg.exec();
-            msg.setText(to_string(post_to_show.numLikes).c_str());
-            msg.exec();
-            msg.setText(post_to_show.pubDate.c_str());
-
-            msg.exec();
-
-        if (post_to_show.id != -1)
-        {
-            ViewPost *view_post_dialog = new ViewPost();
-            view_post_dialog->set_current_post(post_to_show, comments);
-            view_post_dialog->exec();
-        }
-    };
-
-    ui->listWidgetPubli->clear();
-
-    list<Post*> posts;
-
-    switch(op)
-    {
-        case 0:
-            posts = main_instance->getPostsThatTitleEqualsToString(ui->txtSearchBox->text().toStdString(), asc, 50);
-            break;
-        case 1:
-            posts = main_instance->getPostsThatStartsWithString(ui->txtSearchBox->text().toStdString(), asc, 50);
-            break;
-        case 2:
-            posts = main_instance->getPostsThatEndsWithString(ui->txtSearchBox->text().toStdString(), asc, 50);
-            break;
-        case 3:
-            posts = main_instance->getPostsThatContainsString(ui->txtSearchBox->text().toStdString(), asc, 50);
-            break;
-        case 4:
-            posts = main_instance->getPostsNoContainsString(ui->txtSearchBox->text().toStdString(), asc, 50);
-            break;
-        default:
-            posts = main_instance->getPostsByNumInteractions(asc, 50);
-            break;
-    }
-
-    for (Post* post : posts)
-    {
-        add_item_to_list_widget(ui->listWidgetPubli, *post, show_post);
-    }
-}
-
-void Principal::add_item_to_list_widget(QListWidget *list, Post individual_post, function<void(int)> show_post)
+void Principal::add_item_to_list_widget(QListWidget *list, Post* individual_post, function<void(Post*, string)> show_post, function<void(int)> show_author_profile, string author_name)
 {
 
     QListWidgetItem *item = new QListWidgetItem();
@@ -197,14 +174,24 @@ void Principal::add_item_to_list_widget(QListWidget *list, Post individual_post,
 
     PostUI *post_ui = new PostUI();
 
-    post_ui->post_text->setText(individual_post.title.c_str());
-    post_ui->post_id = individual_post.id;
+    post_ui->post_text->setText(individual_post->title.c_str());
+    post_ui->post_to_show = individual_post;
+    post_ui->author_profile_button->setText(author_name.c_str());
 
     post_ui->set_view_button_click_action(show_post);
+    post_ui->set_view_user_button_click_action(show_author_profile);
 
     item->setSizeHint(post_ui->minimumSizeHint());
 
     list->setItemWidget(item, post_ui);
+}
+
+void Principal::show_followed_users()
+{
+    for(Follower* follower : main_instance->logged_user->followedUsers)
+    {
+        ui->listWidgetFollowers->addItem(main_instance->getUserById(follower->followedUserID)->fullname.c_str());
+    }
 }
 
 Principal::Principal(QWidget *parent) :
@@ -227,7 +214,7 @@ Principal::Principal(QWidget *parent) :
 
     main_instance = new Hitagget();
 
-    show_all_posts(0, false);
+    show_all_posts(0, false, false);
 
     lst = new ListaT();
 
@@ -388,58 +375,6 @@ Principal::Principal(QWidget *parent) :
 
     act_cont();
 
-
-
-    /*
-
-    ui->listWidgetCont->clear();
-
-    for(int i =0;i<lcont.getCount();i++){
-    ui->listWidgetCont->addItem(lcont.selected->data.get_comp_name() + "\t" + lcont.selected->data.get_numero() + "\t" +lcont.selected->data.get_apodo() );
-    lcont.sgt();
-    }
-    */
-
-
-    /*
-    ifstream c("Contactos.csv");
-
-    string Nombre_cont;
-    string Apellido_cont;
-    string Numero_cont;
-    string Apodo_cont;
-
-    if (c.good()){
-
-        while(!c.eof()){
-            c >> Nombre_cont>>Apellido_cont>>Numero_cont >> Apodo_cont;
-
-            QString tempNC = QString::fromStdString(Nombre_cont);
-            QString tempAC = QString::fromStdString(Apellido_cont);
-            QString tempNumC = QString::fromStdString(Numero_cont);
-            QString tempApC = QString::fromStdString(Apodo_cont);
-
-            Contacto nuevo(tempNC, tempAC, tempNumC, tempApC);
-
-            lcont.append(nuevo);
-        }
-
-    }
-
-    ui->listWidgetCont->clear();
-
-    for(int i =0;i<lcont.getCount();i++){
-    ui->listWidgetCont->addItem(lcont.selected->data.get_nombre() + "\t" + lcont.selected->data.get_apellido() + "\t" + lcont.selected->data.get_numero() + "\t" +lcont.selected->data.get_apodo() );
-    lcont.sgt();
-    }
-    */
-    //LISTA DE CONTACTOS fin
-
-
-
-
-
-
     //Imprimir publicaciones
     while (!Publi.empty()){
       ui->listWidgetPubli->addItem( Publi.head()->get_nombre() + "\t"+Publi.head()->get_titulo());
@@ -448,39 +383,6 @@ Principal::Principal(QWidget *parent) :
       ui->listWidgetPubli->addItem(" ");
       Publi.dequeue();
     }
-
-
-    //Grupos
-
-    ifstream g("Grupos.txt");
-
-    QVector<Grupo> Grupos;
-    Grupo new_grupo;
-    string Nombre_grupo;
-    string Cant_grupo;
-    string Desc_grupo;
-
-    while (g.good()){
-
-      g >> Nombre_grupo >> Cant_grupo>>Desc_grupo;
-
-      QString tempNG = QString::fromStdString(Nombre_grupo);
-      QString tempCG = QString::fromStdString(Cant_grupo);
-      QString tempDG = QString::fromStdString(Desc_grupo);
-
-      new_grupo = Grupo(tempNG,tempCG,tempDG);
-      Grupos.push_back(new_grupo);
-
-    }
-
-
-    for(int i = 0;i<Grupos.size()-1;i++){
-        ui->listWidgetGroup->addItem(Grupos[i].get_nombre());
-        ui->listWidgetGroup->addItem(Grupos[i].get_Describcion());
-        ui->listWidgetGroup->addItem(Grupos[i].get_n());
-        ui->listWidgetGroup->addItem(" ");
-    }
-
 
     limcont = 10;
 
@@ -564,10 +466,11 @@ void Principal::act_tend(){
 
 
 
-void Principal::cambiar_nombre(){
+void Principal::show_user_info(){
 
     ui->lblUsuario->clear();
     ui->lblUsuario->setText("Usuario:\n" + *Unombre + "\n" + *UfechaR);
+    show_followed_users();
 }
 
 void Principal::cambiar_imagen(){
@@ -739,8 +642,11 @@ void Principal::add_contact(){
 void Principal::f_invertir()
 {
     invertir = !invertir;
-    show_all_posts(op_busq, invertir);
 
+    if (main_instance->shown_user == nullptr)
+        show_all_posts(op_busq, invertir, false);
+    else
+        show_all_posts(op_busq, invertir, true);
 }
 
 
@@ -752,11 +658,17 @@ Principal::~Principal()
 void Principal::on_txtSearchBox_returnPressed()
 {
     op_busq = 3 + (ui->cmbBoxSearchOptions->currentIndex());
-    show_all_posts(op_busq, invertir);
+
+    if (main_instance->shown_user == nullptr)
+        show_all_posts(op_busq, invertir, false);
+    else
+        show_all_posts(op_busq, invertir, true);
 }
 
 void Principal::on_cb_criterios_currentIndexChanged(int index)
 {
-    op_busq = index;
-    show_all_posts(op_busq, invertir);
+    if (main_instance->shown_user == nullptr)
+        show_all_posts(index, invertir, false);
+    else
+        show_all_posts(index, invertir, true);
 }

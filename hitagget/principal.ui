@@ -81,7 +81,7 @@ font: 8pt &quot;Courier&quot;;</string>
       <x>330</x>
       <y>79</y>
       <width>581</width>
-      <height>481</height>
+      <height>491</height>
      </rect>
     </property>
     <property name="maximumSize">
@@ -106,7 +106,7 @@ font: 9pt &quot;Arial&quot;;</string>
      <number>0</number>
     </property>
     <property name="horizontalScrollBarPolicy">
-     <enum>Qt::ScrollBarAlwaysOff</enum>
+     <enum>Qt::ScrollBarAsNeeded</enum>
     </property>
     <property name="selectionMode">
      <enum>QAbstractItemView::NoSelection</enum>
@@ -192,13 +192,13 @@ font: 13pt &quot;Comic Sans MS&quot;;</string>
      <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
     </property>
    </widget>
-   <widget class="QListWidget" name="listWidgetGroup">
+   <widget class="QListWidget" name="listWidgetFollowers">
     <property name="geometry">
      <rect>
       <x>20</x>
       <y>190</y>
-      <width>261</width>
-      <height>451</height>
+      <width>281</width>
+      <height>251</height>
      </rect>
     </property>
     <property name="styleSheet">
@@ -287,8 +287,8 @@ color: rgb(255, 255, 255);</string>
    <widget class="QLabel" name="label_2">
     <property name="geometry">
      <rect>
-      <x>760</x>
-      <y>570</y>
+      <x>740</x>
+      <y>580</y>
       <width>131</width>
       <height>16</height>
      </rect>
@@ -354,9 +354,9 @@ color: rgb(255, 255, 255);</string>
     <property name="geometry">
      <rect>
       <x>930</x>
-      <y>310</y>
+      <y>305</y>
       <width>171</width>
-      <height>16</height>
+      <height>21</height>
      </rect>
     </property>
     <property name="font">
@@ -391,7 +391,7 @@ color: rgb(255, 255, 255);</string>
      </font>
     </property>
     <property name="text">
-     <string>Grupos:</string>
+     <string>Seguidos:</string>
     </property>
    </widget>
    <widget class="QLabel" name="label_9">
@@ -493,9 +493,9 @@ color: rgb(255, 255, 255);</string>
    <widget class="QComboBox" name="cb_criterios">
     <property name="geometry">
      <rect>
-      <x>760</x>
-      <y>590</y>
-      <width>141</width>
+      <x>740</x>
+      <y>610</y>
+      <width>171</width>
       <height>31</height>
      </rect>
     </property>
@@ -519,9 +519,9 @@ color: rgb(255, 255, 255);</string>
     <property name="geometry">
      <rect>
       <x>490</x>
-      <y>49</y>
+      <y>39</y>
       <width>421</width>
-      <height>21</height>
+      <height>31</height>
      </rect>
     </property>
     <property name="styleSheet">
@@ -569,9 +569,9 @@ font: 8pt &quot;Comic Sans MS&quot;;</string>
     <property name="geometry">
      <rect>
       <x>330</x>
-      <y>570</y>
-      <width>91</width>
-      <height>23</height>
+      <y>580</y>
+      <width>101</width>
+      <height>31</height>
      </rect>
     </property>
     <property name="font">
@@ -592,13 +592,47 @@ font: 14pt &quot;Comic Sans MS&quot;;</string>
      <string>Invertir</string>
     </property>
    </widget>
+   <widget class="QLabel" name="lblShownUser">
+    <property name="geometry">
+     <rect>
+      <x>20</x>
+      <y>470</y>
+      <width>281</width>
+      <height>101</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Comic Sans MS</family>
+      <pointsize>13</pointsize>
+      <weight>50</weight>
+      <italic>false</italic>
+      <bold>false</bold>
+     </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">color: rgb(35, 182, 111);
+border-color: rgb(255, 255, 0);
+background-color: rgb(28, 44, 58);
+font: 13pt &quot;Comic Sans MS&quot;;</string>
+    </property>
+    <property name="frameShape">
+     <enum>QFrame::Box</enum>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+    </property>
+   </widget>
    <zorder>label_9</zorder>
    <zorder>listWidgetCont</zorder>
    <zorder>listWidgetPubli</zorder>
    <zorder>btnCamFoto</zorder>
    <zorder>lblFPerfil</zorder>
    <zorder>lblUsuario</zorder>
-   <zorder>listWidgetGroup</zorder>
+   <zorder>listWidgetFollowers</zorder>
    <zorder>listWidgetTend</zorder>
    <zorder>btnPublicar</zorder>
    <zorder>btnAgregar</zorder>
@@ -615,6 +649,7 @@ font: 14pt &quot;Comic Sans MS&quot;;</string>
    <zorder>txtSearchBox</zorder>
    <zorder>cmbBoxSearchOptions</zorder>
    <zorder>btnInvertir</zorder>
+   <zorder>lblShownUser</zorder>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
@@ -622,7 +657,7 @@ font: 14pt &quot;Comic Sans MS&quot;;</string>
      <x>0</x>
      <y>0</y>
      <width>1280</width>
-     <height>31</height>
+     <height>37</height>
     </rect>
    </property>
   </widget>
@@ -633,7 +668,7 @@ font: 14pt &quot;Comic Sans MS&quot;;</string>
   <tabstop>btnAgregar</tabstop>
   <tabstop>listWidgetPubli</tabstop>
   <tabstop>listWidgetTend</tabstop>
-  <tabstop>listWidgetGroup</tabstop>
+  <tabstop>listWidgetFollowers</tabstop>
   <tabstop>btnCamFoto</tabstop>
   <tabstop>listWidgetCont</tabstop>
  </tabstops>

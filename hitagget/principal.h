@@ -61,10 +61,9 @@ public:
 
 public:
     Hitagget *main_instance = nullptr;
-    void show_all_posts(int op, bool inv);
-    void show_search_posts(int op, bool asc);
+    void show_all_posts(int op, bool inv, bool show_specific_profile);
     void act_tend();
-    void cambiar_nombre();
+    void show_user_info();
 
 private slots:
     void act_cont();
@@ -83,7 +82,8 @@ private slots:
     void on_cb_criterios_currentIndexChanged(int index);
 
 private:
-    void add_item_to_list_widget(QListWidget *list, Post individual_post, function<void(int)> show_post);
+    void add_item_to_list_widget(QListWidget *list, Post* individual_post, function<void(Post*, string)> show_post, function<void(int)> show_author_profile, string author_name);
+    void show_followed_users();
     Ui::Principal *ui;
 };
 

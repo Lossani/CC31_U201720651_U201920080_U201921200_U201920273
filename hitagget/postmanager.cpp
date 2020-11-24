@@ -120,14 +120,17 @@ void PostManager::deletePost(int id)
 
 list<Post*> PostManager::getAuthorPosts(int userId)
 {
-    /*function<int(Post*)> field_comparator = [](Post* post)
-    {
-        return post->authorId;
-    };
-
-    return find_elements(field_comparator, userId);*/
-
     return avl_posts_by_authorId->findAll(userId);
+}
+
+list<Post *> PostManager::getAuthorPosts(int userId, bool asc, int limit)
+{
+    list<Post*> returnList = avl_posts_by_authorId->findAll(userId, limit);
+    if (asc)
+        returnList.sort([](const Post* a, const Post* b) { return a->numLikes < b->numLikes; });
+    else
+        returnList.sort([](const Post* a, const Post* b) { return a->numLikes > b->numLikes; });
+    return returnList;
 }
 
 /*
@@ -282,7 +285,10 @@ list<Post *> PostManager::getPostsThatStartsWithString(string value, bool asc, i
         return list<Post*>();
 
     list<Post*> returnList = avl_posts_by_title->findAllStringsThatStartsWith(value, limit);
-    returnList.sort([](const Post* a, const Post* b) { return a->numLikes < b->numLikes; });
+    if (asc)
+        returnList.sort([](const Post* a, const Post* b) { return a->numLikes < b->numLikes; });
+    else
+        returnList.sort([](const Post* a, const Post* b) { return a->numLikes > b->numLikes; });
     return returnList;
 }
 
@@ -291,7 +297,10 @@ list<Post *> PostManager::getPostsThatEndsWithString(string value, bool asc, int
     if (limit <= 0)
         return list<Post*>();
     list<Post*> returnList = avl_posts_by_title->findAllStringsThatEndsWith(value, limit);
-    returnList.sort([](const Post* a, const Post* b) { return a->numLikes < b->numLikes; });
+    if (asc)
+        returnList.sort([](const Post* a, const Post* b) { return a->numLikes < b->numLikes; });
+    else
+        returnList.sort([](const Post* a, const Post* b) { return a->numLikes > b->numLikes; });
     return returnList;
 }
 
@@ -306,7 +315,7 @@ list<Post *> PostManager::getPostsThatTitleEqualsToString(string value, bool asc
         return avl_posts_by_title->findAll(value, limit);
 }
 
-const Post* PostManager::getPostById(int postId)
+Post* PostManager::getPostById(int postId)
 {
     return avl_posts_by_id->find(postId);
 }

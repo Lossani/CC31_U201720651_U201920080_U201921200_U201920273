@@ -14,19 +14,16 @@ Hitagget::~Hitagget()
 
 }
 
-bool Hitagget::log_in(string email, string password)
+bool Hitagget::log_in(string email)
 {
-    User user = *getUserByEmail(email);
-
-    if (user.email != "" && password == user.password)
-    {
-        logged_user = user;
-        return true;
-    }
-    else
-    {
+    User* user = getUserByEmail(email);
+    if (user == nullptr)
         return false;
-    }
+
+    logged_user = user;
+
+    return true;
+
 }
 
 bool Hitagget::sign_up(string email, string fullname, string password)
@@ -37,7 +34,7 @@ bool Hitagget::sign_up(string email, string fullname, string password)
     }
     else
     {
-        logged_user = *getUserByEmail(email);
+        logged_user = getUserByEmail(email);
         return true;
     }
 }
@@ -51,12 +48,6 @@ void Hitagget::add_blog(char *title, char *content)
 {
     BlogManager::add_blog(logged_user.id, title, content);
 }*/
-
-User Hitagget::get_logged_user()
-{
-    return logged_user;
-}
-
 
 /*
 void Hitagget::update_logged_user(string fullname, string email)

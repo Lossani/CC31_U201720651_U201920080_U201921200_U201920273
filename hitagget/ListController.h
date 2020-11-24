@@ -85,24 +85,11 @@ void ListController<T, R, S>::retrieve_elements()
 
     file.open(filename, ios::in);
 
-    //file.seekg(0, ios::end);
-    //int num_elements = file.tellg() / sizeof(T);
-
     if (file.is_open())
     {
         all_elements = retrieve_function(file);
 
         file.close();
-        //for (int i = 0; i < num_elements; ++i)
-        //{
-        //    T current_element;
-
-        //   file.seekg(i * sizeof(T), ios::beg);
-
-        //   file.read((char*) &current_element, sizeof(T));
-
-        //   all_elements.push_back(current_element);
-        //}
     }
 }
 template<typename T, typename R, typename S>

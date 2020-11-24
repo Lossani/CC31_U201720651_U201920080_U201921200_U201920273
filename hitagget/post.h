@@ -42,18 +42,6 @@ public:
 
     Post() { }
     ~Post() { }
-
-    //string tag;
 };
 
-/*
-typedef struct
-{
-    int id = -1;
-    char content[255];
-    User author;
-    int comments_number = 0;
-    vector<PostComment> comments;
-} Post;
-*/
 #endif // POST_H

@@ -3,6 +3,7 @@
 #include <QApplication>
 #include <string>
 using namespace std;
+
 class Usuario{
 private:
     QString email;

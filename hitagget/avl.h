@@ -59,7 +59,6 @@ private:
     int height(Node* node);
     void add(Node*& node, T element);
     void remove(Node*& node, R value);
-    //void inOrder();
 
     Node*& greatest(Node*& node);
     Node*& lowest(Node*& node);
@@ -82,10 +81,8 @@ private:
     void findAllStringsThatContainsPostOrder(list<T>& returnValues, Node*& node, string value, int limit);
 
     void findAllStringsThatStartsWith(list<T>& returnValues, Node*& node, string value, int limit);
-    //void findAllStringsThatStartsWithPostOrder(list<T>& returnValues, Node*& node, string value, int limit);
 
     void findAllStringsThatEndsWith(list<T>& returnValues, Node*& node, string value, int limit);
-    //void findAllStringsThatEndsWithPostOrder(list<T>& returnValues, Node*& node, string value, int limit);
 
     Node* nullNode = nullptr;
 };
@@ -661,7 +658,7 @@ void AVL<T, R, NONE>::findAllStringsThatStartsWith(list<T> &returnValues, Node*&
     }
     else
     {
-        findAllStringsThatStartsWith(returnValues, node->leftChild, value, limit);
+        //findAllStringsThatStartsWith(returnValues, node->leftChild, value, limit);
         findAllStringsThatStartsWith(returnValues, node->rightChild, value, limit);
     }
 }
@@ -682,10 +679,10 @@ void AVL<T, R, NONE>::findAllStringsThatEndsWith(list<T> &returnValues, Node*& n
         {
             returnValues.push_back(node->element);
         }
-
-        findAllStringsThatEndsWith(returnValues, node->leftChild, value, limit);
-        findAllStringsThatEndsWith(returnValues, node->rightChild, value, limit);
     }
+
+    findAllStringsThatEndsWith(returnValues, node->leftChild, value, limit);
+    findAllStringsThatEndsWith(returnValues, node->rightChild, value, limit);
 }
 
 #endif // AVL_H
