@@ -695,6 +695,7 @@ void Principal::on_btnCloseUserProfile_clicked()
 
     ui->btnCloseUserProfile->setVisible(false);
     ui->lblShownUser->setVisible(false);
+    ui->btnFollow->setVisible(false);
     ui->lblShownUser->clear();
 
     show_all_posts(op_busq, invertir, false);
