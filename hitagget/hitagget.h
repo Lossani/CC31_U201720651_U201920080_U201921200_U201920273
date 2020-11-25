@@ -22,6 +22,8 @@ public:
     bool log_in(string email);
     //void log_out();
     bool sign_up(string email, string fullname, string password);
+
+    void save_instance();
     //void add_post(string title, string content);
     //void add_blog(string title, string content);
     //User* get_logged_user();

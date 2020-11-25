@@ -1,4 +1,5 @@
 #include "interactionmanager.h"
+#include <QTime>
 
 InteractionManager::InteractionManager() : ListController<PostInteraction*, int, int>(
    [](PostInteraction* interaction)
@@ -9,13 +10,27 @@ InteractionManager::InteractionManager() : ListController<PostInteraction*, int,
    {
        return value1 == value2;
    },
-   [](ofstream& file, PostInteraction* element)
+   [this]()
    {
-   //QMessageBox msg;
-       //msg.setText("newPost->get_post_content()");
-       //msg.exec();
-       file << element->id << endl;
-       file << element->authorId << endl;
+        ofstream file;
+
+        file.open("interaction.tsv", ios::out);
+
+        if (file.is_open())
+        {
+            file << "idUser	idPub	date	share" << endl;
+
+            for (PostInteraction* interaction : get_all_elements())
+            {
+                file << interaction->authorId << '\t'
+                     << interaction->parentPostId
+                     << '\t' << interaction->date
+                     << '\t' << (interaction->shared ? "TRUE" : "FALSE")
+                     << endl;
+            }
+
+            file.close();
+        }
    },
    [this](ifstream& file)
    {
@@ -61,20 +76,26 @@ InteractionManager::~InteractionManager()
 
 }
 
-void InteractionManager::addInteraction(int authorId, int postId, bool shared)
+void InteractionManager::addInteraction(int authorId, Post* post, bool shared)
 {
-    PostInteraction* newInteraction;
+    PostInteraction* newInteraction = new PostInteraction();
 
-    newInteraction->id = time(0);
     newInteraction->authorId = authorId;
-    newInteraction->parentPostId = postId;
+    newInteraction->parentPostId = post->id;
     newInteraction->shared = shared;
 
-    time_t now = time(0);
-    newInteraction->date = ctime(&now);
-    newInteraction->date = newInteraction->date.erase(newInteraction->date.find_last_not_of("\t\n\v\f\r ") + 1);
+    newInteraction->date = QDateTime::currentDateTime().toString("yyyy-MM-dd").toStdString();
 
     add_element(newInteraction);
+
+    avl_interactions_by_post_id->add(newInteraction);
+
+    post->numInteractions += shared ? 2 : 1;
+}
+
+void InteractionManager::editLastInteraction(bool shared)
+{
+    get_last_element()->shared = shared;
 }
 
 list<PostInteraction*> InteractionManager::getPostInteractions(int postId)
@@ -100,4 +121,9 @@ int InteractionManager::getNumInteractionsOfPost(int postId)
     }
 
     return numInteractions;
+}
+
+void InteractionManager::saveInteractions()
+{
+    save_elements();
 }

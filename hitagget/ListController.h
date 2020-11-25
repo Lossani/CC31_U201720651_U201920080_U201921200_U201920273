@@ -25,20 +25,25 @@ protected:
 private:
     function<R(T)> comparator;
     function<bool(S, S)> comparator_function;
-    function<void(ofstream& file, T element)> save_function;
+    function<void()> save_function;
     function<list<T>(ifstream& file)> retrieve_function;
     //function<list<string>(T element, list<int>& final_size)> parser;
     //function<list<T>(string data, int data_size)> interpreter;
     string filename;
 public:
-    ListController(function<R(T)> comparator, function<bool(S, S)> comparator_function, function<void(ofstream& file, T element)> save_function, function<list<T>(ifstream& file)> retrieve_function, string filename);
+    ListController(function<R(T)> comparator, function<bool(S, S)> comparator_function, function<void()> save_function, function<list<T>(ifstream& file)> retrieve_function, string filename);
     ~ListController();
+
+    int get_num_elements();
 
     virtual void save_elements();
     virtual void retrieve_elements();
     virtual void add_element(T element);
     virtual void update_element(T updated_element);
     virtual void delete_element(R identificator);
+
+    //T get_first_element();
+    T get_last_element();
 
     virtual list<T> get_all_elements();
     virtual T get_element(R identificator);
@@ -49,7 +54,7 @@ public:
 };
 
 template<typename T, typename R, typename S>
-ListController<T, R, S>::ListController(function<R(T)> comparator, function<bool(S, S)> comparator_function, function<void(ofstream& file, T element)> save_function, function<list<T>(ifstream& file)> retrieve_function, string filename) : comparator(comparator), comparator_function(comparator_function), save_function(save_function), retrieve_function(retrieve_function), filename(filename)
+ListController<T, R, S>::ListController(function<R(T)> comparator, function<bool(S, S)> comparator_function, function<void()> save_function, function<list<T>(ifstream& file)> retrieve_function, string filename) : comparator(comparator), comparator_function(comparator_function), save_function(save_function), retrieve_function(retrieve_function), filename(filename)
 {
     retrieve_elements();
 }
@@ -61,23 +66,17 @@ ListController<T, R, S>::~ListController()
 }
 
 template<typename T, typename R, typename S>
+int ListController<T, R, S>::get_num_elements()
+{
+    return all_elements.size();
+}
+
+template<typename T, typename R, typename S>
 void ListController<T, R, S>::save_elements()
 {
-    ofstream file;
-
-    file.open(filename, ios::out);
-
-    if (file.is_open())
-    {
-        for (T element : all_elements)
-        {
-            save_function(file, element);
-            //file.write((const char*) &element, sizeof(T));
-        }
-
-        file.close();
-    }
+    save_function();
 }
+
 template<typename T, typename R, typename S>
 void ListController<T, R, S>::retrieve_elements()
 {
@@ -96,7 +95,7 @@ template<typename T, typename R, typename S>
 void ListController<T, R, S>::add_element(T element)
 {
     all_elements.push_back(element);
-    save_elements();
+    //save_elements();
 }
 
 template<typename T, typename R, typename S>
@@ -148,6 +147,12 @@ void ListController<T, R, S>::delete_element(R identificator)
 
     if (was_deleted)
         save_elements();
+}
+
+template<typename T, typename R, typename S>
+T ListController<T, R, S>::get_last_element()
+{
+    return all_elements.back();
 }
 
 template<typename T, typename R, typename S>

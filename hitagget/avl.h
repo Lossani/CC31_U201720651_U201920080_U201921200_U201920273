@@ -43,6 +43,7 @@ public:
     const T find(R value);
     list<T> findAll(R value);
     list<T> findAll(R value, int limit);
+    list<T> findAll(R value, bool asc, int limit);
 
     list<T> findAllStringsNoContains(string value, bool asc, int limit);
     list<T> findAllStringsThatContains(string value, bool asc, int limit);
@@ -68,6 +69,9 @@ private:
     void rotateLeft(Node*& node);
     void rotateRight(Node*& node);
     void balance(Node*& node);
+
+    void findAllInOrder(list<T>& returnValues, Node*& node, R value, int limit);
+    void findAllPostOrder(list<T>& returnValues, Node*& node, R value, int limit);
 
     void inOrder(list<T>& returnValues, Node*& node);
     void postOrder(list<T>& returnValues, Node*& node);
@@ -214,6 +218,19 @@ list<T> AVL<T, R, NONE>::findAll(R value, int limit)
             }
         }
     }
+
+    return returnValues;
+}
+
+template<typename T, typename R, T NONE>
+list<T> AVL<T, R, NONE>::findAll(R value, bool asc, int limit)
+{
+    list<T> returnValues;
+
+    if (asc)
+        findAllInOrder(returnValues, root, value, limit);
+    else
+        findAllPostOrder(returnValues, root, value, limit);
 
     return returnValues;
 }
@@ -479,6 +496,50 @@ void AVL<T, R, NONE>::balance(Node*& node)
     {
         updateHeight(node);
     }
+}
+
+template<typename T, typename R, T NONE>
+void AVL<T, R, NONE>::findAllInOrder(list<T>& returnValues, Node*& node, R value, int limit)
+{
+    if (node == nullptr)
+        return;
+
+    if (returnValues.size() >= limit)
+        return;
+
+    findAllInOrder(returnValues, node->leftChild, value, limit);
+    if (returnValues.size() < limit)
+    {
+        if (comparator_function(node->element) == value)
+        {
+            returnValues.push_back(node->element);
+        }
+    }
+    else
+        return;
+    findAllInOrder(returnValues, node->rightChild, value, limit);
+}
+
+template<typename T, typename R, T NONE>
+void AVL<T, R, NONE>::findAllPostOrder(list<T>& returnValues, Node*& node, R value, int limit)
+{
+    if (node == nullptr)
+        return;
+
+    if (returnValues.size() >= limit)
+        return;
+
+    findAllPostOrder(returnValues, node->rightChild, value, limit);
+    if (returnValues.size() < limit)
+    {
+        if (comparator_function(node->element) == value)
+        {
+            returnValues.push_back(node->element);
+        }
+    }
+    else
+        return;
+    findAllPostOrder(returnValues, node->leftChild, value, limit);
 }
 
 template <typename T, typename R, T NONE>

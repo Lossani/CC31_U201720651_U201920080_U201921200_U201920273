@@ -9,6 +9,7 @@
 #include <QTextCodec>
 #include <QDate>
 #include <QRandomGenerator>
+#include <QCloseEvent>
 
 bool invertir = false;
 int op_busq = 0;
@@ -20,19 +21,21 @@ void Principal::show_all_posts(int op, bool inv, bool show_specific_profile)
         list<PostComment*> comments = main_instance->getPostComments(post->id);
         QMessageBox msg;
 
-            msg.setText(to_string(post->id).c_str());
-            msg.exec();
-            msg.setText(to_string(post->numInteractions).c_str());
-            msg.exec();
-            msg.setText(to_string(post->numLikes).c_str());
-            msg.exec();
-            msg.setText(post->pubDate.c_str());
-
-            msg.exec();
-
         if (post->id != -1)
         {
+            main_instance->addInteraction(main_instance->logged_user->id, post, false);
             ViewPost *view_post_dialog = new ViewPost();
+
+            view_post_dialog->share_post_function = [this](Post* post)
+            {
+                main_instance->editLastInteraction(true);
+            };
+
+            view_post_dialog->new_comment_function = [this](Post* post, string content)
+            {
+                main_instance->addInteraction(main_instance->logged_user->id, post, false);
+                main_instance->addComment(post->id, content);
+            };
 
             view_post_dialog->set_current_post(post, author_name, comments);
             view_post_dialog->exec();
@@ -43,8 +46,15 @@ void Principal::show_all_posts(int op, bool inv, bool show_specific_profile)
     {
         main_instance->shown_user = main_instance->getUserById(authorID);
 
+        if (!main_instance->logged_user->isFollowing(authorID))
+            ui->btnFollow->setVisible(true);
+
+        ui->btnCloseUserProfile->setVisible(true);
+        ui->lblShownUser->setVisible(true);
         ui->lblShownUser->clear();
         ui->lblShownUser->setText(("Mostrando usuario:\n" + main_instance->shown_user->fullname + "\n" + main_instance->shown_user->registerDate).c_str());
+
+        show_all_posts(ui->cb_criterios->currentIndex(), invertir, true);
     };
 /*
     function<void(int)> edit_post = [this](int id)
@@ -91,13 +101,16 @@ void Principal::show_all_posts(int op, bool inv, bool show_specific_profile)
         if (ui->txtSearchBox->text().toStdString().empty())
         {
             if (show_specific_profile)
-                posts = main_instance->getAuthorPosts(main_instance->shown_user != nullptr ? main_instance->shown_user->id : main_instance->logged_user->id, inv, 50);
+            {
+                posts = main_instance->getAuthorPostsByNumInteractions(main_instance->shown_user != nullptr ? main_instance->shown_user->id : main_instance->logged_user->id, inv, 50);
+            }
             else
                 posts = main_instance->getPostsByNumInteractions(inv, 50);
         }
         else
         {
             // We have something in the search box, we will show the results of the search box instead ordered by the interaction criteria
+
             show_all_posts(3 + (ui->cmbBoxSearchOptions->currentIndex()), invertir, show_specific_profile);
             return;
         }
@@ -107,7 +120,12 @@ void Principal::show_all_posts(int op, bool inv, bool show_specific_profile)
 
         if (ui->txtSearchBox->text().toStdString().empty())
         {
-            posts = main_instance->getPostsByPubDate(inv, 50);
+            if (show_specific_profile)
+            {
+                posts = main_instance->getAuthorPostsByPubDate(main_instance->shown_user != nullptr ? main_instance->shown_user->id : main_instance->logged_user->id, inv, 50);
+            }
+            else
+                posts = main_instance->getPostsByPubDate(inv, 50);
         }
         else
         {
@@ -121,7 +139,12 @@ void Principal::show_all_posts(int op, bool inv, bool show_specific_profile)
 
         if (ui->txtSearchBox->text().toStdString().empty())
         {
-            posts = main_instance->getPostsByLikes(inv, 50);
+            if (show_specific_profile)
+            {
+                posts = main_instance->getAuthorPostsByLikes(main_instance->shown_user != nullptr ? main_instance->shown_user->id : main_instance->logged_user->id, inv, 50);
+            }
+            else
+                posts = main_instance->getPostsByLikes(inv, 50);
         }
         else
         {
@@ -132,27 +155,62 @@ void Principal::show_all_posts(int op, bool inv, bool show_specific_profile)
     case 3:
         //IGUAL A
         if (ui->txtSearchBox->text().toStdString() != "")
-            posts = main_instance->getPostsThatTitleEqualsToString(ui->txtSearchBox->text().toStdString(), inv, 50);
+        {
+            if (show_specific_profile)
+            {
+                posts = main_instance->getAuthorPostsThatTitleEqualsToString(main_instance->shown_user != nullptr ? main_instance->shown_user->id : main_instance->logged_user->id, ui->txtSearchBox->text().toStdString(), inv, 50);
+            }
+            else
+                posts = main_instance->getPostsThatTitleEqualsToString(ui->txtSearchBox->text().toStdString(), inv, 50);
+        }
         break;
     case 4:
         //INICIA CON
         if (ui->txtSearchBox->text().toStdString() != "")
-            posts = main_instance->getPostsThatStartsWithString(ui->txtSearchBox->text().toStdString(), inv, 50);
+        {
+            if (show_specific_profile)
+            {
+                posts = main_instance->getAuthorPostsThatStartsWithString(main_instance->shown_user != nullptr ? main_instance->shown_user->id : main_instance->logged_user->id, ui->txtSearchBox->text().toStdString(), inv, 50);
+            }
+            else
+                posts = main_instance->getPostsThatStartsWithString(ui->txtSearchBox->text().toStdString(), inv, 50);
+        }
         break;
     case 5:
         //FINALIZA CON
         if (ui->txtSearchBox->text().toStdString() != "")
-            posts = main_instance->getPostsThatEndsWithString(ui->txtSearchBox->text().toStdString(), inv, 50);
+        {
+            if (show_specific_profile)
+            {
+                posts = main_instance->getAuthorPostsThatEndsWithString(main_instance->shown_user != nullptr ? main_instance->shown_user->id : main_instance->logged_user->id, ui->txtSearchBox->text().toStdString(), inv, 50);
+            }
+            else
+                posts = main_instance->getPostsThatEndsWithString(ui->txtSearchBox->text().toStdString(), inv, 50);
+        }
         break;
     case 6:
         //CONTIENE
         if (ui->txtSearchBox->text().toStdString() != "")
-            posts = main_instance->getPostsThatContainsString(ui->txtSearchBox->text().toStdString(), inv, 50);
+        {
+            if (show_specific_profile)
+            {
+                posts = main_instance->getAuthorPostsThatContainsString(main_instance->shown_user != nullptr ? main_instance->shown_user->id : main_instance->logged_user->id, ui->txtSearchBox->text().toStdString(), inv, 50);
+            }
+            else
+                posts = main_instance->getPostsThatContainsString(ui->txtSearchBox->text().toStdString(), inv, 50);
+        }
         break;
     case 7:
         //NO CONTIENE
         if (ui->txtSearchBox->text().toStdString() != "")
-            posts = main_instance->getPostsNoContainsString(ui->txtSearchBox->text().toStdString(), inv, 50);
+        {
+            if (show_specific_profile)
+            {
+                posts = main_instance->getAuthorPostsNoContainsString(main_instance->shown_user != nullptr ? main_instance->shown_user->id : main_instance->logged_user->id, ui->txtSearchBox->text().toStdString(), inv, 50);
+            }
+            else
+                posts = main_instance->getPostsNoContainsString(ui->txtSearchBox->text().toStdString(), inv, 50);
+        }
         break;
     default:
         posts = main_instance->getPostsByTitle(inv, 50);
@@ -188,10 +246,17 @@ void Principal::add_item_to_list_widget(QListWidget *list, Post* individual_post
 
 void Principal::show_followed_users()
 {
+    ui->listWidgetFollowers->clear();
+
     for(Follower* follower : main_instance->logged_user->followedUsers)
     {
         ui->listWidgetFollowers->addItem(main_instance->getUserById(follower->followedUserID)->fullname.c_str());
     }
+}
+
+void Principal::closeEvent(QCloseEvent *event)
+{
+    main_instance->save_instance();
 }
 
 Principal::Principal(QWidget *parent) :
@@ -202,6 +267,10 @@ Principal::Principal(QWidget *parent) :
     ui->setupUi(this);
 
     QTextCodec::setCodecForLocale(QTextCodec::codecForName("UTF-8"));
+
+    ui->btnCloseUserProfile->setVisible(false);
+    ui->lblShownUser->setVisible(false);
+    ui->btnFollow->setVisible(false);
 
     //Arboles Contactos
     this->BST_Cont_Apodo = new BST<Contacto, QString>([](Contacto j){return j.get_apodo();});
@@ -501,64 +570,9 @@ void Principal::new_publi(){
     }
     else
     {
-        //main_instance->add_post(*result);
-        //show_all_posts();
+        if (result->title != "" && result->content != "")
+            main_instance->addPost(main_instance->logged_user->id, result->title, result->content);
     }
-    /*
-    QString text = ui->tePubli->toPlainText();
-
-    if(ui->leTitleP->text() != "" && ui->leTag->text()!= "" && text != "" ){
-
-            QString temphs = "#"+ui->leTag->text();
-
-        lst->addLast(temphs);
-
-        act_tend();
-
-        //arreglar publi
-        int tamL = 93;
-        int cont = 0;
-        int SizeLineaPubli = text.size();
-        for (int i = 0; i < SizeLineaPubli;i++) {
-            cont++;
-            if (cont>tamL) {
-                if (text[i] == ' ') {
-                    text[i] = '\n';
-                    cont=0;
-                }
-            }
-        }
-
-        string tempTitP = ui->leTitleP->text().toUpper().toStdString();
-        string tempHS = ui->leTag->text().toStdString();
-        string tempTexto = text.toStdString();
-
-        fstream testeo;
-        testeo.open("Publicaciones.txt", ios::out | ios::app);
-        testeo<<endl;
-        testeo<<(*Unombre).toStdString()<<endl;
-        testeo<<tempTitP<<endl;
-        testeo<<"#"<<tempHS<<endl;
-        testeo<<tempTexto;
-        testeo.close();
-
-        //arreglar publi
-
-
-    ui->listWidgetPubli->addItem(*Unombre + "\t"+ (ui->leTitleP->text()).toUpper());
-    ui->listWidgetPubli->addItem(temphs);
-    ui->listWidgetPubli->addItem(text);
-    ui->listWidgetPubli->addItem(" ");
-
-    ui->leTitleP->setText("");
-    ui->leTag->setText("");
-    ui->tePubli->setMarkdown("");
-
-
-    }
-
-
-*/
 }
 
 void Principal::act_cont(){
@@ -667,8 +681,30 @@ void Principal::on_txtSearchBox_returnPressed()
 
 void Principal::on_cb_criterios_currentIndexChanged(int index)
 {
+    op_busq = index;
+
     if (main_instance->shown_user == nullptr)
         show_all_posts(index, invertir, false);
     else
         show_all_posts(index, invertir, true);
+}
+
+void Principal::on_btnCloseUserProfile_clicked()
+{
+    main_instance->shown_user = nullptr;
+
+    ui->btnCloseUserProfile->setVisible(false);
+    ui->lblShownUser->setVisible(false);
+    ui->lblShownUser->clear();
+
+    show_all_posts(op_busq, invertir, false);
+}
+
+void Principal::on_btnFollow_clicked()
+{
+    ui->btnFollow->setVisible(false);
+    Follower* newFollower = main_instance->addFollower(main_instance->logged_user->id, main_instance->shown_user->id);
+    main_instance->logged_user->followedUsers.push_back(newFollower);
+
+    show_followed_users();
 }

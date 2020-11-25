@@ -626,6 +626,60 @@ font: 13pt &quot;Comic Sans MS&quot;;</string>
      <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
     </property>
    </widget>
+   <widget class="QPushButton" name="btnCloseUserProfile">
+    <property name="geometry">
+     <rect>
+      <x>200</x>
+      <y>580</y>
+      <width>101</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Comic Sans MS</family>
+      <pointsize>14</pointsize>
+      <weight>50</weight>
+      <italic>false</italic>
+      <bold>false</bold>
+     </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: rgb(128, 183, 128);
+color: rgb(255, 255, 255);
+font: 14pt &quot;Comic Sans MS&quot;;</string>
+    </property>
+    <property name="text">
+     <string>Cerrar</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="btnFollow">
+    <property name="geometry">
+     <rect>
+      <x>90</x>
+      <y>580</y>
+      <width>101</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Comic Sans MS</family>
+      <pointsize>14</pointsize>
+      <weight>50</weight>
+      <italic>false</italic>
+      <bold>false</bold>
+     </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: rgb(128, 183, 128);
+color: rgb(255, 255, 255);
+font: 14pt &quot;Comic Sans MS&quot;;</string>
+    </property>
+    <property name="text">
+     <string>Seguir</string>
+    </property>
+   </widget>
    <zorder>label_9</zorder>
    <zorder>listWidgetCont</zorder>
    <zorder>listWidgetPubli</zorder>
@@ -650,6 +704,8 @@ font: 13pt &quot;Comic Sans MS&quot;;</string>
    <zorder>cmbBoxSearchOptions</zorder>
    <zorder>btnInvertir</zorder>
    <zorder>lblShownUser</zorder>
+   <zorder>btnCloseUserProfile</zorder>
+   <zorder>btnFollow</zorder>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">

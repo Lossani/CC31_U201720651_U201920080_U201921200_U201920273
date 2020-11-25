@@ -30,6 +30,17 @@ public:
 
     User() { }
     ~User() { }
+
+    bool isFollowing(int userId)
+    {
+        for(Follower* follower : followedUsers)
+        {
+            if (follower->followedUserID == userId)
+                return true;
+        }
+
+        return false;
+    }
 };
 
 #endif // USER_H

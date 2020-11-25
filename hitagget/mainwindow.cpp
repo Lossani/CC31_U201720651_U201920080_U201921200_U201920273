@@ -45,96 +45,22 @@ void MainWindow::Cerrar(){
 }
 
 void MainWindow::Registrar(){
-
-    function<void(QList<Usuario>)> SaveText = [](QList<Usuario>lista) {
-        ofstream archivo;
-        archivo.open("users.tsv");
-        if(archivo.good()){
-            for(int i = 0; i<lista.size();i++){
-                if(i==lista.size()-1){
-                    string saveID = lista[i].get_id().toStdString();
-                    string saveCorreo = lista[i].get_email().toStdString();
-                    string saveName = lista[i].get_fullname().toStdString();
-                    string saveDate = lista[i].get_regdate().toStdString();
-
-                  archivo<<saveID<<"\t"<<saveCorreo<<"\t"<<saveName<<"\t"<<saveDate;
-
-                } else{
-                    string saveID = lista[i].get_id().toStdString();
-                    string saveCorreo = lista[i].get_email().toStdString();
-                    string saveName = lista[i].get_fullname().toStdString();
-                    string saveDate = lista[i].get_regdate().toStdString();
-
-                  archivo<<saveID<<"\t"<<saveCorreo<<"\t"<<saveName<<"\t"<<saveDate<<endl;
-
-                }
-
-            }
-            archivo.close();
-        }
-        };
-
-
-    function<bool(QString c)> VerifCorreo = [](QString c){
-        bool ver = true;
-       for(int i =0;i<c.size();i++){
-           if(c[i] == "@"){
-               ver = false;
-           }
-       }
-       return ver;
-    };
-
-
     if(ui->leNombreReg->text()!="" && ui->leCorreoReg->text() != "" && ui->leContraReg->text() != ""){
         ui->lblerrorReg->hide();
-        QDateTime current = QDateTime::currentDateTime();
-        QString fecha = current.toString("yyyy-MM-dd");
 
-        QString temp = ui->leCorreoReg->text() + ui->cbReg->currentText();
-        QString correo_nuevo = "";
-        for(int i = 0;i<temp.size()-4;i++){
-            correo_nuevo = correo_nuevo + temp[i];
+        bool result = windP.main_instance->sign_up(ui->leCorreoReg->text().toStdString() + ui->cbReg->currentText().toStdString(), ui->leNombreReg->text().toStdString(), ui->leContraReg->text().toStdString());
+
+        if (result)
+        {
+            windP.Unombre = new QString(windP.main_instance->logged_user->fullname.c_str());
+            windP.UfechaR = new QString(windP.main_instance->logged_user->registerDate.c_str());
+            windP.show_user_info();
+            windP.show();
+            Cerrar();
         }
-
-
-        bool exist_correo = false;
-
-        for(int i=0;i<lverif.size();i++){
-            if(lverif[i].get_email() == correo_nuevo){
-            exist_correo = true;}
-        }
-
-        if(VerifCorreo(ui->leCorreoReg->text())){
-            ui->lblerrorReg->hide();
-            if(exist_correo){
-
-                ui->lblerrorReg->setText("ESTE CORREO YA ESTA REGISTRADO");
-                ui->lblerrorReg->show();
-
-            } else {
-                Usuario nuevouser(QString::number(lverif.size()),correo_nuevo,ui->leNombreReg->text(),fecha);
-                lverif.append(nuevouser);
-                ui->lblerrorReg->hide();
-
-                SaveText(lverif);
-
-                QString nametemp = nuevouser.get_fullname();
-                windP.Unombre = &nametemp;
-
-                QString datetemp = nuevouser.get_regdate();
-                windP.UfechaR = &datetemp;
-
-
-                windP.show_user_info();
-
-                windP.show();
-                Cerrar();
-
-            }
-
-        } else{
-            ui->lblerrorReg->setText("CORREO INVALIDO");
+        else
+        {
+            ui->lblerrorReg->setText("ESTE CORREO YA ESTA REGISTRADO");
             ui->lblerrorReg->show();
         }
     } else {

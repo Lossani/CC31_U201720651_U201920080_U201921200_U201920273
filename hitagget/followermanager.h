@@ -15,6 +15,10 @@ public:
     ~FollowerManager();
 
     list<Follower*> getUserFollowedUsersIds(int baseUserId);
+
+    Follower* addFollower(int baseUserId, int followedUserId)
+;
+    void saveFollowers();
 };
 
 #endif // FOLLOWERMANAGER_H

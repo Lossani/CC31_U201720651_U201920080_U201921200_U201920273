@@ -106,7 +106,7 @@ color: rgb(255, 255, 255)</string>
      <x>20</x>
      <y>370</y>
      <width>1031</width>
-     <height>201</height>
+     <height>191</height>
     </rect>
    </property>
    <property name="styleSheet">
@@ -225,6 +225,64 @@ color: rgb(255, 255, 255)</string>
    </property>
    <property name="text">
     <string/>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="btnShare">
+   <property name="geometry">
+    <rect>
+     <x>750</x>
+     <y>320</y>
+     <width>91</width>
+     <height>31</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <weight>75</weight>
+     <bold>true</bold>
+    </font>
+   </property>
+   <property name="styleSheet">
+    <string notr="true"/>
+   </property>
+   <property name="text">
+    <string>Compartir</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="btnComment">
+   <property name="geometry">
+    <rect>
+     <x>800</x>
+     <y>590</y>
+     <width>91</width>
+     <height>31</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <weight>75</weight>
+     <bold>true</bold>
+    </font>
+   </property>
+   <property name="styleSheet">
+    <string notr="true"/>
+   </property>
+   <property name="text">
+    <string>Comentar</string>
+   </property>
+  </widget>
+  <widget class="QLineEdit" name="txtNewCommentContent">
+   <property name="geometry">
+    <rect>
+     <x>20</x>
+     <y>590</y>
+     <width>771</width>
+     <height>31</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">color: black;
+background-color: white;</string>
    </property>
   </widget>
  </widget>

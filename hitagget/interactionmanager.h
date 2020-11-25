@@ -13,11 +13,14 @@ public:
     InteractionManager();
     ~InteractionManager();
 
-    void addInteraction(int authorId, int postId, bool shared);
+    void addInteraction(int authorId, Post* post, bool shared);
+    void editLastInteraction(bool shared);
     list<PostInteraction*> getPostInteractions(int postId);
     PostInteraction getInteraction(int interactionId);
 
     int getNumInteractionsOfPost(int postId);
+
+    void saveInteractions();
 };
 
 #endif // INTERACTIONMANAGER_H

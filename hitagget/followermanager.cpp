@@ -11,10 +11,25 @@ FollowerManager::FollowerManager() : ListController<Follower*, int, int>(
     {
         return value1 == value2;
     },
-    [](ofstream& file, Follower* element)
+    [this]()
     {
-        file << element->userID << endl;
-        file << element->followedUserID << endl;
+        ofstream file;
+
+        file.open("followers.tsv", ios::out);
+
+        if (file.is_open())
+        {
+            file << "idU	idF" << endl;
+
+            for (Follower* follower : ListController<Follower*, int, int>::get_all_elements())
+            {
+                file << follower->userID << '\t'
+                     << follower->followedUserID << '\t'
+                     << endl;
+            }
+
+            file.close();
+        }
     },
     [this](ifstream& file)
     {
@@ -57,4 +72,23 @@ FollowerManager::~FollowerManager()
 list<Follower*> FollowerManager::getUserFollowedUsersIds(int baseUserId)
 {
     return avl_followers_by_user_id->findAll(baseUserId);
+}
+
+Follower* FollowerManager::addFollower(int baseUserId, int followedUserId)
+{
+    Follower* newFollower = new Follower();
+
+    newFollower->userID = baseUserId;
+    newFollower->followedUserID = followedUserId;
+
+    add_element(newFollower);
+
+    avl_followers_by_user_id->add(newFollower);
+
+    return newFollower;
+}
+
+void FollowerManager::saveFollowers()
+{
+    save_elements();
 }

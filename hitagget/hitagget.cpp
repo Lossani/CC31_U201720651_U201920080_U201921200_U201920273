@@ -38,6 +38,15 @@ bool Hitagget::sign_up(string email, string fullname, string password)
         return true;
     }
 }
+
+void Hitagget::save_instance()
+{
+    saveUsers();
+    savePosts();
+    saveComments();
+    saveInteractions();
+    saveFollowers();
+}
 /*
 void Hitagget::add_post(string content)
 {

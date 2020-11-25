@@ -2,7 +2,7 @@
 #include "postmanager.h"
 #include <fstream>
 #include <QMessageBox>
-#include <ctime>
+#include <QTime>
 
 using namespace std;
 
@@ -15,17 +15,29 @@ PostManager::PostManager() : InteractionManager(), ListController<Post*, int, in
     {
         return value1 == value2;
     },
-    [](ofstream& file, Post* element)
+    [this]()
     {
-    //QMessageBox msg;
-        //msg.setText("newPost->get_post_content()");
-        //msg.exec();
-        file << element->id << '\t';
-        file << element->authorId << '\t';
-        file << element->title << '\t';
-        file << element->content << '\t';
-        file << element->pubDate << '\t';
-        file << element->numLikes << endl;
+         ofstream file;
+
+         file.open("publications.tsv", ios::out);
+
+         if (file.is_open())
+         {
+             file << "id	idU	title	desc	pubdate	numlikes" << endl;
+
+             for (Post* post : ListController<Post*, int, int>::get_all_elements())
+             {
+                 file << post->id << '\t'
+                      << post->authorId << '\t'
+                      << post->title << '\t'
+                      << post->content << '\t'
+                      << post->pubDate << '\t'
+                      << post->numLikes << '\t'
+                      << endl;
+             }
+
+             file.close();
+         }
     },
     [this](ifstream& file)
     {
@@ -90,16 +102,22 @@ void PostManager::add_post(Post post)
 
 void PostManager::addPost(int authorId, string title, string content)
 {
-    Post* newPost;
+    Post* newPost = new Post();
 
-    newPost->id = time(0);
+    newPost->id = ListController<Post*, int, int>::get_num_elements() + 1;
     newPost->authorId = authorId;
     newPost->content = content;
     newPost->title = title;
-    time_t now = time(0);
-    newPost->pubDate = ctime(&now);
-    newPost->pubDate = newPost->pubDate.erase(newPost->pubDate.find_last_not_of("\t\n\v\f\r ") + 1);
+    newPost->pubDate = QDateTime::currentDateTime().toString("yyyy-MM-dd").toStdString();
+
     ListController<Post*, int, int>::add_element(newPost);
+
+    avl_posts_by_id->add(newPost);
+    avl_posts_by_authorId->add(newPost);
+    avl_posts_by_title->add(newPost);
+    avl_posts_by_pubDate->add(newPost);
+    avl_posts_by_numLikes->add(newPost);
+    avl_posts_by_numInteractions->add(newPost);
 }
 
 void PostManager::addPost(Post* post)
@@ -125,11 +143,48 @@ list<Post*> PostManager::getAuthorPosts(int userId)
 
 list<Post *> PostManager::getAuthorPosts(int userId, bool asc, int limit)
 {
-    list<Post*> returnList = avl_posts_by_authorId->findAll(userId, limit);
+    if (limit <= 0)
+        return list<Post*>();
+
+    return avl_posts_by_authorId->findAll(userId, asc, limit);
+}
+
+list<Post *> PostManager::getAuthorPostsByPubDate(int userId, bool asc, int limit)
+{
+    if (limit <= 0)
+        return list<Post*>();
+
+    list<Post*> returnList = avl_posts_by_authorId->findAll(userId, asc, limit);
+    if (asc)
+        returnList.sort([](const Post* a, const Post* b) { return a->pubDate < b->pubDate; });
+    else
+        returnList.sort([](const Post* a, const Post* b) { return a->pubDate > b->pubDate; });
+    return returnList;
+}
+
+list<Post *> PostManager::getAuthorPostsByLikes(int userId, bool asc, int limit)
+{
+    if (limit <= 0)
+        return list<Post*>();
+
+    list<Post*> returnList = avl_posts_by_authorId->findAll(userId, asc, limit);
     if (asc)
         returnList.sort([](const Post* a, const Post* b) { return a->numLikes < b->numLikes; });
     else
         returnList.sort([](const Post* a, const Post* b) { return a->numLikes > b->numLikes; });
+    return returnList;
+}
+
+list<Post *> PostManager::getAuthorPostsByNumInteractions(int userId, bool asc, int limit)
+{
+    if (limit <= 0)
+        return list<Post*>();
+
+    list<Post*> returnList = avl_posts_by_authorId->findAll(userId, asc, limit);
+    if (asc)
+        returnList.sort([](const Post* a, const Post* b) { return a->numInteractions < b->numInteractions; });
+    else
+        returnList.sort([](const Post* a, const Post* b) { return a->numInteractions > b->numInteractions; });
     return returnList;
 }
 
@@ -309,10 +364,148 @@ list<Post *> PostManager::getPostsThatTitleEqualsToString(string value, bool asc
     if (limit <= 0)
         return list<Post*>();
 
+    list<Post*> returnList = avl_posts_by_title->findAll(value, limit);
     if (asc)
-        return avl_posts_by_title->findAll(value, limit);
+        returnList.sort([](const Post* a, const Post* b) { return a->title < b->title; });
     else
-        return avl_posts_by_title->findAll(value, limit);
+        returnList.sort([](const Post* a, const Post* b) { return a->title > b->title; });
+    return returnList;
+}
+
+list<Post *> PostManager::getAuthorPostsThatContainsString(int userId, string value, bool asc, int limit)
+{
+    if (limit <= 0)
+        return list<Post*>();
+
+    list<Post*> returnList;
+
+    for (Post* post : getAuthorPosts(userId))
+    {
+        if (returnList.size() >= (uint)limit)
+            break;
+
+        if (post->title.find(value) != string::npos)
+        {
+            returnList.push_back(post);
+        }
+    }
+
+    if (asc)
+        returnList.sort([](const Post* a, const Post* b) { return a->title < b->title; });
+    else
+        returnList.sort([](const Post* a, const Post* b) { return a->title > b->title; });
+
+    return returnList;
+}
+
+list<Post *> PostManager::getAuthorPostsNoContainsString(int userId, string value, bool asc, int limit)
+{
+    if (limit <= 0)
+        return list<Post*>();
+
+    list<Post*> returnList;
+
+    for (Post* post : getAuthorPosts(userId))
+    {
+        if (returnList.size() >= (uint)limit)
+            break;
+
+        if (post->title.find(value) == string::npos)
+        {
+            returnList.push_back(post);
+        }
+    }
+
+    if (asc)
+        returnList.sort([](const Post* a, const Post* b) { return a->title < b->title; });
+    else
+        returnList.sort([](const Post* a, const Post* b) { return a->title > b->title; });
+
+    return returnList;
+}
+
+list<Post *> PostManager::getAuthorPostsThatStartsWithString(int userId, string value, bool asc, int limit)
+{
+    if (limit <= 0)
+        return list<Post*>();
+
+    list<Post*> returnList;
+
+    for (Post* post : getAuthorPosts(userId))
+    {
+        if (returnList.size() >= (uint)limit)
+            break;
+
+        if (value.size() <= post->title.size())
+        {
+            if (value == post->title.substr(0, value.size()))
+            {
+                returnList.push_back(post);
+            }
+        }
+    }
+
+    if (asc)
+        returnList.sort([](const Post* a, const Post* b) { return a->title < b->title; });
+    else
+        returnList.sort([](const Post* a, const Post* b) { return a->title > b->title; });
+
+    return returnList;
+}
+
+list<Post *> PostManager::getAuthorPostsThatEndsWithString(int userId, string value, bool asc, int limit)
+{
+    if (limit <= 0)
+        return list<Post*>();
+
+    list<Post*> returnList;
+
+    for (Post* post : getAuthorPosts(userId))
+    {
+        if (returnList.size() >= (uint)limit)
+            break;
+
+        if (value.size() <= post->title.size())
+        {
+            if (value == post->title.substr(post->title.size() - value.size(), value.size()))
+            {
+                returnList.push_back(post);
+            }
+        }
+    }
+
+    if (asc)
+        returnList.sort([](const Post* a, const Post* b) { return a->title < b->title; });
+    else
+        returnList.sort([](const Post* a, const Post* b) { return a->title > b->title; });
+
+    return returnList;
+}
+
+list<Post *> PostManager::getAuthorPostsThatTitleEqualsToString(int userId, string value, bool asc, int limit)
+{
+    if (limit <= 0)
+        return list<Post*>();
+
+    list<Post*> returnList;
+
+    for (Post* post : getAuthorPosts(userId))
+    {
+        if (returnList.size() >= (uint)limit)
+            break;
+
+        if (post->title == value)
+        {
+            returnList.push_back(post);
+        }
+    }
+
+    if (asc)
+        returnList.sort([](const Post* a, const Post* b) { return a->title < b->title; });
+    else
+        returnList.sort([](const Post* a, const Post* b) { return a->title > b->title; });
+
+    return returnList;
 }
 
 Post* PostManager::getPostById(int postId)
@@ -329,6 +522,11 @@ list<Post *> PostManager::getPostsByNumInteractions(bool asc, int limit)
         return avl_posts_by_numInteractions->inOrder(limit);
     else
         return avl_posts_by_numInteractions->postOrder(limit);
+}
+
+void PostManager::savePosts()
+{
+    ListController<Post*, int, int>::save_elements();
 }
 /*
 void PostManager::add_comment_to_post(int post_id, int author_id, char* comment)

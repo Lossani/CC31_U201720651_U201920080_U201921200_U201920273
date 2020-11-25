@@ -16,9 +16,15 @@ public:
     explicit ViewPost(QWidget *parent = nullptr);
     ~ViewPost();
     void set_current_post(Post* post, string author_name, list<PostComment*> postComments);
+    function<void(Post*)> share_post_function;
+    function<void(Post*, string)> new_comment_function;
 
 private slots:
     void on_btnLike_clicked();
+
+    void on_btnShare_clicked();
+
+    void on_btnComment_clicked();
 
 private:
     Ui::ViewPost *ui;

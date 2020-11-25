@@ -10,7 +10,7 @@
 
 using namespace std;
 
-class PostManager : private InteractionManager, private ListController<Post*, int, int>
+class PostManager : public InteractionManager, private ListController<Post*, int, int>
 {
 private:
     //CommentManager all_comments;
@@ -32,25 +32,37 @@ public:
     void deletePost(int postId);
     list<Post*> getAuthorPosts(int userId);
     list<Post*> getAuthorPosts(int userId, bool asc, int limit);
+    list<Post*> getAuthorPostsByPubDate(int userId, bool asc, int limit);
+    list<Post*> getAuthorPostsByLikes(int userId, bool asc, int limit);
+    list<Post*> getAuthorPostsByNumInteractions(int userId, bool asc, int limit);
     list<Post*> getAllPosts();
 
     list<Post*> getAllPostsByPubDate(bool asc);
     list<Post*> getAllPostsByLikes(bool asc);
-    list<Post *> getAllPostsByNumInteractions(bool asc);
+    list<Post*> getAllPostsByNumInteractions(bool asc);
 
     list<Post*> getPostsByPubDate(bool asc, int limit);
     list<Post*> getPostsByLikes(bool asc, int limit);
     list<Post*> getPostsByTitle(bool asc, int limit);
 
     list<Post*> getPostsThatContainsString(string value, bool asc, int limit);
-    list<Post *> getPostsNoContainsString(string value, bool asc, int limit);
+    list<Post*> getPostsNoContainsString(string value, bool asc, int limit);
     list<Post*> getPostsThatStartsWithString(string value, bool asc, int limit);
     list<Post*> getPostsThatEndsWithString(string value, bool asc, int limit);
     list<Post*> getPostsThatTitleEqualsToString(string value, bool asc, int limit);
 
+    list<Post*> getAuthorPostsThatContainsString(int userId, string value, bool asc, int limit);
+    list<Post*> getAuthorPostsNoContainsString(int userId, string value, bool asc, int limit);
+    list<Post*> getAuthorPostsThatStartsWithString(int userId, string value, bool asc, int limit);
+    list<Post*> getAuthorPostsThatEndsWithString(int userId, string value, bool asc, int limit);
+    list<Post*> getAuthorPostsThatTitleEqualsToString(int userId, string value, bool asc, int limit);
+
+
     Post* getPostById(int postId);
 
     list<Post*> getPostsByNumInteractions(bool asc, int limit);
+
+    void savePosts();
    // void add_comment_to_post(int post_id, int comment_author_id, string comment);
     //void delete_comment(int comment_id);
     //list<PostComment> get_post_comments(int post_id);

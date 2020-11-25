@@ -3,6 +3,7 @@
 
 #include <QMainWindow>
 #include <QListWidget>
+#include <QCloseEvent>
 #include <ListaD.h>
 #include <QQueue>
 #include <contacto.h>
@@ -81,10 +82,17 @@ private slots:
 
     void on_cb_criterios_currentIndexChanged(int index);
 
+    void on_btnCloseUserProfile_clicked();
+
+    void on_btnFollow_clicked();
+
 private:
     void add_item_to_list_widget(QListWidget *list, Post* individual_post, function<void(Post*, string)> show_post, function<void(int)> show_author_profile, string author_name);
     void show_followed_users();
     Ui::Principal *ui;
+
+protected:
+     void closeEvent(QCloseEvent *event);
 };
 
 #endif // PRINCIPAL_H

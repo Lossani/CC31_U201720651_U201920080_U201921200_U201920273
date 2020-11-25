@@ -9,7 +9,7 @@
 
 using namespace std;
 
-class UserManager : private FollowerManager, private ListController<User*, int, string>
+class UserManager : public FollowerManager, private ListController<User*, int, string>
 {
 private:
     function<string(User*)> email_field_comparator;
@@ -25,6 +25,7 @@ public:
     User* getUserById(int id);
     //void delete_user(int id);
 
+    void saveUsers();
 };
 
 #endif // USERMANAGER_H

@@ -3,6 +3,7 @@
 #include <fstream>
 
 #include <QMessageBox>
+#include <QTime>
 using namespace std;
 
 UserManager::UserManager() : FollowerManager(), ListController<User*, int, string>(
@@ -14,13 +15,27 @@ UserManager::UserManager() : FollowerManager(), ListController<User*, int, strin
     {
         return value1 == value2;
     },
-    [](ofstream& file, User* element)
+    [this]()
     {
-        file << element->id << endl;
-        file << element->email << endl;
-        file << element->fullname << endl;
-        file << element->registerDate << endl;
-        file << element->password;
+         ofstream file;
+
+         file.open("users.tsv", ios::out);
+
+         if (file.is_open())
+         {
+             file << "id	email	name	joindate" << endl;
+
+             for (User* user : ListController<User*, int, string>::get_all_elements())
+             {
+                 file << user->id << '\t'
+                      << user->email << '\t'
+                      << user->fullname << '\t'
+                      << user->registerDate << '\t'
+                      << endl;
+             }
+
+             file.close();
+         }
     },
     [this](ifstream& file)
     {
@@ -73,19 +88,24 @@ UserManager::~UserManager()
 
 bool UserManager::addUser(string email, string fullname, string password)
 {
-    if (ListController<User*, int, string>::find_elements(email_field_comparator, email).size() > 0)
+    if (avl_users_by_email->find(email))
     {
         return false;
     }
 
     User* newUser = new User();
 
-    newUser->id = time(0);
+    newUser->id = avl_users_by_email->size() + 1;
     newUser->email = email;
     newUser->password = password;
     newUser->fullname = fullname;
 
+    newUser->registerDate = QDateTime::currentDateTime().toString("yyyy-MM-dd").toStdString();
+
     ListController<User*, int, string>::add_element(newUser);
+
+    avl_users_by_email->add(newUser);
+
     return true;
 }
 
@@ -102,4 +122,9 @@ User* UserManager:: getUserByEmail(string email)
 User* UserManager:: getUserById(int id)
 {
     return ListController<User*, int, string>::get_element(id);
+}
+
+void UserManager::saveUsers()
+{
+    ListController<User*, int, string>::save_elements();
 }

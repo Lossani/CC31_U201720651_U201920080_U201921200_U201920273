@@ -1,6 +1,7 @@
 #include "viewpost.h"
 #include "ui_viewpost.h"
 #include <QMessageBox>
+#include <QTime>
 
 ViewPost::ViewPost(QWidget *parent) :
     QDialog(parent),
@@ -49,4 +50,22 @@ void ViewPost::on_btnLike_clicked()
     }
 
     ui->lblNumLikes->setText(to_string(current_post->numLikes).c_str());
+}
+
+void ViewPost::on_btnShare_clicked()
+{
+    ui->btnShare->setVisible(false);
+
+    if (share_post_function != nullptr)
+        share_post_function(current_post);
+}
+
+void ViewPost::on_btnComment_clicked()
+{
+    if (new_comment_function != nullptr)
+    {
+        new_comment_function(current_post, ui->txtNewCommentContent->text().toStdString());
+        ui->listPostComments->addItem(QDateTime::currentDateTime().toString("yyyy-MM-dd") + '\t' + ui->txtNewCommentContent->text());
+        ui->txtNewCommentContent->setText("");
+    }
 }
