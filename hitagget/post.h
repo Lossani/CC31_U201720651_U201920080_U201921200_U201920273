@@ -26,6 +26,7 @@ public:
     int parentPostId = -1;
     string date = "";
     bool shared = false;
+    bool isDeleted = false;
 
     PostInteraction() { }
     ~PostInteraction() { }

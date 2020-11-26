@@ -28,13 +28,14 @@ PostManager::PostManager() : InteractionManager(), ListController<Post*, int, in
 
              for (Post* post : ListController<Post*, int, int>::get_all_elements())
              {
-                 file << post->id << '\t'
-                      << post->authorId << '\t'
-                      << post->title << '\t'
-                      << post->content << '\t'
-                      << post->pubDate << '\t'
-                      << post->numLikes
-                      << endl;
+                 if (!post->isDeleted)
+                     file << post->id << '\t'
+                          << post->authorId << '\t'
+                          << post->title << '\t'
+                          << post->content << '\t'
+                          << post->pubDate << '\t'
+                          << post->numLikes
+                          << endl;
              }
 
              file.close();
@@ -52,6 +53,8 @@ PostManager::PostManager() : InteractionManager(), ListController<Post*, int, in
         avl_trends = new AVL<string*, string, nullptr>([](string* element) { return *element; });
 
         all_trends = new list<Trend*>();
+
+        currentIndex = 1;
 
         QStringList unique_word_list;
 
@@ -79,6 +82,9 @@ PostManager::PostManager() : InteractionManager(), ListController<Post*, int, in
             currentPost->numLikes = stoi(numLikes);
 
             currentPost->numInteractions = getNumInteractionsOfPost(stoi(id));
+
+            if (currentPost->id > currentIndex)
+                currentIndex = currentPost->id;
 
             retrievedElements.push_back(currentPost);
 
@@ -150,7 +156,7 @@ Post* PostManager::addPost(int authorId, string title, string content)
 {
     Post* newPost = new Post();
 
-    newPost->id = ListController<Post*, int, int>::get_num_elements() + 1;
+    newPost->id = ++currentIndex;
     newPost->authorId = authorId;
     newPost->content = content;
     newPost->title = title;
@@ -165,7 +171,20 @@ Post* PostManager::addPost(int authorId, string title, string content)
     avl_posts_by_numLikes->add(newPost);
     avl_posts_by_numInteractions->add(newPost);
 
-    QString linea = QString::fromStdString(title);
+    updateTrendsFromPostTitle(newPost);
+
+    return newPost;
+}
+
+void PostManager::updatePostsTitleAVL(Post *post)
+{
+    avl_posts_by_title->remove(post);
+    avl_posts_by_title->add(post);
+}
+
+bool PostManager::updateTrendsFromPostTitle(Post *post)
+{
+    QString linea = QString::fromStdString(post->title);
 
     QStringList words = linea.split(" ");
     QStringList foundTags;
@@ -199,14 +218,160 @@ Post* PostManager::addPost(int authorId, string title, string content)
     }
 
     if (foundTags.size() > 0)
+    {
         all_trends->sort([](const Trend* a, const Trend* b) { return a->count > b->count; });
-
-    return newPost;
+        return true;
+    }
+    else
+        return false;
 }
 
-void PostManager::deletePost(int id)
+void PostManager::updateTrendsFromEditedPostTitle(Post *oldPost, Post *post)
 {
-    ListController<Post*, int, int>::delete_element(id);
+    QString linea = QString::fromStdString(oldPost->title);
+    QStringList words = linea.split(" ");
+
+    QStringList foundTags;
+    QStringList deletedTags;
+    QStringList foundTagsInOldTitle;
+
+    for(QString word : words)
+    {
+        if (word.size() > 1 && word[0] == '#')
+        {
+           foundTagsInOldTitle.push_back(word);
+        }
+    }
+
+    foundTagsInOldTitle.removeDuplicates();
+
+    linea = QString::fromStdString(post->title);
+
+    words = linea.split(" ");
+
+    for(QString word : words)
+    {
+        if (word.size() > 1 && word[0] == '#')
+        {
+           foundTags.push_back(word);
+        }
+    }
+
+    foundTags.removeDuplicates();
+
+
+    for (QString oldTag : foundTagsInOldTitle)
+    {
+        bool found = false;
+
+        for (QString tag : foundTags)
+        {
+            if (tag == oldTag)
+            {
+                found = true;
+                break;
+            }
+        }
+
+        if (!found)
+            deletedTags.push_back(oldTag);
+    }
+
+    deletedTags.removeDuplicates();
+
+    for (QString word : foundTags)
+    {
+        bool ignore = false;
+
+        for (QString tag : foundTagsInOldTitle)
+        {
+            if (tag == word)
+            {
+                ignore = true;
+                break;
+            }
+        }
+
+        if (!ignore)
+        {
+            bool found = false;
+            for (Trend* trend : *all_trends)
+            {
+                if (trend->tag == word.toStdString())
+                {
+                    trend->count++;
+                    found = true;
+                }
+            }
+
+            if (!found)
+            {
+                all_trends->push_back(new Trend(1, word.toStdString()));
+            }
+        }
+    }
+
+    for (QString tag : deletedTags)
+    {
+        for (Trend* trend : *all_trends)
+        {
+            if (trend->tag == tag.toStdString())
+            {
+                trend->count--;
+            }
+        }
+    }
+
+    all_trends->sort([](const Trend* a, const Trend* b) { return a->count > b->count; });
+}
+
+void PostManager::updateTrendsFromDeletedPostTitle(Post *post)
+{
+    QString linea = QString::fromStdString(post->title);
+
+    QStringList words = linea.split(" ");
+    QStringList foundTags;
+
+    for(QString word : words)
+    {
+        if (word.size() > 1 && word[0] == '#')
+        {
+           foundTags.push_back(word);
+        }
+    }
+
+    foundTags.removeDuplicates();
+
+    for (QString word : foundTags)
+    {
+        for (Trend* trend : *all_trends)
+        {
+            if (trend->tag == word.toStdString())
+            {
+                trend->count--;
+                break;
+            }
+        }
+    }
+
+    if (foundTags.size() > 0)
+    {
+        all_trends->sort([](const Trend* a, const Trend* b) { return a->count > b->count; });
+    }
+}
+
+void PostManager::deletePost(Post *post)
+{
+    avl_posts_by_id->remove(post);
+    avl_posts_by_authorId->remove(post);
+    avl_posts_by_title->remove(post);
+    avl_posts_by_pubDate->remove(post);
+    avl_posts_by_numLikes->remove(post);
+    avl_posts_by_numInteractions->remove(post);
+
+    post->isDeleted = true;
+
+    updateTrendsFromDeletedPostTitle(post);
 }
 
 list<Post*> PostManager::getAuthorPosts(int userId)

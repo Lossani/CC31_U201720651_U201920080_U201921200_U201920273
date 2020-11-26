@@ -30,6 +30,8 @@ public:
 
     Post* addPost(int authorId, string title, string content) override;
 
+    void deletePost(Post* post) override;
+
     list<Post*> getShownUserPostsThatContainsString(string value, bool asc, int limit);
     list<Post*> getShownUserPostsNoContainsString(string value, bool asc, int limit);
     list<Post*> getShownUserPostsThatStartsWithString(string value, bool asc, int limit);

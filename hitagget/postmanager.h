@@ -24,6 +24,8 @@ private:
 
     AVL<string*, string, nullptr>* avl_trends;
 
+    int currentIndex;
+
 public:
     PostManager();
     ~PostManager();
@@ -32,8 +34,8 @@ public:
 
     //void add_post(Post post);
     virtual Post* addPost(int authorId, string title, string content);
+    virtual void deletePost(Post* post);
 
-    void deletePost(int postId);
     list<Post*> getAuthorPosts(int userId);
     list<Post*> getAuthorPosts(int userId, bool asc, int limit);
     list<Post*> getAuthorPostsByPubDate(int userId, bool asc, int limit);
@@ -69,6 +71,11 @@ public:
     void savePosts();
 
     void updatePostsAVLs(Post* post);
+    void updatePostsTitleAVL(Post* post);
+
+    bool updateTrendsFromPostTitle(Post* post);
+    void updateTrendsFromEditedPostTitle(Post* oldPost, Post* post);
+    void updateTrendsFromDeletedPostTitle(Post* post);
 };
 
 #endif // POSTMANAGER_H

@@ -14,9 +14,6 @@
 #include <QCloseEvent>
 #include <stdlib.h>
 
-bool invertir = false;
-int op_busq = 0;
-
 void Principal::show_all_posts(int op, bool inv, bool show_specific_profile)
 {
     function<void(Post*, string)> show_post = [this](Post* post, string author_name)
@@ -48,9 +45,27 @@ void Principal::show_all_posts(int op, bool inv, bool show_specific_profile)
                 main_instance->updatePostsAVLs(post);
             };
 
-            view_post_dialog->set_current_post(post, author_name, comments);
-            view_post_dialog->exec();
+            view_post_dialog->edit_post_function = [this](Post* oldPost, Post* post, bool hasChangedTitle)
+            {
+                if (hasChangedTitle)
+                {
+                    main_instance->updatePostsTitleAVL(post);
+                    main_instance->updateTrendsFromEditedPostTitle(oldPost, post);
+                    act_tend();
+                }
+            };
 
+            view_post_dialog->delete_post_function = [this](Post* post)
+            {
+                main_instance->deletePost(post);
+            };
+
+            view_post_dialog->set_current_post(post, author_name, comments);
+
+            if (post->authorId != main_instance->logged_user->id)
+                view_post_dialog->hide_author_actions_buttons();
+
+            view_post_dialog->exec();
             show_all_posts(op_busq, invertir, main_instance->get_shown_user() != nullptr ? true : false);
         }
     };
@@ -230,33 +245,51 @@ void Principal::show_followed_users()
 
     for(Follower* follower : main_instance->logged_user->followedUsers)
     {
-        QListWidgetItem *item = new QListWidgetItem();
-        ui->listWidgetFollowers->addItem(item);
-
-        FollowerListUI *follower_ui = new FollowerListUI();
-
-        User* user_shown = main_instance->getUserById(follower->followedUserID);
-        follower_ui->user_name->setText(user_shown->fullname.c_str());
-        follower_ui->user_shown = user_shown;
-
-        follower_ui->set_user_click_action([this](User* user)
+        if (!follower->isDeleted)
         {
-            main_instance->set_shown_user(user);
+            User* user_shown = main_instance->getUserById(follower->followedUserID);
 
-            if (!main_instance->logged_user->isFollowing(user->id))
-                ui->btnFollow->setVisible(true);
+            if (user_shown != nullptr)
+            {
+                QListWidgetItem *item = new QListWidgetItem();
+                ui->listWidgetFollowers->addItem(item);
 
-            ui->btnCloseUserProfile->setVisible(true);
-            ui->lblShownUser->setVisible(true);
-            ui->lblShownUser->clear();
-            ui->lblShownUser->setText(("Mostrando usuario:\n" + main_instance->get_shown_user()->fullname + "\n" + main_instance->get_shown_user()->registerDate).c_str());
+                FollowerListUI *follower_ui = new FollowerListUI();
 
-            show_all_posts(ui->cb_criterios->currentIndex(), invertir, true);
-        });
+                follower_ui->user_name_button->setText(user_shown->fullname.c_str());
+                follower_ui->user_shown = user_shown;
 
-        item->setSizeHint(follower_ui->minimumSizeHint());
+                follower_ui->current_follower = follower;
 
-        ui->listWidgetFollowers->setItemWidget(item, follower_ui);
+                follower_ui->set_user_click_action([this](User* user)
+                {
+                    main_instance->set_shown_user(user);
+
+                    if (!main_instance->logged_user->isFollowing(user->id))
+                        ui->btnFollow->setVisible(true);
+
+                    ui->btnCloseUserProfile->setVisible(true);
+                    ui->lblShownUser->setVisible(true);
+                    ui->lblShownUser->clear();
+                    ui->lblShownUser->setText(("Mostrando usuario:\n" + main_instance->get_shown_user()->fullname + "\n" + main_instance->get_shown_user()->registerDate).c_str());
+
+                    show_all_posts(ui->cb_criterios->currentIndex(), invertir, true);
+                });
+
+                follower_ui->set_remove_click_action([this](Follower* follower)
+                {
+                    follower->isDeleted = true;
+
+                    main_instance->deleteFollower(follower);
+
+                    show_followed_users();
+                });
+
+                item->setSizeHint(follower_ui->minimumSizeHint());
+
+                ui->listWidgetFollowers->setItemWidget(item, follower_ui);
+            }
+        }
     }
 }
 
@@ -269,8 +302,10 @@ void Principal::show_contacts(list<User*> contacts)
 
         FollowerListUI *follower_ui = new FollowerListUI();
 
-        follower_ui->user_name->setText(user->fullname.c_str());
+        follower_ui->user_name_button->setText(user->fullname.c_str());
         follower_ui->user_shown = user;
+
+        follower_ui->remove_follower_button->setVisible(false);
 
         follower_ui->set_user_click_action([this](User* user)
         {
@@ -315,7 +350,7 @@ Principal::Principal(QWidget *parent) :
 
 
 
-    show_all_posts(0, false, false);
+    show_all_posts(ui->cmbBoxSearchOptions->currentIndex(), invertir, false);
 
     act_tend();
 
@@ -335,41 +370,54 @@ Principal::Principal(QWidget *parent) :
     connect(ui->btnPublicar,SIGNAL(released()),this,SLOT(new_publi()));
 
     connect(ui->btnInvertir, SIGNAL(released()), this, SLOT(f_invertir()));
-/*
-    ifstream file("Texto.txt");
-    string finalString = "";
+    /*
+        ifstream file("Texto.txt");
+        string finalString = "";
 
-    if (file.is_open())
-    {
-        string texto;
-
-        getline(file, texto);
-
-        QStringList words = QString(texto.c_str()).split(" ");
-
-        srand(time(0));
-
-        for (int i = 0; i < 5000; ++i)
+        if (file.is_open())
         {
-            int random = rand() % words.size();
-            if (words[random][0] != "#")
-                words[random] = "#" + words[random];
+            string texto;
+
+            getline(file, texto);
+
+            vector<string> tokens;
+            size_t prev = 0, pos = 0;
+            do
+            {
+                pos = texto.find(' ', prev);
+                if (pos == string::npos) pos = texto.length();
+                string token = texto.substr(prev, pos-prev);
+                if (token != "") tokens.push_back(token);
+
+                prev = pos + 1;
+            }
+            while (pos < texto.length() && prev < texto.length());
+
+            srand(time(0));
+
+            for (int i = 0; i < 5000; ++i)
+            {
+                int random = rand();
+                random <<= 15;
+                random ^= rand();
+                random %= tokens.size();
+
+                if (tokens[random][0] != '#')
+                    tokens[random] = "#" + tokens[random];
+            }
+
+            for (string word : tokens)
+            {
+                finalString += word + " ";
+            }
         }
 
+        ofstream newFile("Texto2.txt");
 
+        newFile << finalString;
 
-        for (QString word : words)
-        {
-            finalString += word.toStdString() + " ";
-        }
-    }
-
-    ofstream newFile("Texto2.txt");
-
-    newFile << finalString;
-
-    file.close();
-    newFile.close();
+        file.close();
+        newFile.close();
     */
 }
 
@@ -380,10 +428,8 @@ void Principal::act_tend()
 
     for (Trend* trend : main_instance->get_latest_trends(20))
     {
-         ui->listWidgetTend->addItem(QString(trend->tag.c_str()) + "\n" + QString::number(trend->count) + " posts");
-//         QMessageBox m;
-//         m.setText("test");
-//         m.exec();
+        if (trend->count > 0)
+            ui->listWidgetTend->addItem(QString(trend->tag.c_str()) + "\n" + QString::number(trend->count) + " posts");
     }
 }
 
@@ -433,16 +479,15 @@ void Principal::new_publi(){
     NewPost *newPost = new NewPost();
             newPost->exec();
 
-    Post* result = newPost->new_post;
-    if (result == nullptr)
+    if (newPost->new_post == nullptr)
     {
         return;
     }
     else
     {
-        if (result->title != "" && result->content != "")
+        if (newPost->new_post->title != "" && newPost->new_post->content != "")
         {
-            main_instance->addPost(main_instance->logged_user->id, result->title, result->content);
+            main_instance->addPost(main_instance->logged_user->id, newPost->new_post->title, newPost->new_post->content);
 
             if (main_instance->get_shown_user() != nullptr)
                 show_all_posts(op_busq, invertir, true);
@@ -526,6 +571,10 @@ void Principal::on_btnFollow_clicked()
 void Principal::on_btnLogOut_clicked()
 {
     main_instance->log_out();
+
+    invertir = false;
+    op_busq = 0;
+
     this->hide();
     this->loginWindow->show();
 }

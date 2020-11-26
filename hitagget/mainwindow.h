@@ -29,6 +29,8 @@ private slots:
     void Ingresar();
     void Mostrar_Registro();
     void Registrar();
+    void on_btnGoBack_clicked();
+
 private:
     Ui::MainWindow *ui;
 };

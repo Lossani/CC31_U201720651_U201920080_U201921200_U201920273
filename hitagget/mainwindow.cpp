@@ -103,3 +103,8 @@ void MainWindow::Ingresar(){
     }
 }
 
+
+void MainWindow::on_btnGoBack_clicked()
+{
+    ui->Ventanas->setCurrentIndex(1);
+}

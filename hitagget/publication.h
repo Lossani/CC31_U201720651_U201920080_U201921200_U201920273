@@ -12,6 +12,7 @@ public:
     int authorId = -1;
     string content = "";
     string pubDate = "";
+    bool isDeleted = false;
 
     Publication() { }
     ~Publication() { }

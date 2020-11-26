@@ -16,9 +16,13 @@ public:
     explicit ViewPost(QWidget *parent = nullptr);
     ~ViewPost();
     void set_current_post(Post* post, string author_name, list<PostComment*> postComments);
-    function<void(Post*)> share_post_function;
-    function<void(Post*, string)> new_comment_function;
-    function<void(Post*)> like_post_function;
+    function<void(Post*)> share_post_function = nullptr;
+    function<void(Post*, string)> new_comment_function = nullptr;
+    function<void(Post*)> like_post_function = nullptr;
+    function<void(Post*, Post*, bool)> edit_post_function = nullptr;
+    function<void(Post*)> delete_post_function = nullptr;
+
+    void hide_author_actions_buttons();
 
 private slots:
     void on_btnLike_clicked();
@@ -28,6 +32,10 @@ private slots:
     void on_btnComment_clicked();
 
     void on_btnDialog_accepted();
+
+    void on_btnDeletePost_clicked();
+
+    void on_btnEditPost_clicked();
 
 private:
     Ui::ViewPost *ui;

@@ -11,8 +11,12 @@ using namespace std;
 struct Follower
 {
 public:
-    int userID;
-    int followedUserID;
+    int userID = -1;
+    int followedUserID = -1;
+    bool isDeleted = false;
+
+    Follower() { }
+    ~Follower() { }
 };
 
 class User

@@ -22,11 +22,12 @@ InteractionManager::InteractionManager() : ListController<PostInteraction*, int,
 
             for (PostInteraction* interaction : get_all_elements())
             {
-                file << interaction->authorId << '\t'
-                     << interaction->parentPostId << '\t'
-                     << interaction->date << '\t'
-                     << (interaction->shared ? "TRUE" : "FALSE")
-                     << endl;
+                if (!interaction->isDeleted)
+                    file << interaction->authorId << '\t'
+                         << interaction->parentPostId << '\t'
+                         << interaction->date << '\t'
+                         << (interaction->shared ? "TRUE" : "FALSE")
+                         << endl;
             }
 
             file.close();
@@ -99,6 +100,17 @@ void InteractionManager::addInteraction(int authorId, Post* post, bool shared)
 void InteractionManager::editLastInteraction(bool shared)
 {
     get_last_element()->shared = shared;
+}
+
+void InteractionManager::deletePostInteractions(int postId)
+{
+    for (PostInteraction* interaction : avl_interactions_by_post_id->findAll(postId))
+    {
+        interaction->isDeleted = true;
+        avl_interactions_by_post_id->remove(interaction);
+    }
+
+    //avl_interactions_by_post_id->removeAll(postId);
 }
 
 list<PostInteraction*> InteractionManager::getPostInteractions(int postId)

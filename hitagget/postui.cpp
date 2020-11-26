@@ -13,7 +13,7 @@ PostUI::PostUI(QWidget *parent) : QWidget(parent)
     view_button->setFixedWidth(50);
 
     author_profile_button = new QPushButton("");
-    author_profile_button->setFixedWidth(100);
+    author_profile_button->setFixedWidth(150);
 
     post_text = new QLabel("Vacío");
 

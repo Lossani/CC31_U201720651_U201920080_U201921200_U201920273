@@ -15,6 +15,9 @@ public:
 
     void addInteraction(int authorId, Post* post, bool shared);
     void editLastInteraction(bool shared);
+
+    void deletePostInteractions(int postId);
+
     list<PostInteraction*> getPostInteractions(int postId);
     PostInteraction* getInteraction(int interactionId);
 

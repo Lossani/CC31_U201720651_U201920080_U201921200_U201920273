@@ -69,6 +69,22 @@ Post* Hitagget::addPost(int authorId, string title, string content)
     return newPost;
 }
 
+void Hitagget::deletePost(Post *post)
+{
+    PostManager::deletePost(post);
+
+    deletePostComments(post->id);
+    deletePostInteractions(post->id);
+
+    if (shown_user != nullptr)
+    {
+        if (shown_user->id == post->authorId)
+        {
+            shown_user_posts.remove(post);
+        }
+    }
+}
+
 list<Post *> Hitagget::getShownUserPostsThatContainsString(string value, bool asc, int limit)
 {
     if (limit <= 0 || shown_user == nullptr || shown_user_posts.size() == 0)

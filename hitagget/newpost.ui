@@ -76,7 +76,7 @@ color: rgb(35, 182, 111);
 font: 8pt &quot;Comic Sans MS&quot;;</string>
    </property>
   </widget>
-  <widget class="QLabel" name="label_2">
+  <widget class="QLabel" name="lblTitle">
    <property name="geometry">
     <rect>
      <x>20</x>
@@ -98,7 +98,7 @@ font: 8pt &quot;Comic Sans MS&quot;;</string>
     <string>Titulo:</string>
    </property>
   </widget>
-  <widget class="QLabel" name="label_3">
+  <widget class="QLabel" name="lblContent">
    <property name="geometry">
     <rect>
      <x>20</x>
@@ -117,7 +117,7 @@ font: 8pt &quot;Comic Sans MS&quot;;</string>
     </font>
    </property>
    <property name="text">
-    <string>Descripción:</string>
+    <string>Contenido:</string>
    </property>
   </widget>
  </widget>

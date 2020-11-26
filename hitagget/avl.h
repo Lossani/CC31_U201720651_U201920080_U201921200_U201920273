@@ -39,6 +39,8 @@ public:
     void add(T element);
 
     void remove(T element);
+    void removeAll(R value);
+
     T find(R value);
     list<T> findAll(R value);
     list<T> findAll(R value, int limit);
@@ -60,6 +62,7 @@ private:
     void add(Node*& node, T element);
     void remove(Node*& node, T element);
     void remove(Node*& node, R value);
+    void remove(Node*& node);
 
     Node* greatest(Node*& node);
     Node* lowest(Node*& node);
@@ -73,6 +76,7 @@ private:
     void balance(Node*& node);
 
     void findAll(list<T>& returnValues, Node*& node, R value);
+    void findAll(list<Node*>& returnNodes, Node*& node, R value);
 
     void findAllInOrder(list<T>& returnValues, Node*& node, R value, int limit);
     void findAllPostOrder(list<T>& returnValues, Node*& node, R value, int limit);
@@ -136,6 +140,17 @@ template <typename T, typename R, T NONE>
 void AVL<T, R, NONE>::remove(T element)
 {
     remove(find(root, element), element);
+}
+
+template<typename T, typename R, T NONE>
+void AVL<T, R, NONE>::removeAll(R value)
+{
+    list<Node*> returnNodes;
+    findAll(returnNodes, root, value);
+    for (Node* node : returnNodes)
+    {
+        remove(node);
+    }
 }
 
 template <typename T, typename R, T NONE>
@@ -393,15 +408,41 @@ void AVL<T, R, NONE>::remove(Node*& node, R value)
     balance(node);
 }
 
+template<typename T, typename R, T NONE>
+void AVL<T, R, NONE>::remove(Node*& node)
+{
+    if (node == nullptr)
+        return;
+
+    if (node->leftChild != nullptr && node->rightChild != nullptr)
+    {
+        node->element = lowest(node->rightChild)->element;
+        remove(node->rightChild, comparator_function(node->element));
+    }
+    else
+    {
+        Node* oldNode = node;
+        node = (node->leftChild != nullptr) ? node->leftChild : node->rightChild;
+        delete oldNode;
+        --lenght;
+    }
+
+    balance(node);
+}
+
 template <typename T, typename R, T NONE>
 struct AVL<T, R, NONE>::Node* AVL<T, R, NONE>::greatest(Node*& node)
 {
+    if (node == nullptr)
+        return nullNode;
     return node->right == nullptr ? node : greatest(node->rightChild);
 }
 
 template <typename T, typename R, T NONE>
 struct AVL<T, R, NONE>::Node* AVL<T, R, NONE>::lowest(Node*& node)
 {
+    if (node == nullptr)
+        return nullNode;
     return node->leftChild == nullptr ? node : lowest(node->leftChild);
 }
 
@@ -521,6 +562,9 @@ void AVL<T, R, NONE>::balance(Node*& node)
 template<typename T, typename R, T NONE>
 void AVL<T, R, NONE>::findAll(list<T> &returnValues, Node *&node, R value)
 {
+    if (node == nullptr)
+        return;
+
     Node* foundNode = find(node, value);
 
     if (foundNode != nullptr)
@@ -533,6 +577,24 @@ void AVL<T, R, NONE>::findAll(list<T> &returnValues, Node *&node, R value)
     {
         return;
     }
+}
+
+template<typename T, typename R, T NONE>
+void AVL<T, R, NONE>::findAll(list<Node*>& returnNodes, Node*& node, R value)
+{
+    if (node == nullptr)
+        return;
+
+    Node* foundNode = find(node, value);
+
+    if (foundNode != nullNode)
+    {
+        returnNodes.push_back(foundNode);
+        findAll(returnNodes, foundNode->leftChild, value);
+        findAll(returnNodes, foundNode->rightChild, value);
+    }
+    else
+        return;
 }
 
 template<typename T, typename R, T NONE>

@@ -2,6 +2,7 @@
 #include "ui_viewpost.h"
 #include <QMessageBox>
 #include <QTime>
+#include "newpost.h"
 
 ViewPost::ViewPost(QWidget *parent) :
     QDialog(parent),
@@ -31,6 +32,12 @@ void ViewPost::set_current_post(Post* post, string author_name, list<PostComment
     }
 
     current_post = post;
+}
+
+void ViewPost::hide_author_actions_buttons()
+{
+    ui->btnDeletePost->setVisible(false);
+    ui->btnEditPost->setVisible(false);
 }
 
 void ViewPost::on_btnLike_clicked()
@@ -80,4 +87,55 @@ void ViewPost::on_btnComment_clicked()
 void ViewPost::on_btnDialog_accepted()
 {
     this->close();
+}
+
+void ViewPost::on_btnDeletePost_clicked()
+{
+    QMessageBox::StandardButton reply;
+    reply = QMessageBox::question(this, "Eliminar Publicación", "¿Está seguro de eliminarlo?", QMessageBox::Yes|QMessageBox::No);
+
+    if (reply == QMessageBox::Yes)
+    {
+        if (delete_post_function != nullptr)
+            delete_post_function(current_post);
+        this->close();
+    }
+}
+
+void ViewPost::on_btnEditPost_clicked()
+{
+    NewPost *edit_post_dialog = new NewPost();
+
+    Post oldPost = *current_post;
+
+    edit_post_dialog->new_post = &oldPost;
+
+    edit_post_dialog->show_post();
+
+    edit_post_dialog->exec();
+
+    if (edit_post_dialog->new_post != nullptr)
+    {
+        if (edit_post_dialog->new_post->title != "" && edit_post_dialog->new_post->content != "" &&
+            (edit_post_dialog->new_post->title != current_post->title || edit_post_dialog->new_post->content != current_post->content))
+        {
+            if (edit_post_function != nullptr)
+            {
+                current_post->content = edit_post_dialog->new_post->content;
+
+                if (edit_post_dialog->new_post->title != current_post->title)
+                {
+                    current_post->title = edit_post_dialog->new_post->title;
+                    edit_post_function(&oldPost, current_post, true);
+                }
+                else
+                {
+                    edit_post_function(&oldPost, current_post, false);
+                }
+
+                ui->lblPostTitle->setText(current_post->title.c_str());
+                ui->lblPostContent->setText(current_post->content.c_str());
+            }
+        }
+    }
 }

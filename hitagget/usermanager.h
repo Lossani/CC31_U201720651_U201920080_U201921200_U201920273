@@ -14,6 +14,8 @@ class UserManager : public FollowerManager, private ListController<User*, int, s
 private:
     AVL<User*, string, nullptr>* avl_users_by_email;
 
+    int currentIndex;
+
 public:
     UserManager();
     ~UserManager();

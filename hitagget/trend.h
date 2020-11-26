@@ -10,6 +10,7 @@ class Trend {
 public:
     int count;
     string tag;
+    bool isDeleted = false;
 
     Trend(int count, string tag) : count(count), tag(tag)
     {

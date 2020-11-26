@@ -66,6 +66,9 @@ private:
 
     Ui::Principal *ui;
 
+    bool invertir = false;
+    int op_busq = 0;
+
 protected:
      void closeEvent(QCloseEvent *event);
 };

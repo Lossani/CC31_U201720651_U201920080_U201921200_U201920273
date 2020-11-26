@@ -22,11 +22,12 @@ CommentManager::CommentManager() : ListController<PostComment*, int, int>(
 
            for (PostComment* comment : ListController<PostComment*, int, int>::get_all_elements())
            {
-               file << comment->id << '\t'
-                    << comment->parentPostId << '\t'
-                    << comment->pubDate << '\t'
-                    << comment->content
-                    << endl;
+               if (!comment->isDeleted)
+                   file << comment->id << '\t'
+                        << comment->parentPostId << '\t'
+                        << comment->pubDate << '\t'
+                        << comment->content
+                        << endl;
            }
 
            file.close();
@@ -35,6 +36,8 @@ CommentManager::CommentManager() : ListController<PostComment*, int, int>(
    [this](ifstream& file)
    {
        avl_comments_by_post_id = new AVL<PostComment*, int, nullptr>([] (PostComment* element) { return element->parentPostId; });
+
+       currentIndex = 1;
 
        list<PostComment*> retrievedElements;
 
@@ -55,8 +58,10 @@ CommentManager::CommentManager() : ListController<PostComment*, int, int>(
            getline(file, currentComment->content);
 
            currentComment->id = stoi(id);
-           //currentComment->authorId = stoi(authorId);
            currentComment->parentPostId = stoi(publicationId);
+
+           if (currentComment->id > currentIndex)
+               currentIndex = currentComment->id;
 
            retrievedElements.push_back(currentComment);
 
@@ -82,7 +87,7 @@ void CommentManager::addComment(int postId, string content)
 {
     PostComment* newComment = new PostComment();
 
-    newComment->id = get_num_elements() + 1;
+    newComment->id = ++currentIndex;
     newComment->parentPostId = postId;
     newComment->content = content;
     newComment->pubDate = QDateTime::currentDateTime().toString("yyyy-MM-dd").toStdString();
@@ -90,6 +95,17 @@ void CommentManager::addComment(int postId, string content)
     add_element(newComment);
 
     avl_comments_by_post_id->add(newComment);
+}
+
+void CommentManager::deletePostComments(int postId)
+{
+    for (PostComment* comment : avl_comments_by_post_id->findAll(postId))
+    {
+        comment->isDeleted = true;
+        avl_comments_by_post_id->remove(comment);
+    }
+
+    //avl_comments_by_post_id->removeAll(postId);
 }
 
 list<PostComment*> CommentManager::getPostComments(int postId)

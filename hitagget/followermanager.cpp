@@ -23,9 +23,10 @@ FollowerManager::FollowerManager() : ListController<Follower*, int, int>(
 
             for (Follower* follower : ListController<Follower*, int, int>::get_all_elements())
             {
-                file << follower->userID << '\t'
-                     << follower->followedUserID
-                     << endl;
+                if (!follower->isDeleted)
+                    file << follower->userID << '\t'
+                         << follower->followedUserID
+                         << endl;
             }
 
             file.close();
@@ -72,7 +73,7 @@ FollowerManager::~FollowerManager()
 
 }
 
-list<Follower*> FollowerManager::getUserFollowedUsersIds(int baseUserId)
+list<Follower*> FollowerManager::getUserFollowedUsers(int baseUserId)
 {
     return avl_followers_by_user_id->findAll(baseUserId);
 }
@@ -89,6 +90,11 @@ Follower* FollowerManager::addFollower(int baseUserId, int followedUserId)
     avl_followers_by_user_id->add(newFollower);
 
     return newFollower;
+}
+
+void FollowerManager::deleteFollower(Follower *follower)
+{
+    avl_followers_by_user_id->remove(follower);
 }
 
 void FollowerManager::saveFollowers()

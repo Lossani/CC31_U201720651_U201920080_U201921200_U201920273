@@ -41,6 +41,8 @@ UserManager::UserManager() : FollowerManager(), ListController<User*, int, strin
     {
         avl_users_by_email = new AVL<User*, string, nullptr>([](User* element) { return element->email; });
 
+        currentIndex = 1;
+
         list<User*> retrievedElements;
 
         User* currentUser;
@@ -61,9 +63,12 @@ UserManager::UserManager() : FollowerManager(), ListController<User*, int, strin
 
             currentUser->password = currentUser->email; // Using same email as password temporarily
 
-            currentUser->followedUsers = getUserFollowedUsersIds(currentUser->id);
+            currentUser->followedUsers = getUserFollowedUsers(currentUser->id);
 
             currentUser->followedUsers.unique([](Follower* follower1, Follower* follower2) { return follower1->followedUserID == follower2->followedUserID; });
+
+            if (currentUser->id > currentIndex)
+                currentIndex = currentUser->id;
 
             retrievedElements.push_back(currentUser);
 
@@ -92,7 +97,7 @@ bool UserManager::addUser(string email, string fullname, string password)
 
     User* newUser = new User();
 
-    newUser->id = avl_users_by_email->size() + 1;
+    newUser->id = ++currentIndex;
     newUser->email = email;
     newUser->password = password;
     newUser->fullname = fullname;

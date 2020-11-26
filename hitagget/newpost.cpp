@@ -18,7 +18,11 @@ NewPost::~NewPost()
 
 void NewPost::show_post()
 {
-    ui->label_2->setText(post_content.c_str());
+    if (new_post == nullptr)
+        return;
+
+    ui->txtPostTitle->setText(new_post->title.c_str());
+    ui->txtPostContent->setText(new_post->content.c_str());
 }
 
 void NewPost::on_buttonBox_accepted()
@@ -30,5 +34,5 @@ void NewPost::on_buttonBox_accepted()
 
 void NewPost::on_buttonBox_rejected()
 {
-    post_content = "";
+    new_post = nullptr;
 }
