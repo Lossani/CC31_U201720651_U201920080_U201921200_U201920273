@@ -70,6 +70,8 @@ private:
     void rotateRight(Node*& node);
     void balance(Node*& node);
 
+    void findAll(list<T>& returnValues, Node*& node, R value);
+
     void findAllInOrder(list<T>& returnValues, Node*& node, R value, int limit);
     void findAllPostOrder(list<T>& returnValues, Node*& node, R value, int limit);
 
@@ -145,18 +147,7 @@ template <typename T, typename R, T NONE>
 list<T> AVL<T, R, NONE>::findAll(R value)
 {
     list<T> returnValues;
-    Node* node = find(root, value);
-
-    if (node != nullptr)
-    {
-        returnValues.push_back(node->element);
-    }
-    else
-    {
-        return returnValues;
-    }
-
-
+    findAll(returnValues, root, value);
     return returnValues;
 }
 
@@ -477,6 +468,23 @@ void AVL<T, R, NONE>::balance(Node*& node)
     else
     {
         updateHeight(node);
+    }
+}
+
+template<typename T, typename R, T NONE>
+void AVL<T, R, NONE>::findAll(list<T> &returnValues, Node *&node, R value)
+{
+    Node* foundNode = find(node, value);
+
+    if (foundNode != nullptr)
+    {
+        returnValues.push_back(foundNode->element);
+        findAll(returnValues, foundNode->leftChild, value);
+        findAll(returnValues, foundNode->rightChild, value);
+    }
+    else
+    {
+        return;
     }
 }
 
