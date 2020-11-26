@@ -45,9 +45,9 @@ font: 14pt &quot;Comic Sans MS&quot;;</string>
     <property name="geometry">
      <rect>
       <x>930</x>
-      <y>341</y>
+      <y>380</y>
       <width>321</width>
-      <height>271</height>
+      <height>291</height>
      </rect>
     </property>
     <property name="font">
@@ -223,7 +223,7 @@ font: 9pt &quot;Arial&quot;;</string>
       <x>930</x>
       <y>50</y>
       <width>321</width>
-      <height>241</height>
+      <height>291</height>
      </rect>
     </property>
     <property name="styleSheet">
@@ -264,24 +264,6 @@ color: rgb(255, 255, 255);</string>
     </property>
     <property name="text">
      <string>Publicar</string>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="btnAgregar">
-    <property name="geometry">
-     <rect>
-      <x>930</x>
-      <y>650</y>
-      <width>75</width>
-      <height>23</height>
-     </rect>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">font: 10pt &quot;Arial&quot;;
-background-color: rgb(128, 183, 128);
-color: rgb(255, 255, 255);</string>
-    </property>
-    <property name="text">
-     <string>Agregar</string>
     </property>
    </widget>
    <widget class="QLabel" name="label_2">
@@ -354,7 +336,7 @@ color: rgb(255, 255, 255);</string>
     <property name="geometry">
      <rect>
       <x>930</x>
-      <y>305</y>
+      <y>350</y>
       <width>171</width>
       <height>21</height>
      </rect>
@@ -408,86 +390,6 @@ color: rgb(255, 255, 255);</string>
     </property>
     <property name="text">
      <string/>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="BCnom">
-    <property name="geometry">
-     <rect>
-      <x>1050</x>
-      <y>650</y>
-      <width>61</width>
-      <height>23</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <family>Arial</family>
-      <pointsize>10</pointsize>
-      <weight>50</weight>
-      <italic>false</italic>
-      <bold>false</bold>
-      <underline>false</underline>
-     </font>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">font: 10pt &quot;Arial&quot;;
-background-color: rgb(128, 183, 128);
-color: rgb(255, 255, 255);</string>
-    </property>
-    <property name="text">
-     <string>Nombre</string>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="BCnum">
-    <property name="geometry">
-     <rect>
-      <x>1120</x>
-      <y>650</y>
-      <width>61</width>
-      <height>23</height>
-     </rect>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">font: 10pt &quot;Arial&quot;;
-background-color: rgb(128, 183, 128);
-color: rgb(255, 255, 255);</string>
-    </property>
-    <property name="text">
-     <string>Numero</string>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="BCapod">
-    <property name="geometry">
-     <rect>
-      <x>1190</x>
-      <y>650</y>
-      <width>61</width>
-      <height>23</height>
-     </rect>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">font: 10pt &quot;Arial&quot;;
-background-color: rgb(128, 183, 128);
-color: rgb(255, 255, 255);</string>
-    </property>
-    <property name="text">
-     <string>Apodo</string>
-    </property>
-   </widget>
-   <widget class="QLabel" name="label_10">
-    <property name="geometry">
-     <rect>
-      <x>1050</x>
-      <y>620</y>
-      <width>201</width>
-      <height>20</height>
-     </rect>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">font: 14pt &quot;Comic Sans MS&quot;;</string>
-    </property>
-    <property name="text">
-     <string>Ordenar por:</string>
     </property>
    </widget>
    <widget class="QComboBox" name="cb_criterios">
@@ -743,16 +645,11 @@ color: rgb(255, 255, 255);</string>
    <zorder>listWidgetFollowers</zorder>
    <zorder>listWidgetTend</zorder>
    <zorder>btnPublicar</zorder>
-   <zorder>btnAgregar</zorder>
    <zorder>label_2</zorder>
    <zorder>label_5</zorder>
    <zorder>label_6</zorder>
    <zorder>label_7</zorder>
    <zorder>label_8</zorder>
-   <zorder>BCnom</zorder>
-   <zorder>BCnum</zorder>
-   <zorder>BCapod</zorder>
-   <zorder>label_10</zorder>
    <zorder>cb_criterios</zorder>
    <zorder>txtSearchBox</zorder>
    <zorder>cmbBoxSearchOptions</zorder>
@@ -777,7 +674,6 @@ color: rgb(255, 255, 255);</string>
  </widget>
  <tabstops>
   <tabstop>btnPublicar</tabstop>
-  <tabstop>btnAgregar</tabstop>
   <tabstop>listWidgetPubli</tabstop>
   <tabstop>listWidgetTend</tabstop>
   <tabstop>listWidgetFollowers</tabstop>

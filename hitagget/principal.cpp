@@ -4,6 +4,7 @@
 #include "viewpost.h"
 #include "newpost.h"
 #include "postui.h"
+#include "trend.h"
 #include "followerlistui.h"
 #include <QFileDialog>
 #include <QFile>
@@ -11,6 +12,7 @@
 #include <QDate>
 #include <QRandomGenerator>
 #include <QCloseEvent>
+#include <stdlib.h>
 
 bool invertir = false;
 int op_busq = 0;
@@ -57,40 +59,7 @@ void Principal::show_all_posts(int op, bool inv, bool show_specific_profile)
 
         show_all_posts(ui->cb_criterios->currentIndex(), invertir, true);
     };
-/*
-    function<void(int)> edit_post = [this](int id)
-    {
-        Post post_to_update = main_instance->get_post(id);
 
-        if (post_to_update.id != 1)
-        {
-            NewPost *edit_post_dialog = new NewPost();
-            edit_post_dialog->post_content = post_to_update.content;
-            edit_post_dialog->show_post();
-            edit_post_dialog->exec();
-
-            string result = edit_post_dialog->post_content;
-
-            if (result == "")
-            {
-                return;
-            }
-            else
-            {
-                post_to_update.content = result;
-                main_instance->update_post(post_to_update);
-                show_all_posts();
-            }
-        }
-    };
-
-    function<void(int)> delete_post = [this](int id)
-    {
-        main_instance->delete_post(id);
-
-        show_all_posts();
-    };
-*/
     ui->listWidgetPubli->clear();
 
     list<Post*> posts;
@@ -290,6 +259,8 @@ Principal::Principal(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::Principal)
 {
+    main_instance = new Hitagget();
+
     setlocale(LC_ALL,"");
     ui->setupUi(this);
 
@@ -299,26 +270,15 @@ Principal::Principal(QWidget *parent) :
     ui->lblShownUser->setVisible(false);
     ui->btnFollow->setVisible(false);
 
-    //Arboles Contactos
-    this->BST_Cont_Apodo = new BST<Contacto, QString>([](Contacto j){return j.get_apodo();});
-    this->BST_Cont_CName = new BST<Contacto, QString>([](Contacto j){return j.get_comp_name();});
-    this->BST_Cont_Number = new BST<Contacto, QString>([](Contacto j){return j.get_numero();});
-
-
-
-
-
-    main_instance = new Hitagget();
+    act_tend();
 
     show_all_posts(0, false, false);
 
-    lst = new ListaT();
 
     string tempstr;
 
     fstream arch_foto("Foto.txt");
         getline(arch_foto,tempstr);
-
 
     QString tempR_F = QString::fromStdString(tempstr);
     if(tempR_F != ""){
@@ -326,241 +286,100 @@ Principal::Principal(QWidget *parent) :
         ui->lblFPerfil->setPixmap(*img);
     }
 
-
-
-    //Publicaciones
-
-
-
-
-
-
-    QRandomGenerator r;
-
-    string nom_publi;
-    string tit_publi;
-    string hash_publi;
-    string linea_publi;
-
-    ifstream publi("Publicaciones.txt");
-
-    while(publi.good()){
-        getline(publi,nom_publi);
-        getline(publi,tit_publi);
-        getline(publi,hash_publi);
-        getline(publi,linea_publi);
-
-        int tamL = 93;
-        int cont = 0;
-        int SizeLineaPubli = linea_publi.size();
-        for (int i = 0; i < SizeLineaPubli;i++) {
-            cont++;
-            if (cont>tamL) {
-                if (linea_publi[i] == ' ') {
-                    linea_publi[i] = '\n';
-                    cont=0;
-                }
-            }
-        }
-
-        QString temp_nm = QString::fromStdString(nom_publi);
-        QString temp_tp = QString::fromStdString(tit_publi);
-        QString temp_hp = QString::fromStdString(hash_publi);
-        QString temp_lp = QString::fromStdString(linea_publi);
-
-
-
-
-
-        new_public = new Hitagged(temp_nm, temp_tp,temp_lp, temp_hp);
-
-        lst->addFirst(new_public->get_hashtag());
-
-        Publi.enqueue(new_public);
-
-    }
-
-
-
-    //Tendencias
-
-
-    ui->listWidgetTend->clear();
-
-
-    ListaT *tempLT = new ListaT;
-    for(int i=0;i<lst->size();i++){
-        tempLT->addFirst(lst->get(i));
-    }
-
-
-
-    vector<int> cont;
-
-    for (int i = 0; i < tempLT->size(); i++){
-        int n = 1;
-        cont.push_back(n);
-
-          for (int j = tempLT->size(); j > i;j--){
-            if(tempLT->get(i) == tempLT->get(j)){
-              tempLT->removePos(j);
-              cont[i]++;
-              j=tempLT->size();
-            }
-          }
-
-    }
-
-    //MOSTRAR TENDENCIAS
-
-    QVector<tnd> ord;
-
-    for (int i = 0; i < tempLT->size(); i++){
-
-        tnd temptend(tempLT->get(i),cont[i]);
-        ord.append(temptend);
-    }
-
-    for (int i = 0; i < ord.size() - 1; i++) {
-      int min = i;
-      for (int j = i + 1; j < ord.size(); j++) {
-        if (ord[j].cant > ord[min].cant) {
-          min = j;
-        }
-      }
-      if (min != i) {
-        tnd temp = ord[i];
-        ord[i] = ord[min];
-        ord[min] = temp;
-      }
-    }
-
-    for (int i = 0; i < ord.size(); i++){
-      ui->listWidgetTend->addItem( ord[i].hash + "\t" + "\t"+ QString::number(ord[i].cant));
-    }
-
-
-
-
-
-
-    //Tendencias Fin
-
-
-
-    //LISTA DE CONTACTOS
-
-    QFile file("Contactos.csv");
-    if(file.open(QIODevice::ReadOnly)){ //WriteOnly
-        QTextStream in(&file); // in << palabras[1] << "\n";
-        while(!in.atEnd()){
-            QString linea = in.readLine();
-            QStringList palabras = linea.split(",");
-            Contacto nuevo(palabras[0],palabras[1],palabras[2]);
-            lcont.append(nuevo);
-
-            BST_Cont_CName->add(nuevo);
-            BST_Cont_Number->add(nuevo);
-            BST_Cont_Apodo->add(nuevo);
-        }
-        file.close();
-    }
-
-
-
-
-    act_cont();
-
-    //Imprimir publicaciones
-    while (!Publi.empty()){
-      ui->listWidgetPubli->addItem( Publi.head()->get_nombre() + "\t"+Publi.head()->get_titulo());
-      ui->listWidgetPubli->addItem( Publi.head()->get_hashtag());
-      ui->listWidgetPubli->addItem( Publi.head()->get_texto());
-      ui->listWidgetPubli->addItem(" ");
-      Publi.dequeue();
-    }
-
-    limcont = 10;
-
-    //ARBOL CONTACTO
-    this->ventAC.BST_Cont_Apodo = this->BST_Cont_Apodo;
-    this->ventAC.BST_Cont_CName = this->BST_Cont_CName;
-    this->ventAC.BST_Cont_Number = this->BST_Cont_Number;
-
-    this->ventAC.lista = this->ui->listWidgetCont;
-    this->ventAC.limcont = limcont;
-
-
     connect(ui->btnCamFoto,SIGNAL(released()),this,SLOT(cambiar_imagen()));
 
     connect(ui->btnPublicar,SIGNAL(released()),this,SLOT(new_publi()));
 
-    connect(ui->btnAgregar,SIGNAL(released()),this,SLOT(add_contact()));
-
     connect(ui->btnInvertir, SIGNAL(released()), this, SLOT(f_invertir()));
+/*
+    ifstream file("Texto.txt");
+    string finalString = "";
 
-    connect(ui->BCnom,SIGNAL(released()),this,SLOT(act_cont_ANom()));
-    connect(ui->BCnum,SIGNAL(released()),this,SLOT(act_cont_ANum()));
-    connect(ui->BCapod,SIGNAL(released()),this,SLOT(act_cont_AAp()));
+    if (file.is_open())
+    {
+        string texto;
+
+        getline(file, texto);
+
+        QStringList words = QString(texto.c_str()).split(" ");
+
+        srand(time(0));
+
+        for (int i = 0; i < 5000; ++i)
+        {
+            int random = rand() % words.size();
+            if (words[random][0] != "#")
+                words[random] = "#" + words[random];
+        }
+
+
+
+        for (QString word : words)
+        {
+            finalString += word.toStdString() + " ";
+        }
+    }
+
+    ofstream newFile("Texto2.txt");
+
+    newFile << finalString;
+
+    file.close();
+    newFile.close();
+    */
 }
 
 
-void Principal::act_tend(){
-
+void Principal::act_tend()
+{
     ui->listWidgetTend->clear();
 
-    ListaT *tempLT = new ListaT;
-
-    for(int i=0;i<lst->size();i++){
-        tempLT->addFirst(lst->get(i));
+    for (Trend* trend : main_instance->get_latest_trends(20))
+    {
+         ui->listWidgetTend->addItem(QString(trend->tag.c_str()) + "\t" + QString::number(trend->count));
     }
-
-    vector<int> cont;
-
-    for (int i = 0; i < tempLT->size(); i++){
-        int n = 1;
-        cont.push_back(n);
-
-          for (int j = tempLT->size(); j > i;j--){
-            if(tempLT->get(i) == tempLT->get(j)){
-              tempLT->removePos(j);
-              cont[i]++;
-              j=tempLT->size();
-            }
-          }
-    }
-
-    //MOSTRAR TENDENCIAS
-
-    QVector<tnd> ord;
-
-    for (int i = 0; i < tempLT->size(); i++){
-
-        tnd temptend(tempLT->get(i),cont[i]);
-        ord.append(temptend);
-    }
-
-    for (int i = 0; i < ord.size() - 1; i++) {
-      int min = i;
-      for (int j = i + 1; j < ord.size(); j++) {
-        if (ord[j].cant > ord[min].cant) {
-          min = j;
-        }
-      }
-      if (min != i) {
-        tnd temp = ord[i];
-        ord[i] = ord[min];
-        ord[min] = temp;
-      }
-    }
-
-    for (int i = 0; i < ord.size(); i++){
-      ui->listWidgetTend->addItem( ord[i].hash + "\t" + "\t"+ QString::number(ord[i].cant));
-    }
-
 }
 
+void Principal::update_contacts()
+{
+    ui->listWidgetCont->clear();
 
+    srand(main_instance->logged_user->id);
+
+    int numUsers = main_instance->getUsersCount();
+
+    for (int i = 0; i < 1 + rand() % 20; ++i)
+    {
+        User* user = main_instance->getUserById(1 + rand() % numUsers);
+
+        QListWidgetItem *item = new QListWidgetItem();
+        ui->listWidgetCont->addItem(item);
+
+        FollowerListUI *follower_ui = new FollowerListUI();
+
+        follower_ui->user_name->setText(user->fullname.c_str());
+        follower_ui->user_shown = user;
+
+        follower_ui->set_user_click_action([this](User* user)
+        {
+            main_instance->set_shown_user(user);
+
+            if (!main_instance->logged_user->isFollowing(user->id))
+                ui->btnFollow->setVisible(true);
+
+            ui->btnCloseUserProfile->setVisible(true);
+            ui->lblShownUser->setVisible(true);
+            ui->lblShownUser->clear();
+            ui->lblShownUser->setText(("Mostrando usuario:\n" + main_instance->get_shown_user()->fullname + "\n" + main_instance->get_shown_user()->registerDate).c_str());
+
+            show_all_posts(ui->cb_criterios->currentIndex(), invertir, true);
+        });
+
+        item->setSizeHint(follower_ui->minimumSizeHint());
+
+        ui->listWidgetCont->setItemWidget(item, follower_ui);
+    }
+}
 
 void Principal::show_user_info(){
 
@@ -571,7 +390,7 @@ void Principal::show_user_info(){
 
 void Principal::cambiar_imagen(){
     QString filename = QFileDialog::getOpenFileName(this,tr("Open Image"),"C:\\",tr("Image Files(*.png *.pjg *.bmp)"));
-    if(filename!=""){
+    if(filename!="") {
         QPixmap *img = new QPixmap(filename);
         ui->lblFPerfil->setPixmap(*img);
 
@@ -580,13 +399,9 @@ void Principal::cambiar_imagen(){
         archivo<<filename.toStdString();
         archivo.close();
     }
-
-
-
 }
 
 void Principal::new_publi(){
-
     NewPost *newPost = new NewPost();
             newPost->exec();
 
@@ -601,91 +416,14 @@ void Principal::new_publi(){
         {
             main_instance->addPost(main_instance->logged_user->id, result->title, result->content);
 
-            if ((main_instance->get_shown_user() != nullptr) && (main_instance->get_shown_user()->id == main_instance->logged_user->id))
-            {
-                main_instance->set_shown_user(main_instance->logged_user);
+            if (main_instance->get_shown_user() != nullptr)
                 show_all_posts(op_busq, invertir, true);
-            }
+            else
+                show_all_posts(op_busq, invertir, false);
+
+            act_tend();
         }
     }
-}
-
-void Principal::act_cont(){
-
-    ui->listWidgetCont->clear();
-    lcont.selected = lcont.head;
-    int contador = 0;
-    for(int i =0;i<lcont.getCount();i++){
-        if(contador<10){
-            ui->listWidgetCont->addItem(lcont.selected->data.toString());
-        }
-        contador++;
-
-        /*
-        if(lcont.selected->data.get_comp_name().size()<=16){
-            ui->listWidgetCont->addItem(lcont.selected->data.get_comp_name() + "\t \t" + lcont.selected->data.get_numero() + "\t" +lcont.selected->data.get_apodo() );
-        } else {
-            ui->listWidgetCont->addItem(lcont.selected->data.get_comp_name() + "\t" + lcont.selected->data.get_numero() + "\t" +lcont.selected->data.get_apodo() );
-        }
-        */
-       lcont.sgt();
-    }
-
-
-
-
-}
-
-
-
-
-void Principal::act_cont_AAp(){
-    ui->listWidgetCont->clear();
-
-    if(invertir){
-            BST_Cont_Apodo->inorder(ui->listWidgetCont, limcont);
-                this->ventAC.ord = 0;
-    } else{
-         BST_Cont_Apodo->postorder(ui->listWidgetCont,limcont);
-          this->ventAC.ord = 1;
-    }
-
-    invertir = !invertir;
-
-}
-
-void Principal::act_cont_ANom(){
-    ui->listWidgetCont->clear();
-    if(invertir){
-            BST_Cont_CName->inorder(ui->listWidgetCont,limcont);
-                this->ventAC.ord = 2;
-    } else{
-         BST_Cont_CName->postorder(ui->listWidgetCont,limcont);
-          this->ventAC.ord = 3;
-    }
-
-    invertir = !invertir;
-
-}
-void Principal::act_cont_ANum(){
-
-
-    ui->listWidgetCont->clear();
-    if(invertir){
-            BST_Cont_Number->inorder(ui->listWidgetCont,limcont);
-                this->ventAC.ord = 4;
-    } else{
-         BST_Cont_Number->postorder(ui->listWidgetCont,limcont);
-          this->ventAC.ord = 5;
-    }
-
-    invertir = !invertir;
-}
-
-
-void Principal::add_contact(){
-    ventAC.ptrLC = &lcont;
-    ventAC.show();
 }
 
 void Principal::f_invertir()

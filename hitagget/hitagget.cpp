@@ -54,6 +54,21 @@ void Hitagget::save_instance()
     saveFollowers();
 }
 
+Post* Hitagget::addPost(int authorId, string title, string content)
+{
+    Post* newPost = PostManager::addPost(authorId, title, content);
+
+    if (shown_user != nullptr)
+    {
+        if (shown_user->id == authorId)
+        {
+            shown_user_posts.push_back(newPost);
+        }
+    }
+
+    return newPost;
+}
+
 list<Post *> Hitagget::getShownUserPostsThatContainsString(string value, bool asc, int limit)
 {
     if (limit <= 0 || shown_user == nullptr || shown_user_posts.size() == 0)
@@ -291,6 +306,23 @@ void Hitagget::clear_shown_user()
 {
     shown_user = nullptr;
     shown_user_posts.clear();
+}
+
+list<Trend *> Hitagget::get_latest_trends(int limit)
+{
+    int count = 0;
+    list<Trend*> returnList;
+
+    for (Trend* trend : *all_trends)
+    {
+        if (count >= limit)
+            break;
+
+        returnList.push_back(trend);
+        count++;
+    }
+
+    return returnList;
 }
 /*
 void Hitagget::add_post(string content)

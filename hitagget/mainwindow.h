@@ -16,9 +16,6 @@ class MainWindow : public QMainWindow
     Q_OBJECT
 
 public:
-
-    QList<Usuario> lverif;
-
     int error_contra;
     QString contra;
     MainWindow(QWidget *parent = nullptr);

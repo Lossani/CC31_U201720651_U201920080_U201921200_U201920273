@@ -26,6 +26,8 @@ public:
     //void delete_user(int id);
 
     void saveUsers();
+
+    int getUsersCount();
 };
 
 #endif // USERMANAGER_H

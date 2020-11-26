@@ -48,11 +48,16 @@ PostManager::PostManager() : InteractionManager(), ListController<Post*, int, in
         avl_posts_by_numLikes = new AVL<Post*, int, nullptr>([](Post* element) { return element->numLikes; });
         avl_posts_by_numInteractions = new AVL<Post*, int, nullptr>([](Post* element) { return element->numInteractions; });
 
+        avl_trends = new AVL<string*, string, nullptr>([](string* element) { return *element; });
+
+        all_trends = new list<Trend*>();
+        QStringList unique_word_list;
+
         list<Post*> retrievedElements;
 
         Post* currentPost;
 
-        string id, authorId, numLikes;
+        string id, authorId, numLikes, title;
 
         getline(file, id); // Ignoring first line, temporarily using id for getline parameter
 
@@ -61,13 +66,14 @@ PostManager::PostManager() : InteractionManager(), ListController<Post*, int, in
             currentPost = new Post();
 
             getline(file, authorId, '\t');
-            getline(file, currentPost->title, '\t');
+            getline(file, title, '\t');
             getline(file, currentPost->content, '\t');
             getline(file, currentPost->pubDate, '\t');
             getline(file, numLikes);
 
             currentPost->id = stoi(id);
             currentPost->authorId = stoi(authorId);
+            currentPost->title = title;
             currentPost->numLikes = stoi(numLikes);
             currentPost->numInteractions = getNumInteractionsOfPost(stoi(id));
 
@@ -79,7 +85,36 @@ PostManager::PostManager() : InteractionManager(), ListController<Post*, int, in
             avl_posts_by_pubDate->add(currentPost);
             avl_posts_by_numLikes->add(currentPost);
             avl_posts_by_numInteractions->add(currentPost);
+
+            QString linea = QString::fromStdString(title);
+
+            QStringList words = linea.split(" ");
+
+            words.removeDuplicates();
+
+            for(QString word : words)
+            {
+                if (word.size() > 1 && word[0] == '#')
+                {
+                    avl_trends->add(new string(word.toStdString()));
+                    unique_word_list.push_back(word);
+                }
+            }
         }
+
+        unique_word_list.removeDuplicates();
+
+        for (QString word : unique_word_list)
+        {
+            int count = avl_trends->findAll(word.toStdString()).size();
+            if (count >= 0)
+            {
+                Trend* newTrend = new Trend(count, word.toStdString());
+                all_trends->push_back(newTrend);
+            }
+        }
+
+        all_trends->sort([](const Trend* a, const Trend* b) { return a->count > b->count; });
 
         return retrievedElements;
     },
@@ -93,14 +128,7 @@ PostManager::~PostManager()
 
 }
 
-/*
-void PostManager::add_post(Post post)
-{
-    add_element(post);
-}
-*/
-
-void PostManager::addPost(int authorId, string title, string content)
+Post* PostManager::addPost(int authorId, string title, string content)
 {
     Post* newPost = new Post();
 
@@ -118,12 +146,44 @@ void PostManager::addPost(int authorId, string title, string content)
     avl_posts_by_pubDate->add(newPost);
     avl_posts_by_numLikes->add(newPost);
     avl_posts_by_numInteractions->add(newPost);
-}
 
-void PostManager::addPost(Post* post)
-{
-    post->id = time(0);
-    ListController<Post*, int, int>::add_element(post);
+    QString linea = QString::fromStdString(title);
+
+    QStringList words = linea.split(" ");
+    QStringList foundTags;
+
+    for(QString word : words)
+    {
+        if (word.size() > 1 && word[0] == '#')
+        {
+           foundTags.push_back(word);
+        }
+    }
+
+    foundTags.removeDuplicates();
+
+    for (QString word : foundTags)
+    {
+        bool found = false;
+        for (Trend* trend : *all_trends)
+        {
+            if (trend->tag == word.toStdString())
+            {
+                trend->count++;
+                found = true;
+            }
+        }
+
+        if (!found)
+        {
+            all_trends->push_back(new Trend(1, word.toStdString()));
+        }
+    }
+
+    if (foundTags.size() > 0)
+        all_trends->sort([](const Trend* a, const Trend* b) { return a->count > b->count; });
+
+    return newPost;
 }
 
 void PostManager::updatePost(Post* post)

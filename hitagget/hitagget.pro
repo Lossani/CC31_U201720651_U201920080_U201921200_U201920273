@@ -10,7 +10,6 @@ QMAKE_CXXFLAGS += -std=c++14
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
-    addcontacto.cpp \
     avl.cpp \
     commentmanager.cpp \
     followerlistui.cpp \
@@ -27,16 +26,10 @@ SOURCES += \
     viewpost.cpp
 
 HEADERS += \
-    Arbol.h \
-    ListaD.h \
-    ListaT.h \
-    addcontacto.h \
     avl.h \
     commentmanager.h \
-    contacto.h \
     followerlistui.h \
     followermanager.h \
-    grupo.h \
     hitagget.h \
     interactionmanager.h \
     listcontroller.h \
@@ -46,15 +39,13 @@ HEADERS += \
     postmanager.h \
     postui.h \
     principal.h \
-    publicacion.h \
     publication.h \
+    trend.h \
     user.h \
     usermanager.h \
-    usuario.h \
     viewpost.h
 
 FORMS += \
-    addcontacto.ui \
     mainwindow.ui \
     newpost.ui \
     principal.ui \

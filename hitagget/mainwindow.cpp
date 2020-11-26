@@ -56,6 +56,7 @@ void MainWindow::Registrar(){
             windP.Unombre = new QString(windP.main_instance->logged_user->fullname.c_str());
             windP.UfechaR = new QString(windP.main_instance->logged_user->registerDate.c_str());
             windP.show_user_info();
+            windP.update_contacts();
             windP.show();
             Cerrar();
         }
@@ -84,6 +85,7 @@ void MainWindow::Ingresar(){
             windP.Unombre = new QString(windP.main_instance->logged_user->fullname.c_str());
             windP.UfechaR = new QString(windP.main_instance->logged_user->registerDate.c_str());
             windP.show_user_info();
+            windP.update_contacts();
             windP.show();
             Cerrar();
         }

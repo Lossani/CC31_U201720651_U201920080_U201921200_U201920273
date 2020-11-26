@@ -4,6 +4,7 @@
 #include "post.h"
 #include "listcontroller.h"
 #include "avl.h"
+#include "trend.h"
 //#include "commentmanager.h"
 #include "interactionmanager.h"
 #include <list>
@@ -21,13 +22,17 @@ private:
     AVL<Post*, int, nullptr>* avl_posts_by_numLikes;
     AVL<Post*, int, nullptr>* avl_posts_by_numInteractions;
 
+    AVL<string*, string, nullptr>* avl_trends;
+
 public:
     PostManager();
     ~PostManager();
 
+    list<Trend*>* all_trends;
+
     //void add_post(Post post);
-    virtual void addPost(int authorId, string title, string content);
-    void addPost(Post* post);
+    virtual Post* addPost(int authorId, string title, string content);
+
     void updatePost(Post* post);
     void deletePost(int postId);
     list<Post*> getAuthorPosts(int userId);

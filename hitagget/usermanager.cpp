@@ -66,6 +66,10 @@ UserManager::UserManager() : FollowerManager(), ListController<User*, int, strin
             //QMessageBox msg;
             //msg.setText(to_string(currentUser->email.size()).c_str());
             //msg.exec();
+
+
+            currentUser->followedUsers.unique([](Follower* follower1, Follower* follower2) { return follower1->followedUserID == follower2->followedUserID; });
+
             retrievedElements.push_back(currentUser);
 
             avl_users_by_email->add(currentUser);
@@ -127,4 +131,9 @@ User* UserManager:: getUserById(int id)
 void UserManager::saveUsers()
 {
     ListController<User*, int, string>::save_elements();
+}
+
+int UserManager::getUsersCount()
+{
+    return ListController<User*, int, string>::all_elements.size();
 }
