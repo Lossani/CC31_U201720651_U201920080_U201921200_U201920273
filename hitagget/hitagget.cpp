@@ -327,16 +327,6 @@ list<Trend *> Hitagget::get_latest_trends(int limit)
 
     return returnList;
 }
-/*
-void Hitagget::add_post(string content)
-{
-    PostManager::add_post(logged_user.id, content);
-}*/
-/*
-void Hitagget::add_blog(char *title, char *content)
-{
-    BlogManager::add_blog(logged_user.id, title, content);
-}*/
 
 /*
 void Hitagget::update_logged_user(string fullname, string email)

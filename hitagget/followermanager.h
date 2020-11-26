@@ -1,8 +1,8 @@
 #ifndef FOLLOWERMANAGER_H
 #define FOLLOWERMANAGER_H
 
-#include "ListController.h"
-#include "User.h"
+#include "listcontroller.h"
+#include "user.h"
 #include "avl.h"
 
 

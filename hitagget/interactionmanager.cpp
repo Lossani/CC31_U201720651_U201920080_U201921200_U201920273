@@ -106,9 +106,9 @@ list<PostInteraction*> InteractionManager::getPostInteractions(int postId)
     return avl_interactions_by_post_id->findAll(postId);
 }
 
-PostInteraction InteractionManager::getInteraction(int interactionId)
+PostInteraction* InteractionManager::getInteraction(int interactionId)
 {
-    return *get_element(interactionId);
+    return get_element(interactionId);
 }
 
 int InteractionManager::getNumInteractionsOfPost(int postId)

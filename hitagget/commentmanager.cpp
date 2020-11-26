@@ -92,30 +92,14 @@ void CommentManager::addComment(int postId, string content)
     avl_comments_by_post_id->add(newComment);
 }
 
-void CommentManager::addComment(PostComment comment)
-{
-    comment.id = time(0);
-    add_element(&comment);
-}
-
-void CommentManager::updateComment(PostComment comment)
-{
-    update_element(&comment);
-}
-
-void CommentManager::deleteComment(int id)
-{
-    delete_element(id);
-}
-
 list<PostComment*> CommentManager::getPostComments(int postId)
 {
     return avl_comments_by_post_id->findAll(postId);
 }
 
-PostComment CommentManager::getComment(int commentId)
+PostComment* CommentManager::getComment(int commentId)
 {
-    return *get_element(commentId);
+    return get_element(commentId);
 }
 
 void CommentManager::saveComments()

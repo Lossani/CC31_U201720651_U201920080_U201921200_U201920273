@@ -26,19 +26,8 @@ void NewPost::on_buttonBox_accepted()
     new_post = new Post();
     new_post->title = ui->txtPostTitle->text().toStdString();
     new_post->content = ui->txtPostContent->toPlainText().toStdString();
-    //post_content = ui->lineEdit->text().toStdString();
-}
-/*
-char* NewPost::get_post_content()
-{
-    return post_content;
 }
 
-int NewPost::get_post_id()
-{
-    return post_id;
-}
-*/
 void NewPost::on_buttonBox_rejected()
 {
     post_content = "";

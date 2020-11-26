@@ -62,6 +62,7 @@ private slots:
 private:
     void add_item_to_list_widget(QListWidget *list, Post* individual_post, function<void(Post*, string)> show_post, function<void(int)> show_author_profile, string author_name);
     void show_followed_users();
+    void show_contacts(list<User*> contacts);
 
     Ui::Principal *ui;
 

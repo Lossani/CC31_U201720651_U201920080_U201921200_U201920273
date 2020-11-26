@@ -21,6 +21,9 @@ void ViewPost::set_current_post(Post* post, string author_name, list<PostComment
     ui->lblPostContent->setText(post->content.c_str());
     ui->lblNumLikes->setText(to_string(post->numLikes).c_str());
     ui->lblAuthorName->setText(author_name.c_str());
+    ui->lblDate->setText(post->pubDate.c_str());
+    ui->lblPostID->setText(("ID: " + to_string(post->id)).c_str());
+    ui->lblNumInteractions->setText(to_string(post->numInteractions).c_str());
 
     for (PostComment* comment: postComments)
     {
@@ -60,6 +63,8 @@ void ViewPost::on_btnShare_clicked()
 
     if (share_post_function != nullptr)
         share_post_function(current_post);
+
+    ui->lblNumInteractions->setText(to_string(current_post->numInteractions).c_str());
 }
 
 void ViewPost::on_btnComment_clicked()
@@ -70,4 +75,9 @@ void ViewPost::on_btnComment_clicked()
         ui->listPostComments->addItem(QDateTime::currentDateTime().toString("yyyy-MM-dd") + '\t' + ui->txtNewCommentContent->text());
         ui->txtNewCommentContent->setText("");
     }
+}
+
+void ViewPost::on_btnDialog_accepted()
+{
+    this->close();
 }

@@ -19,10 +19,8 @@ public:
     ~UserManager();
 
     bool addUser(string email, string fullname, string password);
-    void updateUser(User* user);
     User* getUserByEmail(string email);
     User* getUserById(int id);
-    //void delete_user(int id);
 
     void saveUsers();
 

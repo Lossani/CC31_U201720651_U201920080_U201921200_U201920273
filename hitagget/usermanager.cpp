@@ -106,11 +106,6 @@ bool UserManager::addUser(string email, string fullname, string password)
     return true;
 }
 
-void UserManager::updateUser(User* user)
-{
-    ListController<User*, int, string>::update_element(user);
-}
-
 User* UserManager:: getUserByEmail(string email)
 {
     return avl_users_by_email->find(email);

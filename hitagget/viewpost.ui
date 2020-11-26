@@ -83,7 +83,7 @@ color: rgb(255, 255, 255)</string>
     <rect>
      <x>20</x>
      <y>130</y>
-     <width>101</width>
+     <width>121</width>
      <height>21</height>
     </rect>
    </property>
@@ -186,7 +186,7 @@ color: rgb(255, 255, 255)</string>
   <widget class="QLabel" name="lblAuthor">
    <property name="geometry">
     <rect>
-     <x>770</x>
+     <x>710</x>
      <y>280</y>
      <width>71</width>
      <height>21</height>
@@ -208,9 +208,9 @@ color: rgb(255, 255, 255)</string>
   <widget class="QLabel" name="lblAuthorName">
    <property name="geometry">
     <rect>
-     <x>880</x>
+     <x>810</x>
      <y>280</y>
-     <width>141</width>
+     <width>231</width>
      <height>21</height>
     </rect>
    </property>
@@ -283,6 +283,116 @@ color: rgb(255, 255, 255)</string>
    <property name="styleSheet">
     <string notr="true">color: black;
 background-color: white;</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="lblPublishDate">
+   <property name="geometry">
+    <rect>
+     <x>20</x>
+     <y>280</y>
+     <width>71</width>
+     <height>21</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>Comic Sans MS</family>
+     <pointsize>14</pointsize>
+     <weight>50</weight>
+     <italic>false</italic>
+     <bold>false</bold>
+    </font>
+   </property>
+   <property name="text">
+    <string>Fecha:</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="lblDate">
+   <property name="geometry">
+    <rect>
+     <x>100</x>
+     <y>280</y>
+     <width>251</width>
+     <height>21</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>Comic Sans MS</family>
+     <pointsize>12</pointsize>
+     <weight>50</weight>
+     <italic>true</italic>
+     <bold>false</bold>
+    </font>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+  </widget>
+  <widget class="QLabel" name="lblPostID">
+   <property name="geometry">
+    <rect>
+     <x>950</x>
+     <y>20</y>
+     <width>91</width>
+     <height>21</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>Comic Sans MS</family>
+     <pointsize>12</pointsize>
+     <weight>50</weight>
+     <italic>true</italic>
+     <bold>false</bold>
+    </font>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+  </widget>
+  <widget class="QLabel" name="lblInteractions">
+   <property name="geometry">
+    <rect>
+     <x>20</x>
+     <y>310</y>
+     <width>171</width>
+     <height>21</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>Comic Sans MS</family>
+     <pointsize>14</pointsize>
+     <weight>50</weight>
+     <italic>false</italic>
+     <bold>false</bold>
+    </font>
+   </property>
+   <property name="text">
+    <string>Interacciones:</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="lblNumInteractions">
+   <property name="geometry">
+    <rect>
+     <x>200</x>
+     <y>310</y>
+     <width>151</width>
+     <height>21</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>Comic Sans MS</family>
+     <pointsize>12</pointsize>
+     <weight>50</weight>
+     <italic>true</italic>
+     <bold>false</bold>
+    </font>
+   </property>
+   <property name="text">
+    <string/>
    </property>
   </widget>
  </widget>

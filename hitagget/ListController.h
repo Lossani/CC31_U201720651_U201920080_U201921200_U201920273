@@ -27,8 +27,6 @@ private:
     function<bool(S, S)> comparator_function;
     function<void()> save_function;
     function<list<T>(ifstream& file)> retrieve_function;
-    //function<list<string>(T element, list<int>& final_size)> parser;
-    //function<list<T>(string data, int data_size)> interpreter;
     string filename;
 public:
     ListController(function<R(T)> comparator, function<bool(S, S)> comparator_function, function<void()> save_function, function<list<T>(ifstream& file)> retrieve_function, string filename);
@@ -180,9 +178,6 @@ T ListController<T, R, S>::get_element(function<S(T)> field_getter, S field_to_c
 {
     for (T element : all_elements)
     {
-        //QMessageBox msg;
-        //msg.setText("field_getter(element)");
-        //msg.exec();
         if (comparator_function(field_getter(element), field_to_compare))
         {
             return element;

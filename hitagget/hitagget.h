@@ -6,7 +6,7 @@
 #include "commentmanager.h"
 #include "interactionmanager.h"
 #include "trend.h"
-//#include "blogmanager.h"
+
 #include <list>
 
 using namespace std;

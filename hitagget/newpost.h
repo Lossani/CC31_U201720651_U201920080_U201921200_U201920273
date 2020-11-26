@@ -19,9 +19,6 @@ class NewPost : public QDialog
 public:
     explicit NewPost(QWidget *parent = nullptr);
     ~NewPost();
-    //char* get_post_content();
-    //int get_post_id();
-    //int post_id = -1;
     string post_content = "";
     Post* new_post = nullptr;
     void show_post();

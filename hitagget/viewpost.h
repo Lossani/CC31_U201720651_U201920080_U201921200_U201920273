@@ -27,6 +27,8 @@ private slots:
 
     void on_btnComment_clicked();
 
+    void on_btnDialog_accepted();
+
 private:
     Ui::ViewPost *ui;
     Post* current_post;

@@ -204,11 +204,6 @@ Post* PostManager::addPost(int authorId, string title, string content)
     return newPost;
 }
 
-void PostManager::updatePost(Post* post)
-{
-    ListController<Post*, int, int>::update_element(post);
-}
-
 void PostManager::deletePost(int id)
 {
     ListController<Post*, int, int>::delete_element(id);

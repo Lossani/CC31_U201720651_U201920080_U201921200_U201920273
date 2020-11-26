@@ -5,7 +5,7 @@
 #include "listcontroller.h"
 #include "avl.h"
 #include "trend.h"
-//#include "commentmanager.h"
+
 #include "interactionmanager.h"
 #include <list>
 
@@ -33,7 +33,6 @@ public:
     //void add_post(Post post);
     virtual Post* addPost(int authorId, string title, string content);
 
-    void updatePost(Post* post);
     void deletePost(int postId);
     list<Post*> getAuthorPosts(int userId);
     list<Post*> getAuthorPosts(int userId, bool asc, int limit);

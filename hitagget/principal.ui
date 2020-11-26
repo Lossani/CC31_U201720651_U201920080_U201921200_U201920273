@@ -115,9 +115,9 @@ font: 9pt &quot;Arial&quot;;</string>
    <widget class="QPushButton" name="btnCamFoto">
     <property name="geometry">
      <rect>
-      <x>190</x>
+      <x>180</x>
       <y>125</y>
-      <width>111</width>
+      <width>131</width>
       <height>25</height>
      </rect>
     </property>
@@ -272,7 +272,7 @@ color: rgb(255, 255, 255);</string>
       <x>780</x>
       <y>680</y>
       <width>131</width>
-      <height>16</height>
+      <height>21</height>
      </rect>
     </property>
     <property name="font">

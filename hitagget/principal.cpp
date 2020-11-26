@@ -22,16 +22,6 @@ void Principal::show_all_posts(int op, bool inv, bool show_specific_profile)
     function<void(Post*, string)> show_post = [this](Post* post, string author_name)
     {
         list<PostComment*> comments = main_instance->getPostComments(post->id);
-        QMessageBox msg;
-        msg.setText(to_string(post->id).c_str());
-                    msg.exec();
-                    msg.setText(to_string(post->numInteractions).c_str());
-                    msg.exec();
-                    msg.setText(to_string(post->numLikes).c_str());
-                    msg.exec();
-                    msg.setText(post->pubDate.c_str());
-
-                    msg.exec();
 
         if (post->id != -1)
         {
@@ -88,7 +78,7 @@ void Principal::show_all_posts(int op, bool inv, bool show_specific_profile)
     case 0:
         //INTERACCIONES
 
-        if (ui->txtSearchBox->text().toStdString().empty())
+        if (ui->txtSearchBox->text() == "")
         {
             if (show_specific_profile)
             {
@@ -100,7 +90,6 @@ void Principal::show_all_posts(int op, bool inv, bool show_specific_profile)
         else
         {
             // We have something in the search box, we will show the results of the search box instead ordered by the interaction criteria
-
             show_all_posts(3 + (ui->cmbBoxSearchOptions->currentIndex()), invertir, show_specific_profile);
             return;
         }
@@ -108,7 +97,7 @@ void Principal::show_all_posts(int op, bool inv, bool show_specific_profile)
     case 1:
         //FECHA
 
-        if (ui->txtSearchBox->text().toStdString().empty())
+        if (ui->txtSearchBox->text() == "")
         {
             if (show_specific_profile)
             {
@@ -127,7 +116,7 @@ void Principal::show_all_posts(int op, bool inv, bool show_specific_profile)
     case 2:
         //LIKES
 
-        if (ui->txtSearchBox->text().toStdString().empty())
+        if (ui->txtSearchBox->text() == "")
         {
             if (show_specific_profile)
             {
@@ -142,9 +131,10 @@ void Principal::show_all_posts(int op, bool inv, bool show_specific_profile)
             show_all_posts(3 + (ui->cmbBoxSearchOptions->currentIndex()), invertir, show_specific_profile);
             return;
         }
+        break;
     case 3:
         //IGUAL A
-        if (ui->txtSearchBox->text().toStdString() != "")
+        if (ui->txtSearchBox->text()!= "")
         {
             if (show_specific_profile)
             {
@@ -156,7 +146,7 @@ void Principal::show_all_posts(int op, bool inv, bool show_specific_profile)
         break;
     case 4:
         //INICIA CON
-        if (ui->txtSearchBox->text().toStdString() != "")
+        if (ui->txtSearchBox->text() != "")
         {
             if (show_specific_profile)
             {
@@ -168,7 +158,7 @@ void Principal::show_all_posts(int op, bool inv, bool show_specific_profile)
         break;
     case 5:
         //FINALIZA CON
-        if (ui->txtSearchBox->text().toStdString() != "")
+        if (ui->txtSearchBox->text() != "")
         {
             if (show_specific_profile)
             {
@@ -180,7 +170,7 @@ void Principal::show_all_posts(int op, bool inv, bool show_specific_profile)
         break;
     case 6:
         //CONTIENE
-        if (ui->txtSearchBox->text().toStdString() != "")
+        if (ui->txtSearchBox->text() != "")
         {
             if (show_specific_profile)
             {
@@ -192,7 +182,7 @@ void Principal::show_all_posts(int op, bool inv, bool show_specific_profile)
         break;
     case 7:
         //NO CONTIENE
-        if (ui->txtSearchBox->text().toStdString() != "")
+        if (ui->txtSearchBox->text() != "")
         {
             if (show_specific_profile)
             {
@@ -267,6 +257,39 @@ void Principal::show_followed_users()
         item->setSizeHint(follower_ui->minimumSizeHint());
 
         ui->listWidgetFollowers->setItemWidget(item, follower_ui);
+    }
+}
+
+void Principal::show_contacts(list<User*> contacts)
+{
+    for (User* user : contacts)
+    {
+        QListWidgetItem *item = new QListWidgetItem();
+        ui->listWidgetCont->addItem(item);
+
+        FollowerListUI *follower_ui = new FollowerListUI();
+
+        follower_ui->user_name->setText(user->fullname.c_str());
+        follower_ui->user_shown = user;
+
+        follower_ui->set_user_click_action([this](User* user)
+        {
+            main_instance->set_shown_user(user);
+
+            if (!main_instance->logged_user->isFollowing(user->id))
+                ui->btnFollow->setVisible(true);
+
+            ui->btnCloseUserProfile->setVisible(true);
+            ui->lblShownUser->setVisible(true);
+            ui->lblShownUser->clear();
+            ui->lblShownUser->setText(("Mostrando usuario:\n" + main_instance->get_shown_user()->fullname + "\n" + main_instance->get_shown_user()->registerDate).c_str());
+
+            show_all_posts(ui->cb_criterios->currentIndex(), invertir, true);
+        });
+
+        item->setSizeHint(follower_ui->minimumSizeHint());
+
+        ui->listWidgetCont->setItemWidget(item, follower_ui);
     }
 }
 
@@ -372,38 +395,19 @@ void Principal::update_contacts()
 
     int numUsers = main_instance->getUsersCount();
 
+    list<User*> contacts;
+
     for (int i = 0; i < 1 + rand() % 20; ++i)
     {
-        User* user = main_instance->getUserById(1 + rand() % numUsers);
-
-        QListWidgetItem *item = new QListWidgetItem();
-        ui->listWidgetCont->addItem(item);
-
-        FollowerListUI *follower_ui = new FollowerListUI();
-
-        follower_ui->user_name->setText(user->fullname.c_str());
-        follower_ui->user_shown = user;
-
-        follower_ui->set_user_click_action([this](User* user)
-        {
-            main_instance->set_shown_user(user);
-
-            if (!main_instance->logged_user->isFollowing(user->id))
-                ui->btnFollow->setVisible(true);
-
-            ui->btnCloseUserProfile->setVisible(true);
-            ui->lblShownUser->setVisible(true);
-            ui->lblShownUser->clear();
-            ui->lblShownUser->setText(("Mostrando usuario:\n" + main_instance->get_shown_user()->fullname + "\n" + main_instance->get_shown_user()->registerDate).c_str());
-
-            show_all_posts(ui->cb_criterios->currentIndex(), invertir, true);
-        });
-
-        item->setSizeHint(follower_ui->minimumSizeHint());
-
-        ui->listWidgetCont->setItemWidget(item, follower_ui);
+       contacts.push_back(main_instance->getUserById(1 + rand() % numUsers));
     }
+
+    contacts.unique([](const User* a, const User* b) { return a->id == b->id; });
+
+    show_contacts(contacts);
 }
+
+
 
 void Principal::show_user_info(){
 
@@ -468,6 +472,18 @@ Principal::~Principal()
 
 void Principal::on_txtSearchBox_returnPressed()
 {
+    if (ui->txtSearchBox->text() == "")
+    {
+        op_busq = ui->cmbBoxSearchOptions->currentIndex();
+
+        if (main_instance->get_shown_user() == nullptr)
+            show_all_posts(op_busq, invertir, false);
+        else
+            show_all_posts(op_busq, invertir, true);
+
+        return;
+    }
+
     op_busq = 3 + (ui->cmbBoxSearchOptions->currentIndex());
 
     if (main_instance->get_shown_user() == nullptr)

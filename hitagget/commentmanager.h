@@ -14,11 +14,10 @@ public:
     ~CommentManager();
 
     void addComment(int postId, string content);
-    void addComment(PostComment comment);
     void updateComment(PostComment comment);
     void deleteComment(int id);
     list<PostComment*> getPostComments(int postId);
-    PostComment getComment(int commentId);
+    PostComment* getComment(int commentId);
 
     void saveComments();
 };
