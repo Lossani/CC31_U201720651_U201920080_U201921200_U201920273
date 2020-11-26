@@ -12,22 +12,36 @@ using namespace std;
 
 class Hitagget : public UserManager, public PostManager, public CommentManager
 {
+private:
+    User* shown_user;
+    list<Post*> shown_user_posts;
 public:
     Hitagget();
     ~Hitagget();
 
     User* logged_user;
-    User* shown_user;
 
     bool log_in(string email);
-    //void log_out();
+    void log_out();
     bool sign_up(string email, string fullname, string password);
 
     void save_instance();
-    //void add_post(string title, string content);
-    //void add_blog(string title, string content);
-    //User* get_logged_user();
-    //void update_logged_user(string nickname, string email);
+
+    list<Post*> getShownUserPostsThatContainsString(string value, bool asc, int limit);
+    list<Post*> getShownUserPostsNoContainsString(string value, bool asc, int limit);
+    list<Post*> getShownUserPostsThatStartsWithString(string value, bool asc, int limit);
+    list<Post*> getShownUserPostsThatEndsWithString(string value, bool asc, int limit);
+    list<Post*> getShownUserPostsThatTitleEqualsToString(string value, bool asc, int limit);
+
+    list<Post*> getShownUserPostsByPubDate(bool asc, int limit);
+    list<Post*> getShownUserPostsByLikes(bool asc, int limit);
+    list<Post*> getShownUserPostsByNumInteractions(bool asc, int limit);
+
+    User* get_shown_user();
+    list<Post*> get_shown_user_posts();
+    void set_shown_user(int user_id);
+    void set_shown_user(User* user);
+    void clear_shown_user();
 };
 
 #endif // HITAGGET_H

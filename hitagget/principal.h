@@ -57,6 +57,8 @@ public:
 
     addcontacto ventAC;
 
+    QMainWindow* loginWindow;
+
     explicit Principal(QWidget *parent = nullptr);
     ~Principal();
 
@@ -85,6 +87,10 @@ private slots:
     void on_btnCloseUserProfile_clicked();
 
     void on_btnFollow_clicked();
+
+    void on_btnLogOut_clicked();
+
+    void on_btnShowMyProfile_clicked();
 
 private:
     void add_item_to_list_widget(QListWidget *list, Post* individual_post, function<void(Post*, string)> show_post, function<void(int)> show_author_profile, string author_name);

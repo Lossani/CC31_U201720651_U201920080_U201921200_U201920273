@@ -4,6 +4,7 @@
 #include "viewpost.h"
 #include "newpost.h"
 #include "postui.h"
+#include "followerlistui.h"
 #include <QFileDialog>
 #include <QFile>
 #include <QTextCodec>
@@ -44,7 +45,7 @@ void Principal::show_all_posts(int op, bool inv, bool show_specific_profile)
 
     function<void(int)> show_author_profile = [this](int authorID)
     {
-        main_instance->shown_user = main_instance->getUserById(authorID);
+        main_instance->set_shown_user(authorID);
 
         if (!main_instance->logged_user->isFollowing(authorID))
             ui->btnFollow->setVisible(true);
@@ -52,7 +53,7 @@ void Principal::show_all_posts(int op, bool inv, bool show_specific_profile)
         ui->btnCloseUserProfile->setVisible(true);
         ui->lblShownUser->setVisible(true);
         ui->lblShownUser->clear();
-        ui->lblShownUser->setText(("Mostrando usuario:\n" + main_instance->shown_user->fullname + "\n" + main_instance->shown_user->registerDate).c_str());
+        ui->lblShownUser->setText(("Mostrando usuario:\n" + main_instance->get_shown_user()->fullname + "\n" + main_instance->get_shown_user()->registerDate).c_str());
 
         show_all_posts(ui->cb_criterios->currentIndex(), invertir, true);
     };
@@ -102,7 +103,7 @@ void Principal::show_all_posts(int op, bool inv, bool show_specific_profile)
         {
             if (show_specific_profile)
             {
-                posts = main_instance->getAuthorPostsByNumInteractions(main_instance->shown_user != nullptr ? main_instance->shown_user->id : main_instance->logged_user->id, inv, 50);
+                posts = main_instance->getShownUserPostsByNumInteractions(inv, 50);
             }
             else
                 posts = main_instance->getPostsByNumInteractions(inv, 50);
@@ -122,7 +123,7 @@ void Principal::show_all_posts(int op, bool inv, bool show_specific_profile)
         {
             if (show_specific_profile)
             {
-                posts = main_instance->getAuthorPostsByPubDate(main_instance->shown_user != nullptr ? main_instance->shown_user->id : main_instance->logged_user->id, inv, 50);
+                posts = main_instance->getShownUserPostsByPubDate(inv, 50);
             }
             else
                 posts = main_instance->getPostsByPubDate(inv, 50);
@@ -141,7 +142,7 @@ void Principal::show_all_posts(int op, bool inv, bool show_specific_profile)
         {
             if (show_specific_profile)
             {
-                posts = main_instance->getAuthorPostsByLikes(main_instance->shown_user != nullptr ? main_instance->shown_user->id : main_instance->logged_user->id, inv, 50);
+                posts = main_instance->getShownUserPostsByLikes(inv, 50);
             }
             else
                 posts = main_instance->getPostsByLikes(inv, 50);
@@ -158,7 +159,7 @@ void Principal::show_all_posts(int op, bool inv, bool show_specific_profile)
         {
             if (show_specific_profile)
             {
-                posts = main_instance->getAuthorPostsThatTitleEqualsToString(main_instance->shown_user != nullptr ? main_instance->shown_user->id : main_instance->logged_user->id, ui->txtSearchBox->text().toStdString(), inv, 50);
+                posts = main_instance->getShownUserPostsThatTitleEqualsToString(ui->txtSearchBox->text().toStdString(), inv, 50);
             }
             else
                 posts = main_instance->getPostsThatTitleEqualsToString(ui->txtSearchBox->text().toStdString(), inv, 50);
@@ -170,7 +171,7 @@ void Principal::show_all_posts(int op, bool inv, bool show_specific_profile)
         {
             if (show_specific_profile)
             {
-                posts = main_instance->getAuthorPostsThatStartsWithString(main_instance->shown_user != nullptr ? main_instance->shown_user->id : main_instance->logged_user->id, ui->txtSearchBox->text().toStdString(), inv, 50);
+                posts = main_instance->getShownUserPostsThatStartsWithString(ui->txtSearchBox->text().toStdString(), inv, 50);
             }
             else
                 posts = main_instance->getPostsThatStartsWithString(ui->txtSearchBox->text().toStdString(), inv, 50);
@@ -182,7 +183,7 @@ void Principal::show_all_posts(int op, bool inv, bool show_specific_profile)
         {
             if (show_specific_profile)
             {
-                posts = main_instance->getAuthorPostsThatEndsWithString(main_instance->shown_user != nullptr ? main_instance->shown_user->id : main_instance->logged_user->id, ui->txtSearchBox->text().toStdString(), inv, 50);
+                posts = main_instance->getShownUserPostsThatEndsWithString(ui->txtSearchBox->text().toStdString(), inv, 50);
             }
             else
                 posts = main_instance->getPostsThatEndsWithString(ui->txtSearchBox->text().toStdString(), inv, 50);
@@ -194,7 +195,7 @@ void Principal::show_all_posts(int op, bool inv, bool show_specific_profile)
         {
             if (show_specific_profile)
             {
-                posts = main_instance->getAuthorPostsThatContainsString(main_instance->shown_user != nullptr ? main_instance->shown_user->id : main_instance->logged_user->id, ui->txtSearchBox->text().toStdString(), inv, 50);
+                posts = main_instance->getShownUserPostsThatContainsString(ui->txtSearchBox->text().toStdString(), inv, 50);
             }
             else
                 posts = main_instance->getPostsThatContainsString(ui->txtSearchBox->text().toStdString(), inv, 50);
@@ -206,7 +207,7 @@ void Principal::show_all_posts(int op, bool inv, bool show_specific_profile)
         {
             if (show_specific_profile)
             {
-                posts = main_instance->getAuthorPostsNoContainsString(main_instance->shown_user != nullptr ? main_instance->shown_user->id : main_instance->logged_user->id, ui->txtSearchBox->text().toStdString(), inv, 50);
+                posts = main_instance->getShownUserPostsNoContainsString(ui->txtSearchBox->text().toStdString(), inv, 50);
             }
             else
                 posts = main_instance->getPostsNoContainsString(ui->txtSearchBox->text().toStdString(), inv, 50);
@@ -250,7 +251,33 @@ void Principal::show_followed_users()
 
     for(Follower* follower : main_instance->logged_user->followedUsers)
     {
-        ui->listWidgetFollowers->addItem(main_instance->getUserById(follower->followedUserID)->fullname.c_str());
+        QListWidgetItem *item = new QListWidgetItem();
+        ui->listWidgetFollowers->addItem(item);
+
+        FollowerListUI *follower_ui = new FollowerListUI();
+
+        User* user_shown = main_instance->getUserById(follower->followedUserID);
+        follower_ui->user_name->setText(user_shown->fullname.c_str());
+        follower_ui->user_shown = user_shown;
+
+        follower_ui->set_user_click_action([this](User* user)
+        {
+            main_instance->set_shown_user(user);
+
+            if (!main_instance->logged_user->isFollowing(user->id))
+                ui->btnFollow->setVisible(true);
+
+            ui->btnCloseUserProfile->setVisible(true);
+            ui->lblShownUser->setVisible(true);
+            ui->lblShownUser->clear();
+            ui->lblShownUser->setText(("Mostrando usuario:\n" + main_instance->get_shown_user()->fullname + "\n" + main_instance->get_shown_user()->registerDate).c_str());
+
+            show_all_posts(ui->cb_criterios->currentIndex(), invertir, true);
+        });
+
+        item->setSizeHint(follower_ui->minimumSizeHint());
+
+        ui->listWidgetFollowers->setItemWidget(item, follower_ui);
     }
 }
 
@@ -571,7 +598,15 @@ void Principal::new_publi(){
     else
     {
         if (result->title != "" && result->content != "")
+        {
             main_instance->addPost(main_instance->logged_user->id, result->title, result->content);
+
+            if ((main_instance->get_shown_user() != nullptr) && (main_instance->get_shown_user()->id == main_instance->logged_user->id))
+            {
+                main_instance->set_shown_user(main_instance->logged_user);
+                show_all_posts(op_busq, invertir, true);
+            }
+        }
     }
 }
 
@@ -657,7 +692,7 @@ void Principal::f_invertir()
 {
     invertir = !invertir;
 
-    if (main_instance->shown_user == nullptr)
+    if (main_instance->get_shown_user() == nullptr)
         show_all_posts(op_busq, invertir, false);
     else
         show_all_posts(op_busq, invertir, true);
@@ -673,7 +708,7 @@ void Principal::on_txtSearchBox_returnPressed()
 {
     op_busq = 3 + (ui->cmbBoxSearchOptions->currentIndex());
 
-    if (main_instance->shown_user == nullptr)
+    if (main_instance->get_shown_user() == nullptr)
         show_all_posts(op_busq, invertir, false);
     else
         show_all_posts(op_busq, invertir, true);
@@ -683,7 +718,7 @@ void Principal::on_cb_criterios_currentIndexChanged(int index)
 {
     op_busq = index;
 
-    if (main_instance->shown_user == nullptr)
+    if (main_instance->get_shown_user() == nullptr)
         show_all_posts(index, invertir, false);
     else
         show_all_posts(index, invertir, true);
@@ -691,7 +726,7 @@ void Principal::on_cb_criterios_currentIndexChanged(int index)
 
 void Principal::on_btnCloseUserProfile_clicked()
 {
-    main_instance->shown_user = nullptr;
+    main_instance->clear_shown_user();
 
     ui->btnCloseUserProfile->setVisible(false);
     ui->lblShownUser->setVisible(false);
@@ -704,8 +739,27 @@ void Principal::on_btnCloseUserProfile_clicked()
 void Principal::on_btnFollow_clicked()
 {
     ui->btnFollow->setVisible(false);
-    Follower* newFollower = main_instance->addFollower(main_instance->logged_user->id, main_instance->shown_user->id);
+    Follower* newFollower = main_instance->addFollower(main_instance->logged_user->id, main_instance->get_shown_user()->id);
     main_instance->logged_user->followedUsers.push_back(newFollower);
 
     show_followed_users();
+}
+
+void Principal::on_btnLogOut_clicked()
+{
+    main_instance->log_out();
+    this->hide();
+    this->loginWindow->show();
+}
+
+void Principal::on_btnShowMyProfile_clicked()
+{
+    main_instance->set_shown_user(main_instance->logged_user);
+
+    ui->btnCloseUserProfile->setVisible(true);
+    ui->lblShownUser->setVisible(true);
+    ui->lblShownUser->clear();
+    ui->lblShownUser->setText("Mostrando:\n Mi perfil");
+
+    show_all_posts(ui->cb_criterios->currentIndex(), invertir, true);
 }

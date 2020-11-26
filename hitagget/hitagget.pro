@@ -13,6 +13,7 @@ SOURCES += \
     addcontacto.cpp \
     avl.cpp \
     commentmanager.cpp \
+    followerlistui.cpp \
     followermanager.cpp \
     hitagget.cpp \
     interactionmanager.cpp \
@@ -33,6 +34,7 @@ HEADERS += \
     avl.h \
     commentmanager.h \
     contacto.h \
+    followerlistui.h \
     followermanager.h \
     grupo.h \
     hitagget.h \

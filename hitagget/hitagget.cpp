@@ -26,6 +26,12 @@ bool Hitagget::log_in(string email)
 
 }
 
+void Hitagget::log_out()
+{
+    clear_shown_user();
+    logged_user = nullptr;
+}
+
 bool Hitagget::sign_up(string email, string fullname, string password)
 {
     if (!addUser(email, fullname, password))
@@ -46,6 +52,245 @@ void Hitagget::save_instance()
     saveComments();
     saveInteractions();
     saveFollowers();
+}
+
+list<Post *> Hitagget::getShownUserPostsThatContainsString(string value, bool asc, int limit)
+{
+    if (limit <= 0 || shown_user == nullptr || shown_user_posts.size() == 0)
+        return list<Post*>();
+
+    list<Post*> returnList;
+
+    for (Post* post : shown_user_posts)
+    {
+        if (returnList.size() >= (uint)limit)
+            break;
+
+        if (post->title.find(value) != string::npos)
+        {
+            returnList.push_back(post);
+        }
+    }
+
+    if (asc)
+        returnList.sort([](const Post* a, const Post* b) { return a->title < b->title; });
+    else
+        returnList.sort([](const Post* a, const Post* b) { return a->title > b->title; });
+
+    return returnList;
+}
+
+list<Post *> Hitagget::getShownUserPostsNoContainsString(string value, bool asc, int limit)
+{
+    if (limit <= 0 || shown_user == nullptr || shown_user_posts.size() == 0)
+        return list<Post*>();
+
+    list<Post*> returnList;
+
+    for (Post* post : shown_user_posts)
+    {
+        if (returnList.size() >= (uint)limit)
+            break;
+
+        if (post->title.find(value) == string::npos)
+        {
+            returnList.push_back(post);
+        }
+    }
+
+    if (asc)
+        returnList.sort([](const Post* a, const Post* b) { return a->title < b->title; });
+    else
+        returnList.sort([](const Post* a, const Post* b) { return a->title > b->title; });
+
+    return returnList;
+}
+
+list<Post *> Hitagget::getShownUserPostsThatStartsWithString(string value, bool asc, int limit)
+{
+    if (limit <= 0 || shown_user == nullptr || shown_user_posts.size() == 0)
+        return list<Post*>();
+
+    list<Post*> returnList;
+
+    for (Post* post : shown_user_posts)
+    {
+        if (returnList.size() >= (uint)limit)
+            break;
+
+        if (value.size() <= post->title.size())
+        {
+            if (value == post->title.substr(0, value.size()))
+            {
+                returnList.push_back(post);
+            }
+        }
+    }
+
+    if (asc)
+        returnList.sort([](const Post* a, const Post* b) { return a->title < b->title; });
+    else
+        returnList.sort([](const Post* a, const Post* b) { return a->title > b->title; });
+
+    return returnList;
+}
+
+list<Post *> Hitagget::getShownUserPostsThatEndsWithString(string value, bool asc, int limit)
+{
+    if (limit <= 0 || shown_user == nullptr || shown_user_posts.size() == 0)
+        return list<Post*>();
+
+    list<Post*> returnList;
+
+    for (Post* post : shown_user_posts)
+    {
+        if (returnList.size() >= (uint)limit)
+            break;
+
+        if (value.size() <= post->title.size())
+        {
+            if (value == post->title.substr(post->title.size() - value.size(), value.size()))
+            {
+                returnList.push_back(post);
+            }
+        }
+    }
+
+    if (asc)
+        returnList.sort([](const Post* a, const Post* b) { return a->title < b->title; });
+    else
+        returnList.sort([](const Post* a, const Post* b) { return a->title > b->title; });
+
+    return returnList;
+}
+
+list<Post *> Hitagget::getShownUserPostsThatTitleEqualsToString(string value, bool asc, int limit)
+{
+    if (limit <= 0 || shown_user == nullptr || shown_user_posts.size() == 0)
+        return list<Post*>();
+
+    list<Post*> returnList;
+
+    for (Post* post : shown_user_posts)
+    {
+        if (returnList.size() >= (uint)limit)
+            break;
+
+        if (post->title == value)
+        {
+            returnList.push_back(post);
+        }
+    }
+
+    if (asc)
+        returnList.sort([](const Post* a, const Post* b) { return a->title < b->title; });
+    else
+        returnList.sort([](const Post* a, const Post* b) { return a->title > b->title; });
+
+    return returnList;
+}
+
+list<Post *> Hitagget::getShownUserPostsByPubDate(bool asc, int limit)
+{
+    if (limit <= 0)
+        return list<Post*>();
+
+    list<Post*> userPosts = shown_user_posts;
+
+    if (asc)
+        userPosts.sort([](const Post* a, const Post* b) { return a->pubDate < b->pubDate; });
+    else
+        userPosts.sort([](const Post* a, const Post* b) { return a->pubDate > b->pubDate; });
+
+    list<Post*> returnList;
+
+    for (Post* post : userPosts)
+    {
+        if (returnList.size() >= (uint)limit)
+            break;
+
+        returnList.push_back(post);
+    }
+
+    return returnList;
+}
+
+list<Post *> Hitagget::getShownUserPostsByLikes(bool asc, int limit)
+{
+    if (limit <= 0)
+        return list<Post*>();
+
+    list<Post*> userPosts = shown_user_posts;
+
+    if (asc)
+        userPosts.sort([](const Post* a, const Post* b) { return a->numLikes < b->numLikes; });
+    else
+        userPosts.sort([](const Post* a, const Post* b) { return a->numLikes > b->numLikes; });
+
+    list<Post*> returnList;
+
+    for (Post* post : userPosts)
+    {
+        if (returnList.size() >= (uint)limit)
+            break;
+
+        returnList.push_back(post);
+    }
+
+    return returnList;
+}
+
+list<Post *> Hitagget::getShownUserPostsByNumInteractions(bool asc, int limit)
+{
+    if (limit <= 0)
+        return list<Post*>();
+
+    list<Post*> userPosts = shown_user_posts;
+
+    if (asc)
+        userPosts.sort([](const Post* a, const Post* b) { return a->numInteractions < b->numInteractions; });
+    else
+        userPosts.sort([](const Post* a, const Post* b) { return a->numInteractions > b->numInteractions; });
+
+    list<Post*> returnList;
+
+    for (Post* post : userPosts)
+    {
+        if (returnList.size() >= (uint)limit)
+            break;
+
+        returnList.push_back(post);
+    }
+
+    return returnList;
+}
+
+User *Hitagget::get_shown_user()
+{
+    return shown_user;
+}
+
+list<Post *> Hitagget::get_shown_user_posts()
+{
+    return shown_user_posts;
+}
+
+void Hitagget::set_shown_user(int user_id)
+{
+    shown_user = getUserById(user_id);
+    shown_user_posts = getAuthorPosts(user_id);
+}
+
+void Hitagget::set_shown_user(User *user)
+{
+    shown_user = user;
+    shown_user_posts = getAuthorPosts(user->id);
+}
+
+void Hitagget::clear_shown_user()
+{
+    shown_user = nullptr;
+    shown_user_posts.clear();
 }
 /*
 void Hitagget::add_post(string content)

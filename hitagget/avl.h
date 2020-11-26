@@ -156,24 +156,6 @@ list<T> AVL<T, R, NONE>::findAll(R value)
         return returnValues;
     }
 
-    if (node->rightChild != nullptr)
-    {
-        Node* nextNode = node;
-
-        while (nextNode->rightChild != nullptr)
-        {
-            nextNode = find(nextNode->rightChild, value);
-
-            if (nextNode != nullptr)
-            {
-                returnValues.push_back(nextNode->element);
-            }
-            else
-            {
-                break;
-            }
-        }
-    }
 
     return returnValues;
 }

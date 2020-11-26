@@ -28,6 +28,8 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->btnRegistrar,SIGNAL(released()),this,SLOT(Registrar()));
     connect(ui->btnIngresar,SIGNAL(released()),this,SLOT(Ingresar()));
     connect(ui->btnCrearCuenta,SIGNAL(released()),this,SLOT(Mostrar_Registro()));
+
+    windP.loginWindow = this;
 }
 
 MainWindow::~MainWindow()
@@ -40,7 +42,6 @@ void MainWindow::Mostrar_Registro(){
 }
 
 void MainWindow::Cerrar(){
-
     this->hide();
 }
 
