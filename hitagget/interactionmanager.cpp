@@ -23,9 +23,9 @@ InteractionManager::InteractionManager() : ListController<PostInteraction*, int,
             for (PostInteraction* interaction : get_all_elements())
             {
                 file << interaction->authorId << '\t'
-                     << interaction->parentPostId
-                     << '\t' << interaction->date
-                     << '\t' << (interaction->shared ? "TRUE" : "FALSE")
+                     << interaction->parentPostId << '\t'
+                     << interaction->date << '\t'
+                     << (interaction->shared ? "TRUE" : "FALSE")
                      << endl;
             }
 
@@ -68,7 +68,10 @@ InteractionManager::InteractionManager() : ListController<PostInteraction*, int,
    },
    "interaction.tsv")
 {
-
+    if (avl_interactions_by_post_id == nullptr)
+    {
+        avl_interactions_by_post_id = new AVL<PostInteraction*, int, nullptr>([](PostInteraction* element) { return element->parentPostId; });
+    }
 }
 
 InteractionManager::~InteractionManager()

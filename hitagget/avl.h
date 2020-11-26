@@ -39,7 +39,7 @@ public:
     void add(T element);
     //void inOrder()
 
-    void remove(R value);
+    void remove(T element);
     const T find(R value);
     list<T> findAll(R value);
     list<T> findAll(R value, int limit);
@@ -59,10 +59,10 @@ private:
     void destroy(Node*& node);
     int height(Node* node);
     void add(Node*& node, T element);
-    void remove(Node*& node, R value);
+    void remove(Node*& node, T element);
 
-    Node*& greatest(Node*& node);
-    Node*& lowest(Node*& node);
+    Node* greatest(Node*& node);
+    Node* lowest(Node*& node);
     Node* find(Node*& node, R value);
 
     void updateHeight(Node* node);
@@ -131,9 +131,9 @@ void AVL<T, R, NONE>::add(T element)
 }
 
 template <typename T, typename R, T NONE>
-void AVL<T, R, NONE>::remove(R value)
+void AVL<T, R, NONE>::remove(T element)
 {
-    remove(root, value);
+    remove(root, element);
 }
 
 template <typename T, typename R, T NONE>
@@ -344,38 +344,45 @@ void AVL<T, R, NONE>::add(Node*& node, T element)
 }
 
 template <typename T, typename R, T NONE>
-void AVL<T, R, NONE>::remove(Node*& node, R value)
+void AVL<T, R, NONE>::remove(Node*& node, T element)
 {
     if (node == nullptr)
         return;
 
-    if (value < comparator_function(node->element))
-        remove(node->leftChild, value);
-    else if (comparator_function(node->element) < value)
-        remove(node->rightChild, value);
-    else if (node->leftChild != nullptr && node->rightChild != nullptr)
+    if (comparator_function(element) < comparator_function(node->element))
+        remove(node->leftChild, element);
+    else if (comparator_function(node->element) < comparator_function(element))
+        remove(node->rightChild, element);
+    else if (element->id == node->element->id && node->leftChild != nullptr && node->rightChild != nullptr)
     {
+        QMessageBox msg;
+        msg.setText((to_string(node->element->id) + "tiene hijos").c_str());
+                    msg.exec();
         node->element = lowest(node->rightChild)->element;
-        remove(node->rightChild, comparator_function(node->element));
+        remove(node->rightChild, node->element);
     }
-    else
+    else if (element->id == node->element->id)
     {
+        QMessageBox msg;
+        msg.setText((to_string(node->element->id) + " borrando").c_str());
+                    msg.exec();
         Node* oldNode = node;
         node = (node->leftChild != nullptr) ? node->leftChild : node->rightChild;
         delete oldNode;
+        --lenght;
     }
 
     balance(node);
 }
 
 template <typename T, typename R, T NONE>
-struct AVL<T, R, NONE>::Node*& AVL<T, R, NONE>::greatest(Node*& node)
+struct AVL<T, R, NONE>::Node* AVL<T, R, NONE>::greatest(Node*& node)
 {
     return node->right == nullptr ? node : greatest(node->rightChild);
 }
 
 template <typename T, typename R, T NONE>
-struct AVL<T, R, NONE>::Node*& AVL<T, R, NONE>::lowest(Node*& node)
+struct AVL<T, R, NONE>::Node* AVL<T, R, NONE>::lowest(Node*& node)
 {
     return node->leftChild == nullptr ? node : lowest(node->leftChild);
 }

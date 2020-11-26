@@ -28,7 +28,7 @@ public:
     PostManager();
     ~PostManager();
 
-    list<Trend*>* all_trends;
+    list<Trend*>* all_trends = nullptr;
 
     //void add_post(Post post);
     virtual Post* addPost(int authorId, string title, string content);
@@ -68,9 +68,8 @@ public:
     list<Post*> getPostsByNumInteractions(bool asc, int limit);
 
     void savePosts();
-   // void add_comment_to_post(int post_id, int comment_author_id, string comment);
-    //void delete_comment(int comment_id);
-    //list<PostComment> get_post_comments(int post_id);
+
+    void updatePostsAVLs(Post* post);
 };
 
 #endif // POSTMANAGER_H

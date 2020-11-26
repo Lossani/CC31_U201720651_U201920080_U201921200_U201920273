@@ -24,7 +24,7 @@ FollowerManager::FollowerManager() : ListController<Follower*, int, int>(
             for (Follower* follower : ListController<Follower*, int, int>::get_all_elements())
             {
                 file << follower->userID << '\t'
-                     << follower->followedUserID << '\t'
+                     << follower->followedUserID
                      << endl;
             }
 
@@ -61,7 +61,10 @@ FollowerManager::FollowerManager() : ListController<Follower*, int, int>(
     },
     "followers.tsv")
 {
-
+    if (avl_followers_by_user_id == nullptr)
+    {
+        avl_followers_by_user_id = new AVL<Follower*, int, nullptr>([](Follower* element) { return element->userID; });
+    }
 }
 
 FollowerManager::~FollowerManager()

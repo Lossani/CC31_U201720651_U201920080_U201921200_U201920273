@@ -58,6 +58,7 @@ void MainWindow::Registrar(){
             windP.show_user_info();
             windP.update_contacts();
             windP.show();
+            ui->Ventanas->setCurrentIndex(1);
             Cerrar();
         }
         else

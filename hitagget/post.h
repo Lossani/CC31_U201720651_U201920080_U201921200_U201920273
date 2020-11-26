@@ -34,8 +34,8 @@ public:
 class Post : public Publication
 {
 public:
-    string title;
-    unsigned int numLikes;
+    string title = "";
+    unsigned int numLikes = 0;
     vector<PostComment*> comments;
     vector<PostInteraction*> interactions;
     int numInteractions = 0;

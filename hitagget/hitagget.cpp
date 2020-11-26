@@ -313,13 +313,16 @@ list<Trend *> Hitagget::get_latest_trends(int limit)
     int count = 0;
     list<Trend*> returnList;
 
-    for (Trend* trend : *all_trends)
+    if (all_trends != nullptr && all_trends->size() > 0)
     {
-        if (count >= limit)
-            break;
+        for (Trend* trend : *all_trends)
+        {
+            if (count >= limit)
+                break;
 
-        returnList.push_back(trend);
-        count++;
+            returnList.push_back(trend);
+            count++;
+        }
     }
 
     return returnList;

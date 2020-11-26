@@ -12,7 +12,6 @@ using namespace std;
 class UserManager : public FollowerManager, private ListController<User*, int, string>
 {
 private:
-    function<string(User*)> email_field_comparator;
     AVL<User*, string, nullptr>* avl_users_by_email;
 
 public:

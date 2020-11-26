@@ -32,7 +32,7 @@ PostManager::PostManager() : InteractionManager(), ListController<Post*, int, in
                       << post->title << '\t'
                       << post->content << '\t'
                       << post->pubDate << '\t'
-                      << post->numLikes << '\t'
+                      << post->numLikes
                       << endl;
              }
 
@@ -51,6 +51,7 @@ PostManager::PostManager() : InteractionManager(), ListController<Post*, int, in
         avl_trends = new AVL<string*, string, nullptr>([](string* element) { return *element; });
 
         all_trends = new list<Trend*>();
+
         QStringList unique_word_list;
 
         list<Post*> retrievedElements;
@@ -75,6 +76,7 @@ PostManager::PostManager() : InteractionManager(), ListController<Post*, int, in
             currentPost->authorId = stoi(authorId);
             currentPost->title = title;
             currentPost->numLikes = stoi(numLikes);
+
             currentPost->numInteractions = getNumInteractionsOfPost(stoi(id));
 
             retrievedElements.push_back(currentPost);
@@ -120,7 +122,20 @@ PostManager::PostManager() : InteractionManager(), ListController<Post*, int, in
     },
     "publications.tsv")
 {
-
+         if (avl_posts_by_id == nullptr)
+            avl_posts_by_id = new AVL<Post*, int, nullptr>([](Post* element) { return element->id; });
+         if (avl_posts_by_authorId == nullptr)
+            avl_posts_by_authorId = new AVL<Post*, int, nullptr>([](Post* element) { return element->authorId; });
+         if (avl_posts_by_title == nullptr)
+            avl_posts_by_title = new AVL<Post*, string, nullptr>([](Post* element) { return element->title; });
+         if (avl_posts_by_pubDate == nullptr)
+            avl_posts_by_pubDate = new AVL<Post*, string, nullptr>([](Post* element) { return element->pubDate; });
+         if (avl_posts_by_numLikes == nullptr)
+            avl_posts_by_numLikes = new AVL<Post*, int, nullptr>([](Post* element) { return element->numLikes; });
+         if (avl_posts_by_numInteractions == nullptr)
+            avl_posts_by_numInteractions = new AVL<Post*, int, nullptr>([](Post* element) { return element->numInteractions; });
+         if (avl_trends == nullptr)
+            avl_trends = new AVL<string*, string, nullptr>([](string* element) { return *element; });
 }
 
 PostManager::~PostManager()
@@ -248,74 +263,6 @@ list<Post *> PostManager::getAuthorPostsByNumInteractions(int userId, bool asc, 
     return returnList;
 }
 
-/*
-void PostManager::save_posts()
-{
-    ofstream posts_file;
-    ofstream comments_file;
-
-    posts_file.open("posts.dat", ios::out | ios::binary | ios::app);
-    comments_file.open("comments.dat", ios::out | ios::binary | ios::app);
-
-    if (posts_file.is_open() && comments_file.is_open())
-    {
-        for (Post post : all_posts)
-        {
-            posts_file.write((const char*) &post.id, sizeof(Post::id));
-            posts_file.write((const char*) &post.author, sizeof(Post::author));
-            posts_file.write((const char*) &post.content, sizeof(Post::content));
-            posts_file.write((const char*) &post.comments_number, sizeof(Post::comments_number));
-
-            for (Post comment : post.comments)
-            {
-                comments_file.write((const char*) &comment, sizeof(Post));
-            }
-        }
-
-        posts_file.close();
-        comments_file.close();
-    }
-}
-
-void PostManager::retrieve_posts()
-{
-    ifstream posts_file;
-    ifstream comments_file;
-
-    posts_file.open("posts.dat", ios::in | ios::binary);
-    comments_file.open("comments.dat", ios::in | ios::binary);
-
-    if (posts_file.is_open() && comments_file.is_open())
-    {
-        posts_file.seekg(0, ios::end);
-        int posts_number = posts_file.tellg() / sizeof(Post);
-        int last_post_comments_number = 0;
-
-        for (int i = 0; i < posts_number; ++i)
-        {
-            Post current_post;
-            posts_file.seekg(i * sizeof(Post), ios::beg);
-            posts_file.read((char*)&current_post.id, sizeof(Post::id));
-            posts_file.read((char*)&current_post.author, sizeof(Post::author));
-            posts_file.read((char*)&current_post.content, sizeof(Post::content));
-            posts_file.read((char*)&current_post.comments_number, sizeof(Post::comments_number));
-
-            for (int j = 0; j < current_post.comments_number; ++j)
-            {
-                Post current_comment;
-                comments_file.seekg((last_post_comments_number + j) * sizeof(Post), ios::beg);
-                comments_file.read((char*)&current_comment, sizeof(Post));
-                current_post.comments.push_back(current_comment);
-            }
-
-            last_post_comments_number = current_post.comments.size();
-            all_posts.push_back(current_post);
-        }
-
-        posts_file.close();
-    }
-}
-*/
 list<Post*> PostManager::getAllPosts()
 {
     return ListController<Post*, int, int>::get_all_elements();
@@ -588,90 +535,12 @@ void PostManager::savePosts()
 {
     ListController<Post*, int, int>::save_elements();
 }
-/*
-void PostManager::add_comment_to_post(int post_id, int author_id, char* comment)
+
+void PostManager::updatePostsAVLs(Post *post)
 {
-    PostComment new_comment;
+    avl_posts_by_numLikes->remove(post);
+    avl_posts_by_numInteractions->remove(post);
 
-    new_comment.id = time(0);
-    new_comment.parent_post_id = post_id;
-    new_comment.author_id = author_id;
-    strcpy(new_comment.content, comment);
-
-    all_comments.add_comment(new_comment);
+    avl_posts_by_numLikes->add(post);
+    avl_posts_by_numInteractions->add(post);
 }
-
-void PostManager::delete_comment(int comment_id)
-{
-    all_comments.delete_comment(comment_id);
-}
-
-list<PostComment> PostManager::get_post_comments(int post_id)
-{
-    function<int(PostComment)> field_comparator = [](PostComment comment)
-    {
-        return comment.parent_post_id;
-    };
-
-    return all_comments.find_all_elements(field_comparator, post_id);
-}*/
-
-/*
-void PostManager::add_comment_to_post(int post_id, int comment_author_id, char* comment)
-{
-    if (all_posts.size() == 0)
-        return;
-
-    Post post_to_update = get_post_by_id(post_id);
-    Post new_comment;
-
-    new_comment.author_id = comment_author_id;
-    strcpy(new_comment.content, comment);
-    new_comment.id = time(0);
-
-    post_to_update.comments.push_back(new_comment);
-    post_to_update.comments_number = post_to_update.comments.size();
-    save_posts();
-}
-
-void PostManager::delete_comment(int post_id, int comment_id)
-{
-    int position = get_post_position(post_id);
-
-    if (position == -1)
-        return;
-
-    int counter = 0;
-    bool found = false;
-
-    for (Post comment: all_posts[position].comments)
-    {
-        if (comment.id == comment_id)
-        {
-            found = true;
-            break;
-        }
-        counter++;
-    }
-
-    if (found)
-    {
-        all_posts[position].comments.erase(all_posts[position].comments.begin() + counter);
-        save_posts();
-    }
-}
-
-int PostManager::get_post_position(int post_id)
-{
-    int counter = 0;
-    for (Post post : all_posts)
-    {
-        if (post.id == post_id)
-        {
-           return counter;
-        }
-    }
-
-    return -1;
-}
-*/

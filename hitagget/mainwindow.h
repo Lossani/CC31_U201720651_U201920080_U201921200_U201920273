@@ -23,6 +23,7 @@ public:
     QString nombre;
     QString apellido;
     ~MainWindow();
+
 private slots:
     void Cerrar();
     void Ingresar();

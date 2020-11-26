@@ -23,7 +23,15 @@ void Principal::show_all_posts(int op, bool inv, bool show_specific_profile)
     {
         list<PostComment*> comments = main_instance->getPostComments(post->id);
         QMessageBox msg;
+        msg.setText(to_string(post->id).c_str());
+                    msg.exec();
+                    msg.setText(to_string(post->numInteractions).c_str());
+                    msg.exec();
+                    msg.setText(to_string(post->numLikes).c_str());
+                    msg.exec();
+                    msg.setText(post->pubDate.c_str());
 
+                    msg.exec();
         if (post->id != -1)
         {
             main_instance->addInteraction(main_instance->logged_user->id, post, false);
@@ -32,12 +40,21 @@ void Principal::show_all_posts(int op, bool inv, bool show_specific_profile)
             view_post_dialog->share_post_function = [this](Post* post)
             {
                 main_instance->editLastInteraction(true);
+                post->numInteractions++;
+                main_instance->updatePostsAVLs(post);
             };
 
             view_post_dialog->new_comment_function = [this](Post* post, string content)
             {
                 main_instance->addInteraction(main_instance->logged_user->id, post, false);
                 main_instance->addComment(post->id, content);
+
+                main_instance->updatePostsAVLs(post);
+            };
+
+            view_post_dialog->like_post_function = [this](Post* post)
+            {
+                main_instance->updatePostsAVLs(post);
             };
 
             view_post_dialog->set_current_post(post, author_name, comments);

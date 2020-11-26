@@ -49,6 +49,8 @@ void ViewPost::on_btnLike_clicked()
         ui->btnLike->setStyleSheet("color: rgb(255, 0, 0);");
     }
 
+    if (like_post_function != nullptr)
+        like_post_function(current_post);
     ui->lblNumLikes->setText(to_string(current_post->numLikes).c_str());
 }
 

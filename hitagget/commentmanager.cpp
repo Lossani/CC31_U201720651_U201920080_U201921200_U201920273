@@ -25,7 +25,7 @@ CommentManager::CommentManager() : ListController<PostComment*, int, int>(
                file << comment->id << '\t'
                     << comment->parentPostId << '\t'
                     << comment->pubDate << '\t'
-                    << comment->content << '\t'
+                    << comment->content
                     << endl;
            }
 
@@ -35,7 +35,6 @@ CommentManager::CommentManager() : ListController<PostComment*, int, int>(
    [this](ifstream& file)
    {
        avl_comments_by_post_id = new AVL<PostComment*, int, nullptr>([] (PostComment* element) { return element->parentPostId; });
-       AVL<string*, string, nullptr>* sd = new AVL<string*, string, nullptr>([] (string* element) { return *element; });
 
        list<PostComment*> retrievedElements;
 
@@ -68,7 +67,10 @@ CommentManager::CommentManager() : ListController<PostComment*, int, int>(
    },
    "comment.tsv")
 {
-
+    if (avl_comments_by_post_id == nullptr)
+    {
+         avl_comments_by_post_id = new AVL<PostComment*, int, nullptr>([] (PostComment* element) { return element->parentPostId; });
+    }
 }
 
 CommentManager::~CommentManager()

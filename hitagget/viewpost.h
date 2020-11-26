@@ -18,6 +18,7 @@ public:
     void set_current_post(Post* post, string author_name, list<PostComment*> postComments);
     function<void(Post*)> share_post_function;
     function<void(Post*, string)> new_comment_function;
+    function<void(Post*)> like_post_function;
 
 private slots:
     void on_btnLike_clicked();

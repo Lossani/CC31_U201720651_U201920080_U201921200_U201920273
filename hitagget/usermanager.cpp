@@ -30,7 +30,7 @@ UserManager::UserManager() : FollowerManager(), ListController<User*, int, strin
                  file << user->id << '\t'
                       << user->email << '\t'
                       << user->fullname << '\t'
-                      << user->registerDate << '\t'
+                      << user->registerDate
                       << endl;
              }
 
@@ -79,10 +79,8 @@ UserManager::UserManager() : FollowerManager(), ListController<User*, int, strin
     },
     "users.tsv")
 {
-    email_field_comparator = [](User* user)
-    {
-        return user->email;
-    };
+    if (avl_users_by_email == nullptr)
+        avl_users_by_email = new AVL<User*, string, nullptr>([](User* element) { return element->email; });
 }
 
 UserManager::~UserManager()
