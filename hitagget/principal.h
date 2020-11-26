@@ -39,6 +39,7 @@ public:
     void show_all_posts(int op, bool inv, bool show_specific_profile);
     void show_user_info();
     void update_contacts();
+    void act_tend();
 
 private slots:
     void cambiar_imagen();
@@ -61,7 +62,7 @@ private slots:
 private:
     void add_item_to_list_widget(QListWidget *list, Post* individual_post, function<void(Post*, string)> show_post, function<void(int)> show_author_profile, string author_name);
     void show_followed_users();
-    void act_tend();
+
     Ui::Principal *ui;
 
 protected:

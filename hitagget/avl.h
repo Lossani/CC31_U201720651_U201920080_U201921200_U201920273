@@ -621,7 +621,7 @@ void AVL<T, R, NONE>::inOrder(list<T>& returnValues, Node*& node, int limit)
 template <typename T, typename R, T NONE>
 void AVL<T, R, NONE>::postOrder(list<T>& returnValues, Node*& node, int limit)
 {
-    if(node == nullptr)
+    if (node == nullptr)
         return;
 
     if (returnValues.size() >= limit)

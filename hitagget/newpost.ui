@@ -121,6 +121,10 @@ font: 8pt &quot;Comic Sans MS&quot;;</string>
    </property>
   </widget>
  </widget>
+ <tabstops>
+  <tabstop>txtPostTitle</tabstop>
+  <tabstop>txtPostContent</tabstop>
+ </tabstops>
  <resources/>
  <connections>
   <connection>

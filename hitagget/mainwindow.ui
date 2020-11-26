@@ -298,18 +298,18 @@ color: rgb(255, 255, 255);</string>
     </widget>
    </widget>
   </widget>
-  <widget class="QStatusBar" name="statusbar"/>
-  <widget class="QMenuBar" name="menubar">
-   <property name="geometry">
-    <rect>
-     <x>0</x>
-     <y>0</y>
-     <width>340</width>
-     <height>26</height>
-    </rect>
-   </property>
-  </widget>
  </widget>
+ <tabstops>
+  <tabstop>leCorreo</tabstop>
+  <tabstop>leContra_2</tabstop>
+  <tabstop>btnIngresar</tabstop>
+  <tabstop>btnCrearCuenta</tabstop>
+  <tabstop>leNombreReg</tabstop>
+  <tabstop>leCorreoReg</tabstop>
+  <tabstop>cbReg</tabstop>
+  <tabstop>leContraReg</tabstop>
+  <tabstop>btnRegistrar</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>

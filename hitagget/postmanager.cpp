@@ -3,6 +3,7 @@
 #include <fstream>
 #include <QMessageBox>
 #include <QTime>
+#include <optional>
 
 using namespace std;
 
@@ -122,7 +123,7 @@ PostManager::PostManager() : InteractionManager(), ListController<Post*, int, in
     },
     "publications.tsv")
 {
-         if (avl_posts_by_id == nullptr)
+         /*if (avl_posts_by_id == nullptr)
             avl_posts_by_id = new AVL<Post*, int, nullptr>([](Post* element) { return element->id; });
          if (avl_posts_by_authorId == nullptr)
             avl_posts_by_authorId = new AVL<Post*, int, nullptr>([](Post* element) { return element->authorId; });
@@ -136,6 +137,8 @@ PostManager::PostManager() : InteractionManager(), ListController<Post*, int, in
             avl_posts_by_numInteractions = new AVL<Post*, int, nullptr>([](Post* element) { return element->numInteractions; });
          if (avl_trends == nullptr)
             avl_trends = new AVL<string*, string, nullptr>([](string* element) { return *element; });
+         if (all_trends == nullptr)
+            all_trends = new list<Trend*>();*/
 }
 
 PostManager::~PostManager()

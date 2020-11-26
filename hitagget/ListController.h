@@ -82,7 +82,7 @@ void ListController<T, R, S>::retrieve_elements()
 {
     ifstream file;
 
-    file.open(filename, ios::in);
+    file.open(filename, ios::in | ios::app);
 
     if (file.is_open())
     {

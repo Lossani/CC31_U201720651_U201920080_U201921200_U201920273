@@ -68,10 +68,10 @@ InteractionManager::InteractionManager() : ListController<PostInteraction*, int,
    },
    "interaction.tsv")
 {
-    if (avl_interactions_by_post_id == nullptr)
+    /*if (avl_interactions_by_post_id == nullptr)
     {
         avl_interactions_by_post_id = new AVL<PostInteraction*, int, nullptr>([](PostInteraction* element) { return element->parentPostId; });
-    }
+    }*/
 }
 
 InteractionManager::~InteractionManager()

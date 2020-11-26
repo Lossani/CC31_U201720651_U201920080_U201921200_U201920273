@@ -23,7 +23,7 @@ color: rgb(255, 255, 255)</string>
      <x>20</x>
      <y>160</y>
      <width>1021</width>
-     <height>71</height>
+     <height>101</height>
     </rect>
    </property>
    <property name="text">
@@ -33,9 +33,9 @@ color: rgb(255, 255, 255)</string>
   <widget class="QDialogButtonBox" name="btnDialog">
    <property name="geometry">
     <rect>
-     <x>860</x>
+     <x>972</x>
      <y>590</y>
-     <width>193</width>
+     <width>81</width>
      <height>28</height>
     </rect>
    </property>
@@ -46,8 +46,8 @@ color: rgb(255, 255, 255)</string>
   <widget class="QLabel" name="lblTitle">
    <property name="geometry">
     <rect>
-     <x>10</x>
-     <y>10</y>
+     <x>20</x>
+     <y>30</y>
      <width>171</width>
      <height>21</height>
     </rect>
@@ -69,9 +69,9 @@ color: rgb(255, 255, 255)</string>
    <property name="geometry">
     <rect>
      <x>20</x>
-     <y>40</y>
+     <y>60</y>
      <width>1021</width>
-     <height>51</height>
+     <height>61</height>
     </rect>
    </property>
    <property name="text">
@@ -82,8 +82,8 @@ color: rgb(255, 255, 255)</string>
    <property name="geometry">
     <rect>
      <x>20</x>
-     <y>120</y>
-     <width>171</width>
+     <y>130</y>
+     <width>101</width>
      <height>21</height>
     </rect>
    </property>
@@ -186,8 +186,8 @@ color: rgb(255, 255, 255)</string>
   <widget class="QLabel" name="lblAuthor">
    <property name="geometry">
     <rect>
-     <x>820</x>
-     <y>250</y>
+     <x>770</x>
+     <y>280</y>
      <width>71</width>
      <height>21</height>
     </rect>
@@ -208,10 +208,10 @@ color: rgb(255, 255, 255)</string>
   <widget class="QLabel" name="lblAuthorName">
    <property name="geometry">
     <rect>
-     <x>900</x>
-     <y>240</y>
+     <x>880</x>
+     <y>280</y>
      <width>141</width>
-     <height>31</height>
+     <height>21</height>
     </rect>
    </property>
    <property name="font">
@@ -286,6 +286,13 @@ background-color: white;</string>
    </property>
   </widget>
  </widget>
+ <tabstops>
+  <tabstop>txtNewCommentContent</tabstop>
+  <tabstop>btnComment</tabstop>
+  <tabstop>btnShare</tabstop>
+  <tabstop>btnLike</tabstop>
+  <tabstop>listPostComments</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>

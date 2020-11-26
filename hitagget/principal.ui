@@ -44,9 +44,9 @@ font: 14pt &quot;Comic Sans MS&quot;;</string>
    <widget class="QListWidget" name="listWidgetCont">
     <property name="geometry">
      <rect>
-      <x>930</x>
-      <y>380</y>
-      <width>321</width>
+      <x>980</x>
+      <y>390</y>
+      <width>280</width>
       <height>291</height>
      </rect>
     </property>
@@ -80,14 +80,14 @@ font: 8pt &quot;Courier&quot;;</string>
      <rect>
       <x>330</x>
       <y>79</y>
-      <width>581</width>
-      <height>491</height>
+      <width>620</width>
+      <height>551</height>
      </rect>
     </property>
     <property name="maximumSize">
      <size>
-      <width>581</width>
-      <height>520</height>
+      <width>620</width>
+      <height>600</height>
      </size>
     </property>
     <property name="styleSheet">
@@ -116,9 +116,9 @@ font: 9pt &quot;Arial&quot;;</string>
     <property name="geometry">
      <rect>
       <x>190</x>
-      <y>120</y>
+      <y>125</y>
       <width>111</width>
-      <height>23</height>
+      <height>25</height>
      </rect>
     </property>
     <property name="font">
@@ -144,8 +144,8 @@ color: rgb(255, 255, 255);</string>
      <rect>
       <x>190</x>
       <y>24</y>
-      <width>111</width>
-      <height>91</height>
+      <width>112</width>
+      <height>92</height>
      </rect>
     </property>
     <property name="text">
@@ -162,7 +162,7 @@ color: rgb(255, 255, 255);</string>
     <property name="geometry">
      <rect>
       <x>20</x>
-      <y>10</y>
+      <y>20</y>
       <width>151</width>
       <height>101</height>
      </rect>
@@ -196,9 +196,9 @@ font: 13pt &quot;Comic Sans MS&quot;;</string>
     <property name="geometry">
      <rect>
       <x>20</x>
-      <y>190</y>
-      <width>281</width>
-      <height>251</height>
+      <y>200</y>
+      <width>280</width>
+      <height>271</height>
      </rect>
     </property>
     <property name="styleSheet">
@@ -220,9 +220,9 @@ font: 9pt &quot;Arial&quot;;</string>
    <widget class="QListWidget" name="listWidgetTend">
     <property name="geometry">
      <rect>
-      <x>930</x>
-      <y>50</y>
-      <width>321</width>
+      <x>980</x>
+      <y>60</y>
+      <width>280</width>
       <height>291</height>
      </rect>
     </property>
@@ -230,7 +230,7 @@ font: 9pt &quot;Arial&quot;;</string>
      <string notr="true">color: rgb(255, 255, 255);
 background-color: rgb(28, 44, 58);
 border-top-color: rgb(25, 39, 52);
-font: 9pt &quot;Arial&quot;;</string>
+</string>
     </property>
     <property name="frameShape">
      <enum>QFrame::Box</enum>
@@ -251,26 +251,26 @@ font: 9pt &quot;Arial&quot;;</string>
    <widget class="QPushButton" name="btnPublicar">
     <property name="geometry">
      <rect>
-      <x>560</x>
-      <y>650</y>
-      <width>111</width>
-      <height>23</height>
+      <x>515</x>
+      <y>640</y>
+      <width>250</width>
+      <height>30</height>
      </rect>
     </property>
     <property name="styleSheet">
-     <string notr="true">font: 10pt &quot;Arial&quot;;
+     <string notr="true">font: 14pt &quot;Arial&quot;;
 background-color: rgb(128, 183, 128);
 color: rgb(255, 255, 255);</string>
     </property>
     <property name="text">
-     <string>Publicar</string>
+     <string>Nueva Publicación</string>
     </property>
    </widget>
    <widget class="QLabel" name="label_2">
     <property name="geometry">
      <rect>
-      <x>740</x>
-      <y>580</y>
+      <x>780</x>
+      <y>680</y>
       <width>131</width>
       <height>16</height>
      </rect>
@@ -285,14 +285,14 @@ color: rgb(255, 255, 255);</string>
      </font>
     </property>
     <property name="text">
-     <string>Criterio:</string>
+     <string>Criterio</string>
     </property>
    </widget>
    <widget class="QLabel" name="label_5">
     <property name="geometry">
      <rect>
       <x>330</x>
-      <y>10</y>
+      <y>20</y>
       <width>171</width>
       <height>16</height>
      </rect>
@@ -313,10 +313,10 @@ color: rgb(255, 255, 255);</string>
    <widget class="QLabel" name="label_6">
     <property name="geometry">
      <rect>
-      <x>930</x>
-      <y>5</y>
+      <x>980</x>
+      <y>30</y>
       <width>171</width>
-      <height>31</height>
+      <height>21</height>
      </rect>
     </property>
     <property name="font">
@@ -335,8 +335,8 @@ color: rgb(255, 255, 255);</string>
    <widget class="QLabel" name="label_7">
     <property name="geometry">
      <rect>
-      <x>930</x>
-      <y>350</y>
+      <x>980</x>
+      <y>360</y>
       <width>171</width>
       <height>21</height>
      </rect>
@@ -358,9 +358,9 @@ color: rgb(255, 255, 255);</string>
     <property name="geometry">
      <rect>
       <x>20</x>
-      <y>150</y>
+      <y>170</y>
       <width>171</width>
-      <height>31</height>
+      <height>21</height>
      </rect>
     </property>
     <property name="font">
@@ -381,8 +381,8 @@ color: rgb(255, 255, 255);</string>
      <rect>
       <x>186</x>
       <y>20</y>
-      <width>119</width>
-      <height>99</height>
+      <width>120</width>
+      <height>100</height>
      </rect>
     </property>
     <property name="styleSheet">
@@ -395,10 +395,10 @@ color: rgb(255, 255, 255);</string>
    <widget class="QComboBox" name="cb_criterios">
     <property name="geometry">
      <rect>
-      <x>740</x>
-      <y>610</y>
-      <width>171</width>
-      <height>31</height>
+      <x>780</x>
+      <y>640</y>
+      <width>170</width>
+      <height>30</height>
      </rect>
     </property>
     <item>
@@ -421,8 +421,8 @@ color: rgb(255, 255, 255);</string>
     <property name="geometry">
      <rect>
       <x>490</x>
-      <y>39</y>
-      <width>421</width>
+      <y>40</y>
+      <width>461</width>
       <height>31</height>
      </rect>
     </property>
@@ -471,14 +471,14 @@ font: 8pt &quot;Comic Sans MS&quot;;</string>
     <property name="geometry">
      <rect>
       <x>330</x>
-      <y>580</y>
-      <width>101</width>
-      <height>31</height>
+      <y>640</y>
+      <width>170</width>
+      <height>30</height>
      </rect>
     </property>
     <property name="font">
      <font>
-      <family>Comic Sans MS</family>
+      <family>Arial</family>
       <pointsize>14</pointsize>
       <weight>50</weight>
       <italic>false</italic>
@@ -488,7 +488,7 @@ font: 8pt &quot;Comic Sans MS&quot;;</string>
     <property name="styleSheet">
      <string notr="true">background-color: rgb(128, 183, 128);
 color: rgb(255, 255, 255);
-font: 14pt &quot;Comic Sans MS&quot;;</string>
+font: 14pt &quot;Arial&quot;;</string>
     </property>
     <property name="text">
      <string>Invertir</string>
@@ -498,9 +498,9 @@ font: 14pt &quot;Comic Sans MS&quot;;</string>
     <property name="geometry">
      <rect>
       <x>20</x>
-      <y>470</y>
+      <y>490</y>
       <width>281</width>
-      <height>101</height>
+      <height>111</height>
      </rect>
     </property>
     <property name="font">
@@ -532,9 +532,9 @@ font: 13pt &quot;Comic Sans MS&quot;;</string>
     <property name="geometry">
      <rect>
       <x>200</x>
-      <y>580</y>
+      <y>620</y>
       <width>101</width>
-      <height>31</height>
+      <height>30</height>
      </rect>
     </property>
     <property name="font">
@@ -559,9 +559,9 @@ font: 14pt &quot;Comic Sans MS&quot;;</string>
     <property name="geometry">
      <rect>
       <x>90</x>
-      <y>580</y>
+      <y>620</y>
       <width>101</width>
-      <height>31</height>
+      <height>30</height>
      </rect>
     </property>
     <property name="font">
@@ -585,15 +585,15 @@ font: 14pt &quot;Comic Sans MS&quot;;</string>
    <widget class="QPushButton" name="btnLogOut">
     <property name="geometry">
      <rect>
-      <x>10</x>
-      <y>650</y>
+      <x>20</x>
+      <y>670</y>
       <width>151</width>
-      <height>31</height>
+      <height>30</height>
      </rect>
     </property>
     <property name="font">
      <font>
-      <family>Comic Sans MS</family>
+      <family>Arial</family>
       <pointsize>14</pointsize>
       <weight>50</weight>
       <italic>false</italic>
@@ -603,7 +603,7 @@ font: 14pt &quot;Comic Sans MS&quot;;</string>
     <property name="styleSheet">
      <string notr="true">background-color: rgb(128, 183, 128);
 color: rgb(255, 255, 255);
-font: 14pt &quot;Comic Sans MS&quot;;</string>
+font: 14pt &quot;Arial&quot;;</string>
     </property>
     <property name="text">
      <string>Cerrar Sesión</string>
@@ -613,9 +613,9 @@ font: 14pt &quot;Comic Sans MS&quot;;</string>
     <property name="geometry">
      <rect>
       <x>20</x>
-      <y>120</y>
-      <width>111</width>
-      <height>23</height>
+      <y>125</y>
+      <width>151</width>
+      <height>25</height>
      </rect>
     </property>
     <property name="font">
@@ -660,24 +660,21 @@ color: rgb(255, 255, 255);</string>
    <zorder>btnLogOut</zorder>
    <zorder>btnShowMyProfile</zorder>
   </widget>
-  <widget class="QMenuBar" name="menubar">
-   <property name="geometry">
-    <rect>
-     <x>0</x>
-     <y>0</y>
-     <width>1280</width>
-     <height>37</height>
-    </rect>
-   </property>
-  </widget>
-  <widget class="QStatusBar" name="statusbar"/>
  </widget>
  <tabstops>
+  <tabstop>txtSearchBox</tabstop>
+  <tabstop>cmbBoxSearchOptions</tabstop>
+  <tabstop>cb_criterios</tabstop>
   <tabstop>btnPublicar</tabstop>
+  <tabstop>btnInvertir</tabstop>
+  <tabstop>btnCloseUserProfile</tabstop>
+  <tabstop>btnFollow</tabstop>
+  <tabstop>btnLogOut</tabstop>
   <tabstop>listWidgetPubli</tabstop>
-  <tabstop>listWidgetTend</tabstop>
-  <tabstop>listWidgetFollowers</tabstop>
   <tabstop>btnCamFoto</tabstop>
+  <tabstop>btnShowMyProfile</tabstop>
+  <tabstop>listWidgetFollowers</tabstop>
+  <tabstop>listWidgetTend</tabstop>
   <tabstop>listWidgetCont</tabstop>
  </tabstops>
  <resources/>

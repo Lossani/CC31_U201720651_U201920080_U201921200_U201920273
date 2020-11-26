@@ -42,6 +42,18 @@ void MainWindow::Mostrar_Registro(){
 }
 
 void MainWindow::Cerrar(){
+    windP.show_user_info();
+    windP.update_contacts();
+    //windP.act_tend();
+    windP.show();
+
+    ui->leContraReg->setText("");
+    ui->leContra_2->setText("");
+    ui->leCorreo->setText("");
+    ui->leCorreoReg->setText("");
+    ui->leNombreReg->setText("");
+
+    ui->Ventanas->setCurrentIndex(1);
     this->hide();
 }
 
@@ -55,10 +67,6 @@ void MainWindow::Registrar(){
         {
             windP.Unombre = new QString(windP.main_instance->logged_user->fullname.c_str());
             windP.UfechaR = new QString(windP.main_instance->logged_user->registerDate.c_str());
-            windP.show_user_info();
-            windP.update_contacts();
-            windP.show();
-            ui->Ventanas->setCurrentIndex(1);
             Cerrar();
         }
         else
@@ -85,9 +93,6 @@ void MainWindow::Ingresar(){
         {
             windP.Unombre = new QString(windP.main_instance->logged_user->fullname.c_str());
             windP.UfechaR = new QString(windP.main_instance->logged_user->registerDate.c_str());
-            windP.show_user_info();
-            windP.update_contacts();
-            windP.show();
             Cerrar();
         }
     }

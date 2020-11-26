@@ -63,11 +63,6 @@ UserManager::UserManager() : FollowerManager(), ListController<User*, int, strin
 
             currentUser->followedUsers = getUserFollowedUsersIds(currentUser->id);
 
-            //QMessageBox msg;
-            //msg.setText(to_string(currentUser->email.size()).c_str());
-            //msg.exec();
-
-
             currentUser->followedUsers.unique([](Follower* follower1, Follower* follower2) { return follower1->followedUserID == follower2->followedUserID; });
 
             retrievedElements.push_back(currentUser);
@@ -79,8 +74,8 @@ UserManager::UserManager() : FollowerManager(), ListController<User*, int, strin
     },
     "users.tsv")
 {
-    if (avl_users_by_email == nullptr)
-        avl_users_by_email = new AVL<User*, string, nullptr>([](User* element) { return element->email; });
+    /*if (avl_users_by_email == nullptr)
+        avl_users_by_email = new AVL<User*, string, nullptr>([](User* element) { return element->email; });*/
 }
 
 UserManager::~UserManager()

@@ -22,7 +22,7 @@ void Principal::show_all_posts(int op, bool inv, bool show_specific_profile)
     function<void(Post*, string)> show_post = [this](Post* post, string author_name)
     {
         list<PostComment*> comments = main_instance->getPostComments(post->id);
-        /*QMessageBox msg;
+        QMessageBox msg;
         msg.setText(to_string(post->id).c_str());
                     msg.exec();
                     msg.setText(to_string(post->numInteractions).c_str());
@@ -32,7 +32,7 @@ void Principal::show_all_posts(int op, bool inv, bool show_specific_profile)
                     msg.setText(post->pubDate.c_str());
 
                     msg.exec();
-                    */
+
         if (post->id != -1)
         {
             main_instance->addInteraction(main_instance->logged_user->id, post, false);
@@ -290,10 +290,11 @@ Principal::Principal(QWidget *parent) :
     ui->lblShownUser->setVisible(false);
     ui->btnFollow->setVisible(false);
 
-    act_tend();
+
 
     show_all_posts(0, false, false);
 
+    act_tend();
 
     string tempstr;
 
@@ -356,7 +357,10 @@ void Principal::act_tend()
 
     for (Trend* trend : main_instance->get_latest_trends(20))
     {
-         ui->listWidgetTend->addItem(QString(trend->tag.c_str()) + "\t" + QString::number(trend->count));
+         ui->listWidgetTend->addItem(QString(trend->tag.c_str()) + "\n" + QString::number(trend->count) + " posts");
+//         QMessageBox m;
+//         m.setText("test");
+//         m.exec();
     }
 }
 

@@ -28,7 +28,7 @@ public:
     PostManager();
     ~PostManager();
 
-    list<Trend*>* all_trends = nullptr;
+    list<Trend*>* all_trends;
 
     //void add_post(Post post);
     virtual Post* addPost(int authorId, string title, string content);

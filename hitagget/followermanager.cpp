@@ -61,10 +61,10 @@ FollowerManager::FollowerManager() : ListController<Follower*, int, int>(
     },
     "followers.tsv")
 {
-    if (avl_followers_by_user_id == nullptr)
+    /*if (avl_followers_by_user_id == nullptr)
     {
         avl_followers_by_user_id = new AVL<Follower*, int, nullptr>([](Follower* element) { return element->userID; });
-    }
+    }*/
 }
 
 FollowerManager::~FollowerManager()

@@ -67,10 +67,10 @@ CommentManager::CommentManager() : ListController<PostComment*, int, int>(
    },
    "comment.tsv")
 {
-    if (avl_comments_by_post_id == nullptr)
+    /*if (avl_comments_by_post_id == nullptr)
     {
          avl_comments_by_post_id = new AVL<PostComment*, int, nullptr>([] (PostComment* element) { return element->parentPostId; });
-    }
+    }*/
 }
 
 CommentManager::~CommentManager()
