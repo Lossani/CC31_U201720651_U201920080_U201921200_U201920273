@@ -30,6 +30,9 @@ void Principal::show_all_posts(int op, bool inv, bool show_specific_profile)
                 main_instance->editLastInteraction(true);
                 post->numInteractions++;
                 main_instance->updatePostsAVLs(post);
+
+                if (ui->cb_criterios->currentIndex() == 0)
+                    show_all_posts(op_busq, invertir, main_instance->get_shown_user() != nullptr ? true : false);
             };
 
             view_post_dialog->new_comment_function = [this](Post* post, string content)
@@ -38,11 +41,17 @@ void Principal::show_all_posts(int op, bool inv, bool show_specific_profile)
                 main_instance->addComment(post->id, content);
 
                 main_instance->updatePostsAVLs(post);
+
+                if (ui->cb_criterios->currentIndex() == 0)
+                    show_all_posts(op_busq, invertir, main_instance->get_shown_user() != nullptr ? true : false);
             };
 
             view_post_dialog->like_post_function = [this](Post* post)
             {
                 main_instance->updatePostsAVLs(post);
+
+                if (ui->cb_criterios->currentIndex() == 2)
+                    show_all_posts(op_busq, invertir, main_instance->get_shown_user() != nullptr ? true : false);
             };
 
             view_post_dialog->edit_post_function = [this](Post* oldPost, Post* post, bool hasChangedTitle)
@@ -53,6 +62,8 @@ void Principal::show_all_posts(int op, bool inv, bool show_specific_profile)
                     main_instance->updateTrendsFromEditedPostTitle(oldPost, post);
                     act_tend();
                 }
+
+                show_all_posts(op_busq, invertir, main_instance->get_shown_user() != nullptr ? true : false);
             };
 
             view_post_dialog->delete_post_function = [this](Post* post)
@@ -66,7 +77,6 @@ void Principal::show_all_posts(int op, bool inv, bool show_specific_profile)
                 view_post_dialog->hide_author_actions_buttons();
 
             view_post_dialog->exec();
-            show_all_posts(op_busq, invertir, main_instance->get_shown_user() != nullptr ? true : false);
         }
     };
 
@@ -214,8 +224,11 @@ void Principal::show_all_posts(int op, bool inv, bool show_specific_profile)
 
     for (Post* post : posts)
     {
-        string author_name = main_instance->getUserById(post->authorId)->fullname;
-        add_item_to_list_widget(ui->listWidgetPubli, post, show_post, show_author_profile, author_name);
+        if (!post->isDeleted)
+        {
+            string author_name = main_instance->getUserById(post->authorId)->fullname;
+            add_item_to_list_widget(ui->listWidgetPubli, post, show_post, show_author_profile, author_name);
+        }
     }
 }
 

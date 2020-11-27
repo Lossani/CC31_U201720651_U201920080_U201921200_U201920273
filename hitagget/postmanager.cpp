@@ -362,13 +362,14 @@ void PostManager::updateTrendsFromDeletedPostTitle(Post *post)
 
 void PostManager::deletePost(Post *post)
 {
+    /*
     avl_posts_by_id->remove(post);
     avl_posts_by_authorId->remove(post);
     avl_posts_by_title->remove(post);
     avl_posts_by_pubDate->remove(post);
     avl_posts_by_numLikes->remove(post);
     avl_posts_by_numInteractions->remove(post);
-
+    */
     post->isDeleted = true;
 
     updateTrendsFromDeletedPostTitle(post);

@@ -81,6 +81,8 @@ void ViewPost::on_btnComment_clicked()
         new_comment_function(current_post, ui->txtNewCommentContent->text().toStdString());
         ui->listPostComments->addItem(QDateTime::currentDateTime().toString("yyyy-MM-dd") + '\t' + ui->txtNewCommentContent->text());
         ui->txtNewCommentContent->setText("");
+
+        ui->lblNumInteractions->setText(to_string(current_post->numInteractions).c_str());
     }
 }
 

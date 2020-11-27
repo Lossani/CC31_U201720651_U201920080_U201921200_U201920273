@@ -818,7 +818,7 @@ void AVL<T, R, NONE>::findAllStringsThatStartsWith(list<T> &returnValues, Node*&
     }
     else
     {
-        findAllStringsThatStartsWith(returnValues, node->leftChild, value, limit);
+        //findAllStringsThatStartsWith(returnValues, node->leftChild, value, limit);
         findAllStringsThatStartsWith(returnValues, node->rightChild, value, limit);
     }
 }

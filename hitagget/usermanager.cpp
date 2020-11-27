@@ -40,6 +40,7 @@ UserManager::UserManager() : FollowerManager(), ListController<User*, int, strin
     [this](ifstream& file)
     {
         avl_users_by_email = new AVL<User*, string, nullptr>([](User* element) { return element->email; });
+        avl_users_by_id = new AVL<User*, int, nullptr>([](User* element) { return element->id; });
 
         currentIndex = 1;
 
@@ -73,6 +74,7 @@ UserManager::UserManager() : FollowerManager(), ListController<User*, int, strin
             retrievedElements.push_back(currentUser);
 
             avl_users_by_email->add(currentUser);
+            avl_users_by_id->add(currentUser);
         }
 
         return retrievedElements;
@@ -118,7 +120,7 @@ User* UserManager:: getUserByEmail(string email)
 
 User* UserManager:: getUserById(int id)
 {
-    return ListController<User*, int, string>::get_element(id);
+    return avl_users_by_id->find(id);
 }
 
 void UserManager::saveUsers()
