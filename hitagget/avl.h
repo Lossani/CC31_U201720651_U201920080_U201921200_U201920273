@@ -46,10 +46,11 @@ public:
     list<T> findAll(R value, int limit);
     list<T> findAll(R value, bool asc, int limit);
 
+    list<T> findAllStringsThatEquals(string value, bool asc, int limit);
     list<T> findAllStringsNoContains(string value, bool asc, int limit);
     list<T> findAllStringsThatContains(string value, bool asc, int limit);
-    list<T> findAllStringsThatStartsWith(string value, int limit);
-    list<T> findAllStringsThatEndsWith(string value, int limit);
+    list<T> findAllStringsThatStartsWith(string value, bool asc, int limit);
+    list<T> findAllStringsThatEndsWith(string value, bool asc, int limit);
 
     list<T> inOrder();
     list<T> postOrder();
@@ -86,15 +87,20 @@ private:
     void inOrder(list<T>& returnValues, Node*& node, int limit);
     void postOrder(list<T>& returnValues, Node*& node, int limit);
 
+    void findAllStringsThatEqualsInOrder(list<T>& returnValues, Node*& node, string value, int limit);
+    void findAllStringsThatEqualsPostOrder(list<T>& returnValues, Node*& node, string value, int limit);
+
     void findAllStringsNoContainsInOrder(list<T>& returnValues, Node*& node, string value, int limit);
     void findAllStringsNoContainsPostOrder(list<T>& returnValues, Node*& node, string value, int limit);
 
     void findAllStringsThatContainsInOrder(list<T>& returnValues, Node*& node, string value, int limit);
     void findAllStringsThatContainsPostOrder(list<T>& returnValues, Node*& node, string value, int limit);
 
-    void findAllStringsThatStartsWith(list<T>& returnValues, Node*& node, string value, int limit);
+    void findAllStringsThatStartsWithInOrder(list<T>& returnValues, Node*& node, string value, int limit);
+    void findAllStringsThatStartsWithPostOrder(list<T>& returnValues, Node*& node, string value, int limit);
 
-    void findAllStringsThatEndsWith(list<T>& returnValues, Node*& node, string value, int limit);
+    void findAllStringsThatEndsWithInOrder(list<T>& returnValues, Node*& node, string value, int limit);
+    void findAllStringsThatEndsWithPostOrder(list<T>& returnValues, Node*& node, string value, int limit);
 
     Node* nullNode = nullptr;
 };
@@ -225,6 +231,19 @@ list<T> AVL<T, R, NONE>::findAll(R value, bool asc, int limit)
     return returnValues;
 }
 
+template<typename T, typename R, T NONE>
+list<T> AVL<T, R, NONE>::findAllStringsThatEquals(string value, bool asc, int limit)
+{
+    list<T> returnValues;
+
+    if (asc)
+        findAllStringsThatEqualsInOrder(returnValues, root, value, limit);
+    else
+        findAllStringsThatEqualsPostOrder(returnValues, root, value, limit);
+
+    return returnValues;
+}
+
 template <typename T, typename R, T NONE>
 list<T> AVL<T, R, NONE>::findAllStringsThatContains(string value, bool asc, int limit)
 {
@@ -259,27 +278,33 @@ list<T> AVL<T, R, NONE>::findAllStringsNoContains(string value, bool asc, int li
 
 
 template <typename T, typename R, T NONE>
-list<T> AVL<T, R, NONE>::findAllStringsThatStartsWith(string value, int limit)
+list<T> AVL<T, R, NONE>::findAllStringsThatStartsWith(string value, bool asc, int limit)
 {
     if (typeid(R) != typeid(string))
         return list<T>();
 
     list<T> returnValues;
 
-    findAllStringsThatStartsWith(returnValues, root, value, limit);
+    if (asc)
+        findAllStringsThatStartsWithInOrder(returnValues, root, value, limit);
+    else
+        findAllStringsThatStartsWithPostOrder(returnValues, root, value, limit);
 
     return returnValues;
 }
 
 template <typename T, typename R, T NONE>
-list<T> AVL<T, R, NONE>::findAllStringsThatEndsWith(string value, int limit)
+list<T> AVL<T, R, NONE>::findAllStringsThatEndsWith(string value, bool asc, int limit)
 {
     if (typeid(R) != typeid(string))
         return list<T>();
 
     list<T> returnValues;
 
-    findAllStringsThatEndsWith(returnValues, root, value, limit);
+    if (asc)
+        findAllStringsThatEndsWithInOrder(returnValues, root, value, limit);
+    else
+        findAllStringsThatEndsWithPostOrder(returnValues, root, value, limit);
 
     return returnValues;
 }
@@ -697,6 +722,54 @@ void AVL<T, R, NONE>::postOrder(list<T>& returnValues, Node*& node, int limit)
     postOrder(returnValues, node->leftChild, limit);
 }
 
+template<typename T, typename R, T NONE>
+void AVL<T, R, NONE>::findAllStringsThatEqualsInOrder(list<T> &returnValues, Node *&node, string value, int limit)
+{
+    if (node == nullptr)
+        return;
+
+    if (returnValues.size() >= limit)
+        return;
+
+    findAllStringsThatEqualsInOrder(returnValues, node->leftChild, value, limit);
+
+    if (returnValues.size() < limit)
+    {
+        if (node->element->title == value)
+        {
+            returnValues.push_back(node->element);
+        }
+    }
+    else
+        return;
+
+    findAllStringsThatEqualsInOrder(returnValues, node->rightChild, value, limit);
+}
+
+template<typename T, typename R, T NONE>
+void AVL<T, R, NONE>::findAllStringsThatEqualsPostOrder(list<T> &returnValues, Node *&node, string value, int limit)
+{
+    if (node == nullptr)
+        return;
+
+    if (returnValues.size() >= limit)
+        return;
+
+    findAllStringsThatEqualsPostOrder(returnValues, node->rightChild, value, limit);
+
+    if (returnValues.size() < limit)
+    {
+        if (node->element->title == value)
+        {
+            returnValues.push_back(node->element);
+        }
+    }
+    else
+        return;
+
+    findAllStringsThatEqualsPostOrder(returnValues, node->leftChild, value, limit);
+}
+
 template <typename T, typename R, T NONE>
 void AVL<T, R, NONE>::findAllStringsThatContainsInOrder(list<T>& returnValues, Node*& node, string value, int limit)
 {
@@ -745,6 +818,118 @@ void AVL<T, R, NONE>::findAllStringsThatContainsPostOrder(list<T>& returnValues,
     findAllStringsThatContainsPostOrder(returnValues, node->leftChild, value, limit);
 }
 
+template<typename T, typename R, T NONE>
+void AVL<T, R, NONE>::findAllStringsThatStartsWithInOrder(list<T> &returnValues, AVL::Node *&node, string value, int limit)
+{
+    if (node == nullptr)
+        return;
+
+    if (returnValues.size() >= limit)
+        return;
+
+    findAllStringsThatStartsWithInOrder(returnValues, node->leftChild, value, limit);
+
+    if (returnValues.size() < limit)
+    {
+        if (value.size() <= node->element->title.size())
+        {
+            string startString = node->element->title.substr(0, value.size());
+            if (value == startString)
+            {
+                returnValues.push_back(node->element);
+            }
+        }
+    }
+    else
+        return;
+
+    findAllStringsThatStartsWithInOrder(returnValues, node->rightChild, value, limit);
+}
+
+template<typename T, typename R, T NONE>
+void AVL<T, R, NONE>::findAllStringsThatStartsWithPostOrder(list<T> &returnValues, AVL::Node *&node, string value, int limit)
+{
+    if (node == nullptr)
+        return;
+
+    if (returnValues.size() >= limit)
+        return;
+
+    findAllStringsThatStartsWithPostOrder(returnValues, node->rightChild, value, limit);
+
+    if (returnValues.size() < limit)
+    {
+        if (value.size() <= node->element->title.size())
+        {
+            string startString = node->element->title.substr(0, value.size());
+            if (value == startString)
+            {
+                returnValues.push_back(node->element);
+            }
+        }
+    }
+    else
+        return;
+
+    findAllStringsThatStartsWithPostOrder(returnValues, node->leftChild, value, limit);
+}
+
+template<typename T, typename R, T NONE>
+void AVL<T, R, NONE>::findAllStringsThatEndsWithInOrder(list<T> &returnValues, AVL::Node *&node, string value, int limit)
+{
+    if (node == nullptr)
+        return;
+
+    if (returnValues.size() >= limit)
+        return;
+
+    findAllStringsThatEndsWithInOrder(returnValues, node->leftChild, value, limit);
+
+    if (returnValues.size() < limit)
+    {
+        if (value.size() <= node->element->title.size())
+        {
+            string endString = node->element->title.substr(node->element->title.size() - value.size(), value.size());
+            if (value == endString)
+            {
+                returnValues.push_back(node->element);
+            }
+        }
+    }
+    else
+        return;
+
+    findAllStringsThatEndsWithInOrder(returnValues, node->rightChild, value, limit);
+}
+
+template<typename T, typename R, T NONE>
+void AVL<T, R, NONE>::findAllStringsThatEndsWithPostOrder(list<T> &returnValues, AVL::Node *&node, string value, int limit)
+{
+    if (node == nullptr)
+        return;
+
+    if (returnValues.size() >= limit)
+        return;
+
+    findAllStringsThatEndsWithPostOrder(returnValues, node->rightChild, value, limit);
+
+    if (returnValues.size() < limit)
+    {
+        if (value.size() <= node->element->title.size())
+        {
+            string endString = node->element->title.substr(node->element->title.size() - value.size(), value.size());
+            if (value == endString)
+            {
+                returnValues.push_back(node->element);
+            }
+        }
+    }
+    else
+        return;
+
+    findAllStringsThatEndsWithPostOrder(returnValues, node->leftChild, value, limit);
+}
+
 template <typename T, typename R, T NONE>
 void AVL<T, R, NONE>::findAllStringsNoContainsInOrder(list<T>& returnValues, Node*& node, string value, int limit)
 {
@@ -791,58 +976,6 @@ void AVL<T, R, NONE>::findAllStringsNoContainsPostOrder(list<T>& returnValues, N
         return;
 
     findAllStringsNoContainsPostOrder(returnValues, node->leftChild, value, limit);
-}
-
-template<typename T, typename R, T NONE>
-void AVL<T, R, NONE>::findAllStringsThatStartsWith(list<T> &returnValues, Node*& node, string value, int limit)
-{
-    if (returnValues.size() >= limit)
-        return;
-
-    if (node == nullptr)
-        return;
-
-    if (value.size() <= comparator_function(node->element).size())
-    {
-        string startString = comparator_function(node->element).substr(0, value.size());
-        if (value == startString)
-        {
-            returnValues.push_back(node->element);
-            findAllStringsThatStartsWith(returnValues, node->leftChild, value, limit);
-            findAllStringsThatStartsWith(returnValues, node->rightChild, value, limit);
-        }
-        else if (value < startString)
-            findAllStringsThatStartsWith(returnValues, node->leftChild, value, limit);
-        else
-            findAllStringsThatStartsWith(returnValues, node->rightChild, value, limit);
-    }
-    else
-    {
-        //findAllStringsThatStartsWith(returnValues, node->leftChild, value, limit);
-        findAllStringsThatStartsWith(returnValues, node->rightChild, value, limit);
-    }
-}
-
-template<typename T, typename R, T NONE>
-void AVL<T, R, NONE>::findAllStringsThatEndsWith(list<T> &returnValues, Node*& node, string value, int limit)
-{
-    if (returnValues.size() >= limit)
-        return;
-
-    if (node == nullptr)
-        return;
-
-    if (value.size() <= comparator_function(node->element).size())
-    {
-        string endString = comparator_function(node->element).substr(comparator_function(node->element).size() - value.size(), value.size());
-        if (value == endString)
-        {
-            returnValues.push_back(node->element);
-        }
-    }
-
-    findAllStringsThatEndsWith(returnValues, node->leftChild, value, limit);
-    findAllStringsThatEndsWith(returnValues, node->rightChild, value, limit);
 }
 
 #endif // AVL_H

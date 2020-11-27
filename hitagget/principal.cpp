@@ -166,7 +166,7 @@ void Principal::show_all_posts(int op, bool inv, bool show_specific_profile)
                 posts = main_instance->getShownUserPostsThatTitleEqualsToString(ui->txtSearchBox->text().toStdString(), inv, 50);
             }
             else
-                posts = main_instance->getPostsThatTitleEqualsToString(ui->txtSearchBox->text().toStdString(), inv, 50);
+                posts = main_instance->getPostsThatTitleEqualsToString(ui->txtSearchBox->text().toStdString(), inv, 50, 3);
         }
         break;
     case 4:
@@ -178,7 +178,7 @@ void Principal::show_all_posts(int op, bool inv, bool show_specific_profile)
                 posts = main_instance->getShownUserPostsThatStartsWithString(ui->txtSearchBox->text().toStdString(), inv, 50);
             }
             else
-                posts = main_instance->getPostsThatStartsWithString(ui->txtSearchBox->text().toStdString(), inv, 50);
+                posts = main_instance->getPostsThatStartsWithString(ui->txtSearchBox->text().toStdString(), inv, 50, 0);
         }
         break;
     case 5:
@@ -190,7 +190,7 @@ void Principal::show_all_posts(int op, bool inv, bool show_specific_profile)
                 posts = main_instance->getShownUserPostsThatEndsWithString(ui->txtSearchBox->text().toStdString(), inv, 50);
             }
             else
-                posts = main_instance->getPostsThatEndsWithString(ui->txtSearchBox->text().toStdString(), inv, 50);
+                posts = main_instance->getPostsThatEndsWithString(ui->txtSearchBox->text().toStdString(), inv, 50, 1);
         }
         break;
     case 6:
@@ -202,7 +202,7 @@ void Principal::show_all_posts(int op, bool inv, bool show_specific_profile)
                 posts = main_instance->getShownUserPostsThatContainsString(ui->txtSearchBox->text().toStdString(), inv, 50);
             }
             else
-                posts = main_instance->getPostsThatContainsString(ui->txtSearchBox->text().toStdString(), inv, 50);
+                posts = main_instance->getPostsThatContainsString(ui->txtSearchBox->text().toStdString(), inv, 50, 2);
         }
         break;
     case 7:
@@ -214,7 +214,7 @@ void Principal::show_all_posts(int op, bool inv, bool show_specific_profile)
                 posts = main_instance->getShownUserPostsNoContainsString(ui->txtSearchBox->text().toStdString(), inv, 50);
             }
             else
-                posts = main_instance->getPostsNoContainsString(ui->txtSearchBox->text().toStdString(), inv, 50);
+                posts = main_instance->getPostsNoContainsString(ui->txtSearchBox->text().toStdString(), inv, 50, 0);
         }
         break;
     default:

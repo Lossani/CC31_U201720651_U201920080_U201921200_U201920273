@@ -489,58 +489,114 @@ list<Post *> PostManager::getPostsByTitle(bool asc, int limit)
         return avl_posts_by_title->postOrder(limit);
 }
 
-list<Post *> PostManager::getPostsThatContainsString(string value, bool asc, int limit)
+list<Post *> PostManager::getPostsThatContainsString(string value, bool asc, int limit, int operation)
 {
     if (limit <= 0)
         return list<Post*>();
 
-    return avl_posts_by_numLikes->findAllStringsThatContains(value, asc, limit);
+    switch (operation)
+    {
+        case 0:
+            return avl_posts_by_numInteractions->findAllStringsThatContains(value, asc, limit);
+            break;
+        case 1:
+            return avl_posts_by_pubDate->findAllStringsThatContains(value, asc, limit);
+            break;
+        case 2:
+            return avl_posts_by_numLikes->findAllStringsThatContains(value, asc, limit);
+            break;
+        default:
+            return avl_posts_by_title->findAllStringsThatContains(value, asc, limit);
+            break;
+    }
 }
 
-list<Post *> PostManager::getPostsNoContainsString(string value, bool asc, int limit)
+list<Post *> PostManager::getPostsNoContainsString(string value, bool asc, int limit, int operation)
 {
     if (limit <= 0)
         return list<Post*>();
 
-    return avl_posts_by_numLikes->findAllStringsNoContains(value, asc, limit);
+    switch (operation)
+    {
+        case 0:
+            return avl_posts_by_numInteractions->findAllStringsNoContains(value, asc, limit);
+            break;
+        case 1:
+            return avl_posts_by_pubDate->findAllStringsNoContains(value, asc, limit);
+            break;
+        case 2:
+            return avl_posts_by_numLikes->findAllStringsNoContains(value, asc, limit);
+            break;
+        default:
+            return avl_posts_by_title->findAllStringsNoContains(value, asc, limit);
+            break;
+    }
 }
 
-list<Post *> PostManager::getPostsThatStartsWithString(string value, bool asc, int limit)
+list<Post *> PostManager::getPostsThatStartsWithString(string value, bool asc, int limit, int operation)
 {
     if (limit <= 0)
         return list<Post*>();
 
-    list<Post*> returnList = avl_posts_by_title->findAllStringsThatStartsWith(value, limit);
-    if (asc)
-        returnList.sort([](const Post* a, const Post* b) { return a->numLikes < b->numLikes; });
-    else
-        returnList.sort([](const Post* a, const Post* b) { return a->numLikes > b->numLikes; });
-    return returnList;
+    switch (operation)
+    {
+        case 0:
+            return avl_posts_by_numInteractions->findAllStringsThatStartsWith(value, asc, limit);
+            break;
+        case 1:
+            return avl_posts_by_pubDate->findAllStringsThatStartsWith(value, asc, limit);
+            break;
+        case 2:
+            return avl_posts_by_numLikes->findAllStringsThatStartsWith(value, asc, limit);
+            break;
+        default:
+            return avl_posts_by_title->findAllStringsThatStartsWith(value, asc, limit);
+            break;
+    }
 }
 
-list<Post *> PostManager::getPostsThatEndsWithString(string value, bool asc, int limit)
+list<Post *> PostManager::getPostsThatEndsWithString(string value, bool asc, int limit, int operation)
 {
     if (limit <= 0)
         return list<Post*>();
-    list<Post*> returnList = avl_posts_by_title->findAllStringsThatEndsWith(value, limit);
-    if (asc)
-        returnList.sort([](const Post* a, const Post* b) { return a->numLikes < b->numLikes; });
-    else
-        returnList.sort([](const Post* a, const Post* b) { return a->numLikes > b->numLikes; });
-    return returnList;
+
+    switch (operation)
+    {
+        case 0:
+            return avl_posts_by_numInteractions->findAllStringsThatEndsWith(value, asc, limit);
+            break;
+        case 1:
+            return avl_posts_by_pubDate->findAllStringsThatEndsWith(value, asc, limit);
+            break;
+        case 2:
+            return avl_posts_by_numLikes->findAllStringsThatEndsWith(value, asc, limit);
+            break;
+        default:
+            return avl_posts_by_title->findAllStringsThatEndsWith(value, asc, limit);
+            break;
+    }
 }
 
-list<Post *> PostManager::getPostsThatTitleEqualsToString(string value, bool asc, int limit)
+list<Post *> PostManager::getPostsThatTitleEqualsToString(string value, bool asc, int limit, int operation)
 {
     if (limit <= 0)
         return list<Post*>();
 
-    list<Post*> returnList = avl_posts_by_title->findAll(value, limit);
-    if (asc)
-        returnList.sort([](const Post* a, const Post* b) { return a->title < b->title; });
-    else
-        returnList.sort([](const Post* a, const Post* b) { return a->title > b->title; });
-    return returnList;
+    switch (operation)
+    {
+        case 0:
+            return avl_posts_by_numInteractions->findAllStringsThatEquals(value, asc, limit);
+            break;
+        case 1:
+            return avl_posts_by_pubDate->findAllStringsThatEquals(value, asc, limit);
+            break;
+        case 2:
+            return avl_posts_by_numLikes->findAllStringsThatEquals(value, asc, limit);
+            break;
+        default:
+            return avl_posts_by_title->findAllStringsThatEquals(value, asc, limit);
+            break;
+    }
 }
 
 list<Post *> PostManager::getAuthorPostsThatContainsString(int userId, string value, bool asc, int limit)
