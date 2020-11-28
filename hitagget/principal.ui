@@ -33,7 +33,7 @@
   </property>
   <property name="windowIcon">
    <iconset>
-    <normaloff>../../../../UPC/CICLO 3/Algoritmos y estructura de datos/Semana 7/logo_icon.ico</normaloff>../../../../UPC/CICLO 3/Algoritmos y estructura de datos/Semana 7/logo_icon.ico</iconset>
+    <normaloff>../build/Imagenes/logo_icon.ico</normaloff>../build/Imagenes/logo_icon.ico</iconset>
   </property>
   <property name="styleSheet">
    <string notr="true">color: rgb(255, 255, 255);

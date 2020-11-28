@@ -69,6 +69,7 @@ void Principal::show_all_posts(int op, bool inv, bool show_specific_profile)
             view_post_dialog->delete_post_function = [this](Post* post)
             {
                 main_instance->deletePost(post);
+                show_all_posts(op_busq, invertir, main_instance->get_shown_user() != nullptr ? true : false);
             };
 
             view_post_dialog->set_current_post(post, author_name, comments);
@@ -76,6 +77,7 @@ void Principal::show_all_posts(int op, bool inv, bool show_specific_profile)
             if (post->authorId != main_instance->logged_user->id)
                 view_post_dialog->hide_author_actions_buttons();
 
+            view_post_dialog->setWindowTitle("Ver publicación");
             view_post_dialog->exec();
         }
     };
@@ -166,7 +168,7 @@ void Principal::show_all_posts(int op, bool inv, bool show_specific_profile)
                 posts = main_instance->getShownUserPostsThatTitleEqualsToString(ui->txtSearchBox->text().toStdString(), inv, 50);
             }
             else
-                posts = main_instance->getPostsThatTitleEqualsToString(ui->txtSearchBox->text().toStdString(), inv, 50, 3);
+                posts = main_instance->getPostsThatTitleEqualsToString(ui->txtSearchBox->text().toStdString(), inv, 50, ui->cb_criterios->currentIndex());
         }
         break;
     case 4:
@@ -178,7 +180,7 @@ void Principal::show_all_posts(int op, bool inv, bool show_specific_profile)
                 posts = main_instance->getShownUserPostsThatStartsWithString(ui->txtSearchBox->text().toStdString(), inv, 50);
             }
             else
-                posts = main_instance->getPostsThatStartsWithString(ui->txtSearchBox->text().toStdString(), inv, 50, 0);
+                posts = main_instance->getPostsThatStartsWithString(ui->txtSearchBox->text().toStdString(), inv, 50, ui->cb_criterios->currentIndex());
         }
         break;
     case 5:
@@ -190,7 +192,7 @@ void Principal::show_all_posts(int op, bool inv, bool show_specific_profile)
                 posts = main_instance->getShownUserPostsThatEndsWithString(ui->txtSearchBox->text().toStdString(), inv, 50);
             }
             else
-                posts = main_instance->getPostsThatEndsWithString(ui->txtSearchBox->text().toStdString(), inv, 50, 1);
+                posts = main_instance->getPostsThatEndsWithString(ui->txtSearchBox->text().toStdString(), inv, 50, ui->cb_criterios->currentIndex());
         }
         break;
     case 6:
@@ -202,7 +204,7 @@ void Principal::show_all_posts(int op, bool inv, bool show_specific_profile)
                 posts = main_instance->getShownUserPostsThatContainsString(ui->txtSearchBox->text().toStdString(), inv, 50);
             }
             else
-                posts = main_instance->getPostsThatContainsString(ui->txtSearchBox->text().toStdString(), inv, 50, 2);
+                posts = main_instance->getPostsThatContainsString(ui->txtSearchBox->text().toStdString(), inv, 50, ui->cb_criterios->currentIndex());
         }
         break;
     case 7:
@@ -214,7 +216,7 @@ void Principal::show_all_posts(int op, bool inv, bool show_specific_profile)
                 posts = main_instance->getShownUserPostsNoContainsString(ui->txtSearchBox->text().toStdString(), inv, 50);
             }
             else
-                posts = main_instance->getPostsNoContainsString(ui->txtSearchBox->text().toStdString(), inv, 50, 0);
+                posts = main_instance->getPostsNoContainsString(ui->txtSearchBox->text().toStdString(), inv, 50, ui->cb_criterios->currentIndex());
         }
         break;
     default:
@@ -490,6 +492,7 @@ void Principal::cambiar_imagen(){
 
 void Principal::new_publi(){
     NewPost *newPost = new NewPost();
+    newPost->setWindowTitle("Nueva publicación");
             newPost->exec();
 
     if (newPost->new_post == nullptr)

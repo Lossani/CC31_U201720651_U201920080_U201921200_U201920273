@@ -280,9 +280,6 @@ list<T> AVL<T, R, NONE>::findAllStringsNoContains(string value, bool asc, int li
 template <typename T, typename R, T NONE>
 list<T> AVL<T, R, NONE>::findAllStringsThatStartsWith(string value, bool asc, int limit)
 {
-    if (typeid(R) != typeid(string))
-        return list<T>();
-
     list<T> returnValues;
 
     if (asc)
@@ -296,9 +293,6 @@ list<T> AVL<T, R, NONE>::findAllStringsThatStartsWith(string value, bool asc, in
 template <typename T, typename R, T NONE>
 list<T> AVL<T, R, NONE>::findAllStringsThatEndsWith(string value, bool asc, int limit)
 {
-    if (typeid(R) != typeid(string))
-        return list<T>();
-
     list<T> returnValues;
 
     if (asc)

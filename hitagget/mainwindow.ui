@@ -34,6 +34,10 @@
   <property name="windowTitle">
    <string>HiTagget LogIn</string>
   </property>
+  <property name="windowIcon">
+   <iconset>
+    <normaloff>../build/Imagenes/logo_icon.ico</normaloff>../build/Imagenes/logo_icon.ico</iconset>
+  </property>
   <property name="styleSheet">
    <string notr="true">background-color: rgb(255, 255, 255);</string>
   </property>

@@ -108,3 +108,8 @@ void MainWindow::on_btnGoBack_clicked()
 {
     ui->Ventanas->setCurrentIndex(1);
 }
+
+void MainWindow::closeEvent(QCloseEvent *event)
+{
+    windP.main_instance->save_instance();
+}
